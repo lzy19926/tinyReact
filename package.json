@@ -1,0 +1,27 @@
+{
+  "name": "myreact",
+  "version": "1.0.0",
+  "private": true,
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "compile": "babel tpl.jsx -o tpl_out.js",
+    "dev": "webpack-dev-server",
+    "build": "webpack"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "webpack": "^5.72.0",
+    "webpack-cli": "^4.9.2",
+    "webpack-dev-server": "^4.8.1"
+  },
+  "main": "webpack.config.js",
+  "dependencies": {
+    "snabbdom": "^3.4.0"
+  },
+  "keywords": [],
+  "description": ""
+}
