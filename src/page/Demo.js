@@ -11,7 +11,7 @@ function Item() {
 window.$$Item = Item
 
 
-function Page1() {
+function Demo() {
     const [age, setAge] = myUseState(18)
     const [num, setNum] = myUseState(0)
     const [arr, setArr] = myUseState([])
@@ -64,9 +64,9 @@ function Page1() {
     </div>
         `)
 }
-window.$$Page1 = Page1
+window.$$Demo = Demo
 
-export default Page1
+export default Demo
 
 
 

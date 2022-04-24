@@ -1,12 +1,15 @@
-import Page1 from './components/page1'
-import LayuiPage from './components/Layui'
-import Test from './components/test'
+//功能测试页面
+import Demo from './page/Demo'
+//layui组件库测试页面
+import LayuiPage from './page/Layui'
+
 
 function App() {
     return (`
     <div>
+    <h1>Layui测试页面</h1>
     <LayuiPage></LayuiPage>
-    <Page1></Page1>
+    <Demo></Demo>
     </div>`)
 }
 
