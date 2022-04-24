@@ -51,7 +51,6 @@ function creatFiberNode(vnode: any) {
 
 function createFiberTree(htmlTplStr: string) {
     const vnode = tplToVDOM(htmlTplStr)
-
     const fiberTree = creatFiberNode(vnode)
     return fiberTree
 }

@@ -125,6 +125,7 @@ function resetFiber(newFiber: FiberNode) {
 //! before 前置处理  mutation 渲染dom节点   layout  处理useEffect useLayoutEffect
 function commitPart(rootDom: any) {
 
+    //todo 这里需要遍历  不需要commit整个fiber树
     console.log('本次commit的fiber', fiber);
 
     //todo  mutation阶段
@@ -132,9 +133,12 @@ function commitPart(rootDom: any) {
 
 
 
-    // const childDom = rootDom.children[0]
-    // if (childDom) { rootDom.removeChild(childDom) }//删除之前的dom
-    // rootDom.appendChild(html)//添加渲染好的dom
+    //todo 删除当前渲染dom的子节点
+    for (let i = 0; i < rootDom.childNodes.length; i++) {
+        rootDom.removeChild(rootDom.children[i])
+    }
+
+    rootDom.appendChild(html)//添加渲染好的dom
 
 
     //todo  layout阶段  调用Effects链表 执行create函数()
@@ -203,7 +207,6 @@ function doCreateQueue(createEffectsArr: Effect[]) {
 //todo 根据tag创建节点  填充text  递归appendChild
 function appendDom(fiber: any, container: any) {
 
-
     //todo 大写情况 判断为组件 不创建多余html标签
     //在这里处理props和children
     if (fiber.tag[0].toUpperCase() === fiber.tag[0]) {
@@ -227,7 +230,6 @@ function appendDom(fiber: any, container: any) {
         }
         container.appendChild(dom)
     }
-
 
 
 }
@@ -264,10 +266,9 @@ function handleProps(curFiber: any, dom: any) {
 //!根据fiberTree创建html
 //此方法可以随时停止  传入需要改变的fiberNode实现最小量更新
 const createHtml = (fiberTree: any, rootDom: any) => {
-
-    appendDom(fiberTree, rootDom)
-    
-    return rootDom
+    const container = document.createDocumentFragment()
+    appendDom(fiberTree, container)
+    return container
 }
 
 
@@ -493,6 +494,8 @@ function dispatchAction(queue: any, newVal?: any, action?: Function) {
     fiber.updateQueue = null
     global.hookIndex = 0
     //todo 多个setState会触发多个render  实际上会将多个setState合并执行
+    console.log('本次render的Fiber树', fiber.ref);
+    //todo 需要找到当前的fiber  去进行更新
     render(fiber.stateNode, fiber.ref)
 }
 
@@ -553,7 +556,6 @@ function updateUseStateHook(hook: UseStateHook) {
 
 //! ----------执行useState会执行state的计算过程----------------
 function myUseState(initialState: any) {
-
 
 
     //取出当前hook 如果是mount阶段就创建一个hook(初始值为initState)
@@ -628,7 +630,10 @@ function creatFiberNode(vnode: any) {
 function createFiberTree(htmlTplStr: string) {
     const vnode = tplToVDOM(htmlTplStr)
 
+    console.log('本次创建的虚拟dom树', vnode);
+
     const fiberTree = creatFiberNode(vnode)
+
     return fiberTree
 }
 
@@ -798,6 +803,7 @@ function collectTokens(html: string) {
     const tokens = [];
 
     let word = '';
+
     while (!scanner.eos()) {
         // 扫描文本
         const text = scanner.scanUntil('<');
@@ -811,9 +817,11 @@ function collectTokens(html: string) {
 
         // 如果没有扫描到值，就跳过本次进行下一次扫描
         if (!word) continue;
+
         //todo 对本次扫描的字符串进行事件处理
         const { newHtml, event } = eventParser(word)//todo 拆分事件
         word = newHtml
+
         // 区分开始标签 # 和结束标签 /
         if (word.startsWith('/')) {
             tokens.push(['/', word.slice(1)]);
@@ -914,12 +922,9 @@ function tokens2vdom(tokens: any) {
 
 //! 总和方法 转换html模板为虚拟dom
 function tplToVDOM(html: string) {
-
     const tokensArr = collectTokens(html)
     const tokensTree = nestTokens(tokensArr)
     const vdom = tokens2vdom(tokensTree);
-
-
     return vdom;
 }
 

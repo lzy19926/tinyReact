@@ -53,12 +53,15 @@ function resetFiber(newFiber) {
 //! 分为三部分  beforeMutation  mutation  layout阶段
 //! before 前置处理  mutation 渲染dom节点   layout  处理useEffect useLayoutEffect
 function commitPart(rootDom) {
+    //todo 这里需要遍历  不需要commit整个fiber树
     console.log('本次commit的fiber', fiber);
     //todo  mutation阶段
     const html = createHtml(fiber, rootDom); //根据fiberTree创建html
-    // const childDom = rootDom.children[0]
-    // if (childDom) { rootDom.removeChild(childDom) }//删除之前的dom
-    // rootDom.appendChild(html)//添加渲染好的dom
+    //todo 删除当前渲染dom的子节点
+    for (let i = 0; i < rootDom.childNodes.length; i++) {
+        rootDom.removeChild(rootDom.children[i]);
+    }
+    rootDom.appendChild(html); //添加渲染好的dom
     //todo  layout阶段  调用Effects链表 执行create函数()
     let destoryEffectsArr = [];
     if (fiber.updateQueue !== null) {
@@ -158,8 +161,9 @@ function handleProps(curFiber, dom) {
 //!根据fiberTree创建html
 //此方法可以随时停止  传入需要改变的fiberNode实现最小量更新
 const createHtml = (fiberTree, rootDom) => {
-    appendDom(fiberTree, rootDom);
-    return rootDom;
+    const container = document.createDocumentFragment();
+    appendDom(fiberTree, container);
+    return container;
 };
 //! ---------- unmount阶段 -------------------------
 //todo  清空上一次执行完的updateQueue 重置HookIndex 执行distory函数数组
@@ -337,6 +341,8 @@ function dispatchAction(queue, newVal, action) {
     fiber.updateQueue = null;
     global.hookIndex = 0;
     //todo 多个setState会触发多个render  实际上会将多个setState合并执行
+    console.log('本次render的Fiber树', fiber.ref);
+    //todo 需要找到当前的fiber  去进行更新
     render(fiber.stateNode, fiber.ref);
 }
 //! 创建一个useStateHook并添加到链表中------------------------
@@ -444,6 +450,7 @@ function creatFiberNode(vnode) {
 }
 function createFiberTree(htmlTplStr) {
     const vnode = tplToVDOM(htmlTplStr);
+    console.log('本次创建的虚拟dom树', vnode);
     const fiberTree = creatFiberNode(vnode);
     return fiberTree;
 }
