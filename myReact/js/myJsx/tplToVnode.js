@@ -69,9 +69,13 @@ function propsParser(propsStr) {
                 key = keys[len - 1].trim();
             }
             scanner.scan("="); //! 略过=符号  从下一位开始
+            //! 同时解析" 和 ' 中的value    (不能使用三元 会执行扫描)
             let val = scanner.scanUntil('"');
+            if (val === '') {
+                val = scanner.scanUntil("'");
+            }
             //todo 普通属性value解析
-            if (val[0] === "'") {
+            if (val[0] === "'" || val[0] === '"') {
                 val = val.slice(1, val.length - 1); //去除多余的引号
             }
             //todo {{}}语法解析 获取挂载的方法 放入props

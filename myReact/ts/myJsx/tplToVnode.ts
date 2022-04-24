@@ -93,11 +93,18 @@ function propsParser(propsStr: string) {
             }
 
             scanner.scan("=");//! 略过=符号  从下一位开始
-            let val = scanner.scanUntil('"');
-            //todo 普通属性value解析
-            if (val[0] === "'") {
-                val = val.slice(1, val.length - 1)//去除多余的引号
+
+            //! 同时解析" 和 ' 中的value    (不能使用三元 会执行扫描)
+            let val = scanner.scanUntil('"')
+            if (val === '') {
+                val = scanner.scanUntil("'")
             }
+
+            //todo 普通属性value解析
+            if (val[0] === "'" || val[0] === '"') {
+                val = val.slice(1, val.length - 1); //去除多余的引号
+            }
+
             //todo {{}}语法解析 获取挂载的方法 放入props
             if (val[0] === '{' && val[1] === '{') {
                 val = val.slice(2, val.length - 2)

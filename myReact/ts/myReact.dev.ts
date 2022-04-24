@@ -128,11 +128,13 @@ function commitPart(rootDom: any) {
     console.log('本次commit的fiber', fiber);
 
     //todo  mutation阶段
-    const html = createHtml(fiber)//根据fiberTree创建html
+    const html = createHtml(fiber, rootDom)//根据fiberTree创建html
 
-    const childDom = rootDom.children[0]
-    if (childDom) { rootDom.removeChild(childDom) }//删除之前的dom
-    rootDom.appendChild(html)//添加渲染好的dom
+
+
+    // const childDom = rootDom.children[0]
+    // if (childDom) { rootDom.removeChild(childDom) }//删除之前的dom
+    // rootDom.appendChild(html)//添加渲染好的dom
 
 
     //todo  layout阶段  调用Effects链表 执行create函数()
@@ -201,19 +203,31 @@ function doCreateQueue(createEffectsArr: Effect[]) {
 //todo 根据tag创建节点  填充text  递归appendChild
 function appendDom(fiber: any, container: any) {
 
-    //todo 如果是小写 判断为html标签  填充文本 处理属性
-    const dom = document.createElement(fiber.tag)
-    handleProps(fiber, dom)
-    if (fiber.text) {
-        dom.innerHTML = fiber.text
-    }
-    //todo 如果有children深度优先递归渲染dom节点 
-    if (fiber.children) {
+
+    //todo 大写情况 判断为组件 不创建多余html标签
+    //在这里处理props和children
+    if (fiber.tag[0].toUpperCase() === fiber.tag[0]) {
+        //! 直接遍历子节点 创建tag
         fiber.children.forEach((fiber: any) => {
-            appendDom(fiber, dom)
+            appendDom(fiber, container)
         });
+
+    } else {
+        //todo 如果是小写 判断为html标签  填充文本 处理属性
+        const dom = document.createElement(fiber.tag)
+        handleProps(fiber, dom)
+        if (fiber.text) {
+            dom.innerHTML = fiber.text
+        }
+        //todo 如果有children深度优先递归渲染dom节点 
+        if (fiber.children) {
+            fiber.children.forEach((fiber: any) => {
+                appendDom(fiber, dom)
+            });
+        }
+        container.appendChild(dom)
     }
-    container.appendChild(dom)
+
 
 
 }
@@ -249,11 +263,11 @@ function handleProps(curFiber: any, dom: any) {
 
 //!根据fiberTree创建html
 //此方法可以随时停止  传入需要改变的fiberNode实现最小量更新
-const createHtml = (fiberTree: any) => {
+const createHtml = (fiberTree: any, rootDom: any) => {
 
-    const container = document.createDocumentFragment()
-    appendDom(fiberTree, container)
-    return container
+    appendDom(fiberTree, rootDom)
+    
+    return rootDom
 }
 
 
@@ -716,10 +730,15 @@ function propsParser(propsStr: string) {
             }
 
             scanner.scan("=");//! 略过=符号  从下一位开始
-            let val = scanner.scanUntil('"');
+
+            //! 同时解析" 和 ' 中的value    (不能使用三元 会执行扫描)
+            let val = scanner.scanUntil('"')
+            if (val === '') {
+                val = scanner.scanUntil("'")
+            }
             //todo 普通属性value解析
-            if (val[0] === "'") {
-                val = val.slice(1, val.length - 1)//去除多余的引号
+            if (val[0] === "'" || val[0] === '"') {
+                val = val.slice(1, val.length - 1); //去除多余的引号
             }
             //todo {{}}语法解析 获取挂载的方法 放入props
             if (val[0] === '{' && val[1] === '{') {

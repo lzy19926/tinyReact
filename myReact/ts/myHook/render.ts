@@ -141,6 +141,9 @@ function handleProps(curFiber: any, dom: any) {
         //todo  处理className
         switch (key) {
             case 'className':
+                
+                console.log(value);
+
                 dom.setAttribute("class", value);
                 break;
 

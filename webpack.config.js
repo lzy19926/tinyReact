@@ -9,8 +9,9 @@ module.exports = {
     },
     //开启devServer配置
     devServer: {
+        //devServer的静态资源读取路径  
         static: {
-            directory: path.join(__dirname, 'dist'),
+            directory: path.join(__dirname, 'public'),
         },
         compress: true,
         port: 8000,
