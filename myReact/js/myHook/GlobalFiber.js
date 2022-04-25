@@ -21,6 +21,7 @@ exports.fiber = fiber;
 const global = {
     workInProgressHook: { currentHook: null },
     currentFiberNode: fiber,
+    destoryEffectsArr: [],
     renderTag: 'mount' // 用于判断是否是首次更新
 };
 exports.global = global;

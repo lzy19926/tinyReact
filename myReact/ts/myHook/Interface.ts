@@ -48,6 +48,7 @@ interface FiberNode {
 interface Global {
     workInProgressHook: { currentHook: any },
     currentFiberNode: FiberNode,
+    destoryEffectsArr: Effect[],
     renderTag: string
 }
 

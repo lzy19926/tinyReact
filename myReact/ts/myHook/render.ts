@@ -37,8 +37,9 @@ function createRootFiberTree(newFiber: FiberNode, functionComponent: Function) {
 //! -----------------模拟Commit阶段-----------------------------
 //! 分为三部分  beforeMutation  mutation  layout阶段
 //! before 前置处理  mutation 渲染dom节点   layout  处理useEffect useLayoutEffect
-function commitPart(rootDom: any) {
 
+
+function commitPart(rootDom: any) {
 
     console.log('本次commit的fiber', fiber);
 
@@ -49,54 +50,77 @@ function commitPart(rootDom: any) {
     if (childDom) { rootDom.removeChild(childDom) }//删除之前的dom
     rootDom.appendChild(html)//添加渲染好的dom
 
+    //! 这里为了简化重新render  将root节点挂载上去了  需要更正
+    fiber.ref = rootDom //挂载ref
 
     //todo  layout阶段  调用Effects链表 执行create函数()
-    //! 这里需要找到当前有updateQueue的Fiber
-    
+    //遍历fiber树  找到Effect列表执行
+    handleEffect(fiber)
 
 
-    let destoryEffectsArr: Effect[] = []
-    if (fiber.updateQueue !== null) {
-        const createEffectsArr = createCallbackQueue()
-        destoryEffectsArr = doCreateQueue(createEffectsArr)
-    }
 
     //todo 处理ref
-    fiber.ref = rootDom //挂载ref
     if (fiber.hasRef) {
         // commitAttachRef()//绑定ref
     }
 
-    return destoryEffectsArr
-
 }
 
+//! 遍历树获取所有的Effect(执行create和生成destory函数数组)
+function handleEffect(fiber: FiberNode) {
+
+    let destoryEffectsArr: Effect[] = []
+
+    if (fiber.updateQueue) {
+        const createEffectsArr = createCallbackQueue(fiber)
+        destoryEffectsArr = doCreateQueue(createEffectsArr)
+    }
+
+    if (fiber.children.length !== 0) {
+        fiber.children.forEach((fiber) => {
+            handleEffect(fiber)
+        })
+    }
+
+    global.destoryEffectsArr.push(...destoryEffectsArr)
+}
+
+
+
+
 //todo 遍历Effect链表 将需要执行的Effect推入数组--------------
-function createCallbackQueue() {
+function createCallbackQueue(fiber: FiberNode) {
 
     const createEffectsArr: Effect[] = []
     const lastEffect = fiber.updateQueue.lastEffect
     const firstEffect = lastEffect.next
     let currentEffect = firstEffect
 
+
     do {
-        // Fiber=mount 时 depNochange执行depChange执行
-        // Fiber=update时 depChange执行 
 
         //判断effectTag决定是否执行Effect(mount和dep变更时执行)
-        const isFiberMount = Boolean(fiber.fiberFlags === 'mount')
+        //React底层通过二进制来打tag
+        const isFiberMount = Boolean(global.renderTag === 'mount')
         const isDepChange = Boolean(currentEffect.tag === 'depChanged')
+        const isNullDeps = Boolean(currentEffect.tag === 'nullDeps')
+        const isNoDeps = Boolean(currentEffect.tag === 'noDeps')
 
-        //将create函数推入数组  
-        if (isFiberMount || isDepChange) {
+        //根据不同情况 将Effect推入数组  达到不同的useEffect的效果
+        if (isFiberMount || isDepChange || isNullDeps) {
+            createEffectsArr.push(currentEffect)
+        } else if (isFiberMount && isNoDeps) {
             createEffectsArr.push(currentEffect)
         }
+
         currentEffect = currentEffect.next
     } while (currentEffect !== firstEffect)
 
 
+
     return createEffectsArr
 }
+
 
 //todo 遍历执行需要执行的Effect---生成destory---------
 function doCreateQueue(createEffectsArr: Effect[]) {
@@ -181,8 +205,8 @@ const createHtml = (fiberTree: any) => {
 
 //! ---------- unmount阶段 -------------------------
 //todo  清空上一次执行完的updateQueue 重置HookIndex 执行distory函数数组
-function unmountPart(destoryEffectsArr: Effect[]) {
-    doDestoryQueue(destoryEffectsArr)
+function unmountPart() {
+    doDestoryQueue(global.destoryEffectsArr)
     resetFiber(fiber)
 }
 
@@ -198,6 +222,8 @@ function doDestoryQueue(destoryEffectsArr: Effect[]) {
 function resetFiber(fiberTree: FiberNode) {
     fiberTree.hookIndex = 0
     fiberTree.updateQueue = null
+    global.destoryEffectsArr = []
+
     if (fiberTree.children.length !== 0) {
         fiberTree.children.forEach((fiber) => {
             resetFiber(fiber)
@@ -212,9 +238,9 @@ function render(functionComponent: Function, rootDom: any): any {
 
     const app = renderPart(functionComponent)//todo render阶段
 
-    const destoryEffectsArr = commitPart(rootDom)//todo commit阶段
+    commitPart(rootDom)//todo commit阶段
 
-    unmountPart(destoryEffectsArr)//todo unmount阶段
+    unmountPart()//todo unmount阶段
 
     return app
 }
@@ -252,15 +278,12 @@ function updateRender(functionComponent: Function, rootDom: any): any {
 
     createRootFiberTree(fiberTree, functionComponent) //!根据子FiberTree生成根fiberTree
 
-    fiber.fiberFlags = 'update'//render阶段结束fiber的状态由mount为update
 
     // //todo 获取上一次的fiberTree 执行所有打上tag的functionComponent进行state更新 再commit   
 
+    commitPart(rootDom)//todo commit阶段
 
-
-    const destoryEffectsArr = commitPart(rootDom)//todo commit阶段
-
-    unmountPart(destoryEffectsArr)//todo unmount阶段
+    unmountPart()//todo unmount阶段
 
 
 }

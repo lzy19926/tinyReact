@@ -24,6 +24,7 @@ let fiber: FiberNode = {
 const global: Global = {
     workInProgressHook: { currentHook: null },//React中使用链表来保存hooks 挂在全局
     currentFiberNode: fiber,
+    destoryEffectsArr: [],
     renderTag: 'mount' // 用于判断是否是首次更新
 }
 

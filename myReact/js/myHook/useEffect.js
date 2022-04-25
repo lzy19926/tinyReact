@@ -9,10 +9,17 @@ function mountEffect(fiberFlags, hookFlags, create, deps) {
     const hook = mountWorkInProgressHook();
     //判断是否传入deps 不同时机执行useEffect
     const nextDeps = deps === undefined ? null : deps;
-    //执行mountEffect 改变fiberFlages
-    //! fiber.fiberFlags = fiberFlags
+    //! 根据deps传入不同的情况  实现useEffect的不同使用
     //此时memorizedState保存的就是最后更新的Effect数据(第一次destory为undefined)
-    hook.memorizedState = pushEffect('depNoChange', create, undefined, nextDeps);
+    if (nextDeps === null) {
+        hook.memorizedState = pushEffect('nullDeps', create, undefined, nextDeps);
+    }
+    else if (nextDeps.length === 0) {
+        hook.memorizedState = pushEffect('noDeps', create, undefined, nextDeps);
+    }
+    else {
+        hook.memorizedState = pushEffect('depNoChange', create, undefined, nextDeps);
+    }
     //todo mount后 hookFlag变为update
     hook.hookFlags = 'update';
 }
@@ -52,9 +59,10 @@ function updateEffect(fiberFlags, hookFlags, create, deps) {
         const prevEffect = currentHook.memorizedState; //最后一次Effect
         //todo update时从上一次的Effect中取出销毁函数(在commit阶段执行create函数并赋值了destory)
         const destory = prevEffect.destory;
-        //todo 浅比较上次和本次的deps是否相等(遍历每一项deps进行比较) 
-        //todo 依赖项改变和不改变  传入不同的tag  用于减少更新
+        //! 根据传入的dep 判断是否执行effect
+        //注意 无论如何都会推入Effect  
         if (nextDeps !== null) {
+            //todo 浅比较上次和本次的deps是否相等  传入不同的tag  用于减少更新
             const prveDeps = prevEffect.deps;
             if (shallowCompareDeps(nextDeps, prveDeps)) {
                 pushEffect('depNoChange', create, destory, nextDeps);
@@ -63,8 +71,13 @@ function updateEffect(fiberFlags, hookFlags, create, deps) {
             //todo 如果deps发生改变  传入的tag为'depChanged' commit时这个Effects才会被执行
             //todo  (执行的最后一个effect要被赋值给memorizedState)
             else {
-                currentHook.memorizedState = pushEffect('depChanged', create, destory, nextDeps);
+                currentHook.memorizedState =
+                    pushEffect('depChanged', create, destory, nextDeps);
             }
+        }
+        //! 如果没有传deps 表示任意时候都执行
+        if (nextDeps === null) {
+            pushEffect('nullDeps', create, undefined, nextDeps);
         }
     }
 }

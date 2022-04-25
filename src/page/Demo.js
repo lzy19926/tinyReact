@@ -20,12 +20,19 @@ function Demo() {
 
     //! 支持useEffect全系使用(return函数 同样会发生死循环)
     myUseEffect(() => {
-        console.log('执行useEffect, age发生改变 num++');
+        console.log('传入[],仅仅mount时执行');
+    }, [])
+
+    myUseEffect(() => {
+        console.log('不传 任意时候执行');
+    })
+
+    myUseEffect(() => {
         setNum(num + 1)
-        return () => {
-            console.log('执行destory函数 num++');
-        }
+        console.log('监听age,age改变时执行');
     }, [age])
+
+
 
 
     //!定义onclick方法
