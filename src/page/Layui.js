@@ -1,6 +1,6 @@
 
 
-import { myUseState } from '../../myReact/js/myReact.dev';
+import { myUseState } from '../../myReact/js/myHook/useState';
 //! 引入并配置Layui
 import '../../public/layui'
 import ModalContent from '../components/modalContent'
@@ -55,7 +55,7 @@ function LayuiPage() {
         setId(id + 1)
     }
     window.$$changeId = changeId
-
+    
     return (`
 
   <blockquote class="layui-elem-quote">

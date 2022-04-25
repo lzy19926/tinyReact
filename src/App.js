@@ -2,6 +2,7 @@
 import Demo from './page/Demo'
 //layui组件库测试页面
 import LayuiPage from './page/Layui'
+
 import { myUseState } from '../myReact/js/myHook/useState'
 
 
@@ -20,7 +21,10 @@ window.$$Test = Test
 
 function App() {
   return (`
+  <div>
+  <LayuiPage></LayuiPage>
   <Demo></Demo>
+  </div>
     `)
 }
 

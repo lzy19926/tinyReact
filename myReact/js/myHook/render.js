@@ -116,19 +116,32 @@ function handleProps(curFiber, dom) {
     const props = curFiber.props;
     for (let key in props) {
         const value = props[key];
-        //todo  处理className
         switch (key) {
+            //todo  处理className (合并所有的类名)
             case 'className':
-                dom.setAttribute("class", value);
+                let classNameStr = '';
+                for (let i = 0; i < value.length; i++) {
+                    classNameStr += value[i] + ' ';
+                }
+                dom.setAttribute("class", classNameStr.trim());
                 break;
+            //todo  处理class (合并所有的类名)
+            case 'class':
+                let classStr = '';
+                for (let i = 0; i < value.length; i++) {
+                    classStr += value[i] + ' ';
+                }
+                dom.setAttribute("class", classStr.trim());
+                break;
+            //todo  处理点击事件
             case 'onClick':
                 //! 使用{addNun} 挂载到全局方法
-                const newValue = value.slice(1, value.length - 1);
-                const fn = window['$$' + newValue];
+                const fn = window['$$' + value[0]];
                 dom.addEventListener("click", fn);
                 break;
+            //todo  处理其他
             default:
-                dom.setAttribute(key, value);
+                dom.setAttribute(key, value[0]);
                 break;
         }
     }
@@ -176,20 +189,7 @@ function render(functionComponent, rootDom) {
     return app;
 }
 exports.render = render;
-//  !-----------updateRender方法--------------------------
-//!---------------updateFiberTree()-------------------------
-// function updateFiberTree(fiberTree: FiberNode) {
-//     //todo 在这里同样要将currentFiber赋值  告诉流程哪个fiber正在进行
-//     global.currentFiberNode = fiberTree
-//     if (typeof fiberTree.stateNode === 'function') {
-//         fiberTree.stateNode()
-//     }
-//     if (fiberTree.children.length !== 0) {
-//         fiberTree.children.forEach((fiber) => {
-//             updateFiberTree(fiber)
-//         })
-//     }
-// }
+//  !-----------updateRender方法(未完成)--------------------------
 function updateRender(functionComponent, rootDom) {
     GlobalFiber_1.global.renderTag = 'update';
     const html = functionComponent(); // 执行App 获取html模板

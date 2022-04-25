@@ -169,28 +169,39 @@ function handleProps(curFiber: any, dom: any) {
 
     for (let key in props) {
         const value = props[key]
-        //todo  处理className
         switch (key) {
+            //todo  处理className (合并所有的类名)
             case 'className':
-
-
-                dom.setAttribute("class", value);
+                let classNameStr = ''
+                for (let i = 0; i < value.length; i++) {
+                    classNameStr += value[i] + ' '
+                }
+                dom.setAttribute("class", classNameStr.trim());
                 break;
 
+            //todo  处理class (合并所有的类名)
+            case 'class':
+                let classStr = ''
+                for (let i = 0; i < value.length; i++) {
+                    classStr += value[i] + ' '
+                }
+                dom.setAttribute("class", classStr.trim());
+                break;
+
+            //todo  处理点击事件
             case 'onClick':
                 //! 使用{addNun} 挂载到全局方法
-                const newValue = value.slice(1, value.length - 1)
-                const fn = window['$$' + newValue]
+                const fn = window['$$' + value[0]]
                 dom.addEventListener("click", fn);
                 break;
 
+            //todo  处理其他
             default:
-                dom.setAttribute(key, value);
+                dom.setAttribute(key, value[0]);
                 break;
         }
     }
 }
-
 
 
 //!根据fiberTree创建html
@@ -201,6 +212,7 @@ const createHtml = (fiberTree: any) => {
     appendDom(fiberTree, container)
     return container
 }
+
 
 
 //! ---------- unmount阶段 -------------------------
@@ -220,10 +232,10 @@ function doDestoryQueue(destoryEffectsArr: Effect[]) {
 
 //todo ----遍历清空fiber树上的hookIndex 和 queue
 function resetFiber(fiberTree: FiberNode) {
+
     fiberTree.hookIndex = 0
     fiberTree.updateQueue = null
     global.destoryEffectsArr = []
-
     if (fiberTree.children.length !== 0) {
         fiberTree.children.forEach((fiber) => {
             resetFiber(fiber)
@@ -247,25 +259,7 @@ function render(functionComponent: Function, rootDom: any): any {
 
 
 
-//  !-----------updateRender方法--------------------------
-//!---------------updateFiberTree()-------------------------
-// function updateFiberTree(fiberTree: FiberNode) {
-//     //todo 在这里同样要将currentFiber赋值  告诉流程哪个fiber正在进行
-//     global.currentFiberNode = fiberTree
-
-//     if (typeof fiberTree.stateNode === 'function') {
-//         fiberTree.stateNode()
-//     }
-//     if (fiberTree.children.length !== 0) {
-//         fiberTree.children.forEach((fiber) => {
-//             updateFiberTree(fiber)
-//         })
-//     }
-// }
-
-
-
-
+//  !-----------updateRender方法(未完成)--------------------------
 function updateRender(functionComponent: Function, rootDom: any): any {
 
     global.renderTag = 'update'
