@@ -6,8 +6,6 @@ const render_1 = require("./render");
 const GlobalFiber_1 = require("./GlobalFiber");
 //! ---------------useState返回的updater方法(updateState方法)-------------------
 function dispatchAction(queue, newVal, action) {
-    // const fiber = global.currentFiberNode//! 测试
-    console.log(GlobalFiber_1.global.currentFiberNode);
     //创建updater环链表
     const updater = {
         action: newVal || action,
@@ -25,8 +23,7 @@ function dispatchAction(queue, newVal, action) {
     queue.pending = updater;
     //! 重新render组件  这里需要调用unmount生命周期钩子
     //! 源码中使用切换fiber树的方式执行重新渲染 不需要执行生命周期(处理fiber树时变相执行了unmount阶段)
-    // fiber.updateQueue = null
-    GlobalFiber_1.global.hookIndex = 0;
+    (0, render_1.resetFiber)(GlobalFiber_1.fiber);
     //todo 多个setState会触发多个render  实际上会将多个setState合并执行
     (0, render_1.updateRender)(GlobalFiber_1.fiber.stateNode, GlobalFiber_1.fiber.ref);
 }
@@ -80,7 +77,6 @@ function updateUseStateHook(hook) {
 //! ----------执行useState会执行state的计算过程----------------
 function myUseState(initialState) {
     //todo  需要找到当前的fiber节点()
-    console.log('当前工作的fiber节点', GlobalFiber_1.global.currentFiberNode);
     let fiber = GlobalFiber_1.global.currentFiberNode;
     //取出当前hook 如果是mount阶段就创建一个hook(初始值为initState)
     let hook;
@@ -89,9 +85,8 @@ function myUseState(initialState) {
     }
     else {
         // 更新情况 找到对应的hook
-        hook = (0, GlobalFiber_1.updateWorkInProgressHook)(GlobalFiber_1.global.hookIndex);
+        hook = (0, GlobalFiber_1.updateWorkInProgressHook)(fiber);
     }
-    console.log(hook);
     //todo 更新hook上保存的state
     const baseState = updateUseStateHook(hook);
     //todo 执行完useState 钩子状态变为update

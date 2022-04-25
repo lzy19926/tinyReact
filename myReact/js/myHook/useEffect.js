@@ -41,7 +41,8 @@ function mountWorkInProgressHook() {
 }
 //! -------updateEffect(useEffect后续更新)-------------
 function updateEffect(fiberFlags, hookFlags, create, deps) {
-    const currentHook = (0, GlobalFiber_1.updateWorkInProgressHook)(GlobalFiber_1.global.hookIndex);
+    const fiber = GlobalFiber_1.global.currentFiberNode; //! 测试
+    const currentHook = (0, GlobalFiber_1.updateWorkInProgressHook)(fiber);
     //判断是否传入deps 不同时机执行useEffect
     const nextDeps = deps === undefined ? null : deps;
     //!执行updateEffect 改变fiberFlages

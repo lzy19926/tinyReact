@@ -42,12 +42,13 @@ interface FiberNode {
     props: any,
     tag: any,
     text: any,
+    hookIndex: number
 }
 //!-------------全局需要的变量结构---------------
 interface Global {
     workInProgressHook: { currentHook: any },
-    hookIndex: number,
-    currentFiberNode: FiberNode
+    currentFiberNode: FiberNode,
+    renderTag: string
 }
 
 

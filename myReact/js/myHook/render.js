@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateRender = exports.render = void 0;
+exports.resetFiber = exports.updateRender = exports.render = void 0;
 const GlobalFiber_1 = require("./GlobalFiber");
 const createFiberTree_1 = require("../myJsx/createFiberTree");
 //! render分为2部分  render阶段 - commit阶段  最后unmount
@@ -16,18 +16,6 @@ function renderPart(functionComponent) {
 //! 赋值虚拟节点的属性给fiberNode
 //! 注意 这里生成的fiberTree总树不包括app节点  需要调整
 function createRootFiberTree(newFiber, functionComponent) {
-    const rootFiber = {
-        memorizedState: null,
-        stateNode: () => { },
-        updateQueue: null,
-        fiberFlags: 'mount',
-        hasRef: false,
-        ref: null,
-        children: [],
-        props: null,
-        tag: functionComponent.name,
-        text: null,
-    };
     GlobalFiber_1.fiber.stateNode = functionComponent; // 挂载组件到fiber上
     GlobalFiber_1.fiber.children = [newFiber];
     GlobalFiber_1.fiber.tag = functionComponent.name;
@@ -45,6 +33,7 @@ function commitPart(rootDom) {
     } //删除之前的dom
     rootDom.appendChild(html); //添加渲染好的dom
     //todo  layout阶段  调用Effects链表 执行create函数()
+    //! 这里需要找到当前有updateQueue的Fiber
     let destoryEffectsArr = [];
     if (GlobalFiber_1.fiber.updateQueue !== null) {
         const createEffectsArr = createCallbackQueue();
@@ -141,8 +130,7 @@ const createHtml = (fiberTree) => {
 //todo  清空上一次执行完的updateQueue 重置HookIndex 执行distory函数数组
 function unmountPart(destoryEffectsArr) {
     doDestoryQueue(destoryEffectsArr);
-    GlobalFiber_1.fiber.updateQueue = null;
-    GlobalFiber_1.global.hookIndex = 0;
+    resetFiber(GlobalFiber_1.fiber);
 }
 //todo -----在unmounted时执行destorys数组
 function doDestoryQueue(destoryEffectsArr) {
@@ -153,6 +141,17 @@ function doDestoryQueue(destoryEffectsArr) {
         }
     }
 }
+//todo ----遍历清空fiber树上的hookIndex 和 queue
+function resetFiber(fiberTree) {
+    fiberTree.hookIndex = 0;
+    fiberTree.updateQueue = null;
+    if (fiberTree.children.length !== 0) {
+        fiberTree.children.forEach((fiber) => {
+            resetFiber(fiber);
+        });
+    }
+}
+exports.resetFiber = resetFiber;
 //!--------------Render方法-------------------
 function render(functionComponent, rootDom) {
     console.log('------------render-------------');
@@ -164,22 +163,26 @@ function render(functionComponent, rootDom) {
 exports.render = render;
 //  !-----------updateRender方法--------------------------
 //!---------------updateFiberTree()-------------------------
-function updateFiberTree(fiberTree) {
-    //todo 在这里同样要将currentFiber赋值  告诉流程哪个fiber正在进行
-    GlobalFiber_1.global.currentFiberNode = fiberTree;
-    if (typeof fiberTree.stateNode === 'function') {
-        fiberTree.stateNode();
-    }
-    if (fiberTree.children.length !== 0) {
-        fiberTree.children.forEach((fiber) => {
-            updateFiberTree(fiber);
-        });
-    }
-}
+// function updateFiberTree(fiberTree: FiberNode) {
+//     //todo 在这里同样要将currentFiber赋值  告诉流程哪个fiber正在进行
+//     global.currentFiberNode = fiberTree
+//     if (typeof fiberTree.stateNode === 'function') {
+//         fiberTree.stateNode()
+//     }
+//     if (fiberTree.children.length !== 0) {
+//         fiberTree.children.forEach((fiber) => {
+//             updateFiberTree(fiber)
+//         })
+//     }
+// }
 function updateRender(functionComponent, rootDom) {
-    console.log('------------updateRender-------------');
-    //todo 获取上一次的fiberTree 执行所有打上tag的functionComponent进行state更新 再commit   
-    updateFiberTree(GlobalFiber_1.fiber);
+    GlobalFiber_1.global.renderTag = 'update';
+    const html = functionComponent(); // 执行App 获取html模板
+    const fiberTree = (0, createFiberTree_1.updateFiberTree)(html); //根据模板渲染子fiberTree
+    GlobalFiber_1.fiber.children = fiberTree; //! 将更新后的子fiberTree挂载到App
+    createRootFiberTree(fiberTree, functionComponent); //!根据子FiberTree生成根fiberTree
+    GlobalFiber_1.fiber.fiberFlags = 'update'; //render阶段结束fiber的状态由mount为update
+    // //todo 获取上一次的fiberTree 执行所有打上tag的functionComponent进行state更新 再commit   
     const destoryEffectsArr = commitPart(rootDom); //todo commit阶段
     unmountPart(destoryEffectsArr); //todo unmount阶段
 }

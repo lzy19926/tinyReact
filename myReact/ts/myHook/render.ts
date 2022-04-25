@@ -1,5 +1,5 @@
 import { fiber, global } from './GlobalFiber'
-import { createFiberTree } from '../myJsx/createFiberTree'
+import { createFiberTree, updateFiberTree } from '../myJsx/createFiberTree'
 import { Effect, FiberNode } from './Interface'
 
 
@@ -10,6 +10,7 @@ import { Effect, FiberNode } from './Interface'
 function renderPart(functionComponent: Function) {
 
     const html = functionComponent() // 执行App 获取html模板
+
 
     const fiberTree = createFiberTree(html)//根据模板渲染子fiberTree
 
@@ -23,19 +24,6 @@ function renderPart(functionComponent: Function) {
 //! 赋值虚拟节点的属性给fiberNode
 //! 注意 这里生成的fiberTree总树不包括app节点  需要调整
 function createRootFiberTree(newFiber: FiberNode, functionComponent: Function) {
-
-    const rootFiber: FiberNode = {
-        memorizedState: null,// fiber上的所有hook链表(正在执行的hook会进入workInProgressHook)
-        stateNode: () => { },    // 对应的函数组件
-        updateQueue: null, // Effects的更新链表
-        fiberFlags: 'mount',// fiber的生命周期 判断是否初始化
-        hasRef: false,//ref相关tag
-        ref: null,
-        children: [],
-        props: null,
-        tag: functionComponent.name,
-        text: null,
-    }
 
     fiber.stateNode = functionComponent // 挂载组件到fiber上
     fiber.children = [newFiber]
@@ -51,6 +39,7 @@ function createRootFiberTree(newFiber: FiberNode, functionComponent: Function) {
 //! before 前置处理  mutation 渲染dom节点   layout  处理useEffect useLayoutEffect
 function commitPart(rootDom: any) {
 
+
     console.log('本次commit的fiber', fiber);
 
     //todo  mutation阶段
@@ -62,6 +51,10 @@ function commitPart(rootDom: any) {
 
 
     //todo  layout阶段  调用Effects链表 执行create函数()
+    //! 这里需要找到当前有updateQueue的Fiber
+    
+
+
     let destoryEffectsArr: Effect[] = []
     if (fiber.updateQueue !== null) {
         const createEffectsArr = createCallbackQueue()
@@ -129,6 +122,7 @@ function appendDom(fiber: any, container: any) {
 
     //todo 如果是小写 判断为html标签  填充文本 处理属性
     const dom = document.createElement(fiber.tag)
+
     handleProps(fiber, dom)
     if (fiber.text) {
         dom.innerHTML = fiber.text
@@ -189,8 +183,7 @@ const createHtml = (fiberTree: any) => {
 //todo  清空上一次执行完的updateQueue 重置HookIndex 执行distory函数数组
 function unmountPart(destoryEffectsArr: Effect[]) {
     doDestoryQueue(destoryEffectsArr)
-    fiber.updateQueue = null
-    global.hookIndex = 0
+    resetFiber(fiber)
 }
 
 //todo -----在unmounted时执行destorys数组
@@ -198,6 +191,17 @@ function doDestoryQueue(destoryEffectsArr: Effect[]) {
     for (let i = 0; i < destoryEffectsArr.length; i++) {
         const destory = destoryEffectsArr[i].destory
         if (destory) { destory() }
+    }
+}
+
+//todo ----遍历清空fiber树上的hookIndex 和 queue
+function resetFiber(fiberTree: FiberNode) {
+    fiberTree.hookIndex = 0
+    fiberTree.updateQueue = null
+    if (fiberTree.children.length !== 0) {
+        fiberTree.children.forEach((fiber) => {
+            resetFiber(fiber)
+        })
     }
 }
 
@@ -219,25 +223,40 @@ function render(functionComponent: Function, rootDom: any): any {
 
 //  !-----------updateRender方法--------------------------
 //!---------------updateFiberTree()-------------------------
-function updateFiberTree(fiberTree: FiberNode) {
-    //todo 在这里同样要将currentFiber赋值  告诉流程哪个fiber正在进行
-    global.currentFiberNode = fiberTree
+// function updateFiberTree(fiberTree: FiberNode) {
+//     //todo 在这里同样要将currentFiber赋值  告诉流程哪个fiber正在进行
+//     global.currentFiberNode = fiberTree
 
-    if (typeof fiberTree.stateNode === 'function') {
-        fiberTree.stateNode()
-    }
-    if (fiberTree.children.length !== 0) {
-        fiberTree.children.forEach((fiber) => {
-            updateFiberTree(fiber)
-        })
-    }
-}
+//     if (typeof fiberTree.stateNode === 'function') {
+//         fiberTree.stateNode()
+//     }
+//     if (fiberTree.children.length !== 0) {
+//         fiberTree.children.forEach((fiber) => {
+//             updateFiberTree(fiber)
+//         })
+//     }
+// }
+
+
+
+
 function updateRender(functionComponent: Function, rootDom: any): any {
-    console.log('------------updateRender-------------');
 
-    //todo 获取上一次的fiberTree 执行所有打上tag的functionComponent进行state更新 再commit   
+    global.renderTag = 'update'
 
-    updateFiberTree(fiber)
+    const html = functionComponent() // 执行App 获取html模板
+
+    const fiberTree = updateFiberTree(html)//根据模板渲染子fiberTree
+
+    fiber.children = fiberTree//! 将更新后的子fiberTree挂载到App
+
+    createRootFiberTree(fiberTree, functionComponent) //!根据子FiberTree生成根fiberTree
+
+    fiber.fiberFlags = 'update'//render阶段结束fiber的状态由mount为update
+
+    // //todo 获取上一次的fiberTree 执行所有打上tag的functionComponent进行state更新 再commit   
+
+
 
     const destoryEffectsArr = commitPart(rootDom)//todo commit阶段
 
@@ -247,4 +266,4 @@ function updateRender(functionComponent: Function, rootDom: any): any {
 }
 
 
-export { render, updateRender } 
+export { render, updateRender, resetFiber } 

@@ -7,7 +7,6 @@ import { myUseState } from '../myReact/js/myHook/useState'
 
 function Test() {
   const [num, setNum] = myUseState(0)
-
   function addNum() {
     setNum(num + 1)
   }
@@ -21,9 +20,7 @@ window.$$Test = Test
 
 function App() {
   return (`
-  <div>
-  <Test></Test>
-  </div>
+  <Demo></Demo>
     `)
 }
 

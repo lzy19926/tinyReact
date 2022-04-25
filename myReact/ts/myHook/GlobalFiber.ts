@@ -16,29 +16,29 @@ let fiber: FiberNode = {
     props: null,
     tag: null,
     text: null,
+    hookIndex: 0 // 用于记录hook的数量 以便查找
 }
-
-
 
 
 //! -----需要使用的全局变量---------------
 const global: Global = {
     workInProgressHook: { currentHook: null },//React中使用链表来保存hooks 挂在全局
-    hookIndex: 0,//用于更新hook时找到对应的hook
-    currentFiberNode:fiber
+    currentFiberNode: fiber,
+    renderTag: 'mount' // 用于判断是否是首次更新
 }
 
 
 //! ----------拿取需要本次update需要更新的hook----------------------
-function updateWorkInProgressHook(index: number) {
+function updateWorkInProgressHook(fiber: FiberNode) {
 
+    let index = fiber.hookIndex
     let currentHook = fiber.memorizedState
 
     while (currentHook && currentHook.index != index) {
         currentHook = currentHook.next
     }
     // 因为链表是按顺序的 所以这个函数每执行一次就新增一个
-    global.hookIndex += 1
+    fiber.hookIndex += 1
     return currentHook
 }
 

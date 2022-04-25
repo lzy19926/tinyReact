@@ -2,14 +2,13 @@
 
 // 类型声明
 import { StateUpdater, UseStateHook } from './Interface'
-import { render, updateRender } from './render'
+import { render, updateRender, resetFiber } from './render'
 // 全局变量和当前 Fiber
 import { fiber, global, updateWorkInProgressHook } from './GlobalFiber'
 
 //! ---------------useState返回的updater方法(updateState方法)-------------------
 function dispatchAction(queue: any, newVal?: any, action?: Function) {
-    // const fiber = global.currentFiberNode//! 测试
-    console.log(global.currentFiberNode);
+
 
     //创建updater环链表
     const updater: StateUpdater = {
@@ -29,10 +28,8 @@ function dispatchAction(queue: any, newVal?: any, action?: Function) {
 
     //! 重新render组件  这里需要调用unmount生命周期钩子
     //! 源码中使用切换fiber树的方式执行重新渲染 不需要执行生命周期(处理fiber树时变相执行了unmount阶段)
-    // fiber.updateQueue = null
-    global.hookIndex = 0
 
-
+    resetFiber(fiber)
     //todo 多个setState会触发多个render  实际上会将多个setState合并执行
     updateRender(fiber.stateNode, fiber.ref)
 }
@@ -67,10 +64,8 @@ function createHook(initialState: any) {
 //! 更新该Hook的memorizedState-----------------------------
 function updateUseStateHook(hook: UseStateHook) {
 
-
     // 取出更新链表上的最后一个state
     let baseState = hook.memorizedState
-
     //pending保存了链表最后一项   next就指向第一个update
     if (hook.updateStateQueue.pending) {
         let firstUpdate = hook.updateStateQueue.pending.next;
@@ -98,11 +93,8 @@ function updateUseStateHook(hook: UseStateHook) {
 //! ----------执行useState会执行state的计算过程----------------
 function myUseState(initialState: any) {
 
-
     //todo  需要找到当前的fiber节点()
-    console.log('当前工作的fiber节点', global.currentFiberNode);
     let fiber = global.currentFiberNode
-
 
     //取出当前hook 如果是mount阶段就创建一个hook(初始值为initState)
     let hook;
@@ -110,18 +102,15 @@ function myUseState(initialState: any) {
         hook = createHook(initialState) //创建hook 添加到hook链表
     } else {
         // 更新情况 找到对应的hook
-        hook = updateWorkInProgressHook(global.hookIndex)
+        hook = updateWorkInProgressHook(fiber)
     }
-
-
-    console.log(hook);
-
 
 
     //todo 更新hook上保存的state
     const baseState = updateUseStateHook(hook)
     //todo 执行完useState 钩子状态变为update
     hook.hookFlags = 'update'
+
     //todo 返回最新的状态 和updateAction
     return [baseState, dispatchAction.bind(null, hook.updateStateQueue)]
 }

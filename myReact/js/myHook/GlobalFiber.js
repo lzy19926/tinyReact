@@ -14,23 +14,25 @@ let fiber = {
     props: null,
     tag: null,
     text: null,
+    hookIndex: 0 // 用于记录hook的数量 以便查找
 };
 exports.fiber = fiber;
 //! -----需要使用的全局变量---------------
 const global = {
     workInProgressHook: { currentHook: null },
-    hookIndex: 0,
-    currentFiberNode: fiber
+    currentFiberNode: fiber,
+    renderTag: 'mount' // 用于判断是否是首次更新
 };
 exports.global = global;
 //! ----------拿取需要本次update需要更新的hook----------------------
-function updateWorkInProgressHook(index) {
+function updateWorkInProgressHook(fiber) {
+    let index = fiber.hookIndex;
     let currentHook = fiber.memorizedState;
     while (currentHook && currentHook.index != index) {
         currentHook = currentHook.next;
     }
     // 因为链表是按顺序的 所以这个函数每执行一次就新增一个
-    global.hookIndex += 1;
+    fiber.hookIndex += 1;
     return currentHook;
 }
 exports.updateWorkInProgressHook = updateWorkInProgressHook;
