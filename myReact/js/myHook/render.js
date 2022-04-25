@@ -1,26 +1,36 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.render = void 0;
+exports.updateRender = exports.render = void 0;
 const GlobalFiber_1 = require("./GlobalFiber");
 const createFiberTree_1 = require("../myJsx/createFiberTree");
 //! render分为2部分  render阶段 - commit阶段  最后unmount
 //! ----------------模拟render部分------------------------
 //! 更改并生成fiber树  (结束后fiber由mount变为update)
 function renderPart(functionComponent) {
-    GlobalFiber_1.fiber.stateNode = functionComponent; // 挂载组件到fiber上
-    const app = functionComponent(); // 执行App 获取html模板
-    const fiberTree = (0, createFiberTree_1.createFiberTree)(app); //根据模板渲染fiberTree
-    resetFiber(fiberTree); //! 挂载更新好的fiberTree到全局
+    const html = functionComponent(); // 执行App 获取html模板
+    const fiberTree = (0, createFiberTree_1.createFiberTree)(html); //根据模板渲染子fiberTree
+    createRootFiberTree(fiberTree, functionComponent); //!根据子FiberTree生成根fiberTree
     GlobalFiber_1.fiber.fiberFlags = 'update'; //render阶段结束fiber的状态由mount为update
-    return app;
+    return html;
 }
 //! 赋值虚拟节点的属性给fiberNode
-function resetFiber(newFiber) {
-    const { children, props, tag, text } = newFiber;
-    GlobalFiber_1.fiber.children = children;
-    GlobalFiber_1.fiber.props = props;
-    GlobalFiber_1.fiber.tag = tag;
-    GlobalFiber_1.fiber.text = text;
+//! 注意 这里生成的fiberTree总树不包括app节点  需要调整
+function createRootFiberTree(newFiber, functionComponent) {
+    const rootFiber = {
+        memorizedState: null,
+        stateNode: () => { },
+        updateQueue: null,
+        fiberFlags: 'mount',
+        hasRef: false,
+        ref: null,
+        children: [],
+        props: null,
+        tag: functionComponent.name,
+        text: null,
+    };
+    GlobalFiber_1.fiber.stateNode = functionComponent; // 挂载组件到fiber上
+    GlobalFiber_1.fiber.children = [newFiber];
+    GlobalFiber_1.fiber.tag = functionComponent.name;
 }
 //! -----------------模拟Commit阶段-----------------------------
 //! 分为三部分  beforeMutation  mutation  layout阶段
@@ -106,7 +116,6 @@ function handleProps(curFiber, dom) {
         //todo  处理className
         switch (key) {
             case 'className':
-                console.log(value);
                 dom.setAttribute("class", value);
                 break;
             case 'onClick':
@@ -153,3 +162,25 @@ function render(functionComponent, rootDom) {
     return app;
 }
 exports.render = render;
+//  !-----------updateRender方法--------------------------
+//!---------------updateFiberTree()-------------------------
+function updateFiberTree(fiberTree) {
+    //todo 在这里同样要将currentFiber赋值  告诉流程哪个fiber正在进行
+    GlobalFiber_1.global.currentFiberNode = fiberTree;
+    if (typeof fiberTree.stateNode === 'function') {
+        fiberTree.stateNode();
+    }
+    if (fiberTree.children.length !== 0) {
+        fiberTree.children.forEach((fiber) => {
+            updateFiberTree(fiber);
+        });
+    }
+}
+function updateRender(functionComponent, rootDom) {
+    console.log('------------updateRender-------------');
+    //todo 获取上一次的fiberTree 执行所有打上tag的functionComponent进行state更新 再commit   
+    updateFiberTree(GlobalFiber_1.fiber);
+    const destoryEffectsArr = commitPart(rootDom); //todo commit阶段
+    unmountPart(destoryEffectsArr); //todo unmount阶段
+}
+exports.updateRender = updateRender;

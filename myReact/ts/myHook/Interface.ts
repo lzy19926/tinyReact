@@ -46,7 +46,8 @@ interface FiberNode {
 //!-------------全局需要的变量结构---------------
 interface Global {
     workInProgressHook: { currentHook: any },
-    hookIndex: number
+    hookIndex: number,
+    currentFiberNode: FiberNode
 }
 
 

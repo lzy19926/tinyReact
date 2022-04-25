@@ -19,7 +19,8 @@ exports.fiber = fiber;
 //! -----需要使用的全局变量---------------
 const global = {
     workInProgressHook: { currentHook: null },
-    hookIndex: 0 //用于更新hook时找到对应的hook
+    hookIndex: 0,
+    currentFiberNode: fiber
 };
 exports.global = global;
 //! ----------拿取需要本次update需要更新的hook----------------------

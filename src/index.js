@@ -1,4 +1,4 @@
-import { render } from '../myReact/js/myReact.dev'
+import { render } from '../myReact/js/myHook/render'
 import App from './App'
 
 // 渲染app

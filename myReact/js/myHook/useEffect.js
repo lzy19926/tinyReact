@@ -18,6 +18,7 @@ function mountEffect(fiberFlags, hookFlags, create, deps) {
 }
 //! --------创建一个Hook 形成环链表 添加到hook队列--------------
 function mountWorkInProgressHook() {
+    const fiber = GlobalFiber_1.global.currentFiberNode; //! 测试
     //todo 新建一个hook
     const newHook = {
         index: 0,
@@ -26,14 +27,14 @@ function mountWorkInProgressHook() {
         next: null
     };
     // 添加Hook进单向链表
-    if (GlobalFiber_1.fiber.memorizedState !== null) {
-        const lastHook = GlobalFiber_1.fiber.memorizedState;
+    if (fiber.memorizedState !== null) {
+        const lastHook = fiber.memorizedState;
         newHook.index = lastHook.index + 1;
         newHook.next = lastHook;
-        GlobalFiber_1.fiber.memorizedState = newHook;
+        fiber.memorizedState = newHook;
     }
     //接入hook到fiber上
-    GlobalFiber_1.fiber.memorizedState = newHook;
+    fiber.memorizedState = newHook;
     //接入hook到workProgress
     GlobalFiber_1.global.workInProgressHook.currentHook = newHook;
     return newHook;
@@ -80,6 +81,7 @@ function shallowCompareDeps(nextDeps, prveDeps) {
 }
 //! --------pushEffect创建/增加Effects更新链表---------------
 function pushEffect(tag, create, destory, deps) {
+    const fiber = GlobalFiber_1.global.currentFiberNode; //! 测试
     // 创建Effect 
     const effect = {
         tag,
@@ -90,13 +92,13 @@ function pushEffect(tag, create, destory, deps) {
     };
     //todo 如果Hook上没有更新链表  创建更新链表  如果有则插入一个effect到更新环链表尾部
     const updateQueue = { lastEffect: null };
-    if (GlobalFiber_1.fiber.updateQueue === null) {
+    if (fiber.updateQueue === null) {
         updateQueue.lastEffect = effect.next = effect; // 自身形成环状链表
         //更新fiber上的updateQueue环链表
-        GlobalFiber_1.fiber.updateQueue = updateQueue;
+        fiber.updateQueue = updateQueue;
     }
     else {
-        const lastEffect = GlobalFiber_1.fiber.updateQueue.lastEffect;
+        const lastEffect = fiber.updateQueue.lastEffect;
         if (lastEffect === null) { //todo 有链表结构但是链表为空
             updateQueue.lastEffect = effect.next = effect; // 自身形成环状链表
         }
@@ -106,7 +108,7 @@ function pushEffect(tag, create, destory, deps) {
             effect.next = firstEffect;
             updateQueue.lastEffect = effect; //此时环链表上的最后一项就是effect
             //更新fiber上的updateQueue环链表
-            GlobalFiber_1.fiber.updateQueue = updateQueue;
+            fiber.updateQueue = updateQueue;
         }
     }
     //todo 返回这个Effect 会被赋值给hook.memorizedState(最后一次更新的状态)
@@ -115,13 +117,14 @@ function pushEffect(tag, create, destory, deps) {
 //!------------useEffect主体--------------
 function myUseEffect(create, deps) {
     const nextDeps = deps === undefined ? null : deps;
+    const fiber = GlobalFiber_1.global.currentFiberNode; //! 测试
     // 第一次useEffect执行mountEffect
-    if (GlobalFiber_1.fiber.fiberFlags === 'mount') {
+    if (fiber.fiberFlags === 'mount') {
         const hookFlags = 'mount';
         mountEffect('mount', hookFlags, create, nextDeps);
         // 后续useEffect执行updateEffect
     }
-    else if (GlobalFiber_1.fiber.fiberFlags === 'update') {
+    else if (fiber.fiberFlags === 'update') {
         const hookFlags = 'update';
         updateEffect('update', hookFlags, create, nextDeps);
     }

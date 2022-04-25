@@ -1,4 +1,5 @@
-import { myUseEffect, myUseState } from '../../myReact/js/myReact.dev'
+import {myUseEffect} from '../../myReact/js/myHook/useEffect'
+import {myUseState} from '../../myReact/js/myHook/useState'
 
 
 //! 使用说明: 支持onclick事件绑定  渲染子组件  className设置  map渲染列表

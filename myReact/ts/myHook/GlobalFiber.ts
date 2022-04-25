@@ -24,7 +24,8 @@ let fiber: FiberNode = {
 //! -----需要使用的全局变量---------------
 const global: Global = {
     workInProgressHook: { currentHook: null },//React中使用链表来保存hooks 挂在全局
-    hookIndex: 0//用于更新hook时找到对应的hook
+    hookIndex: 0,//用于更新hook时找到对应的hook
+    currentFiberNode:fiber
 }
 
 
