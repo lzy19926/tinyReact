@@ -23,11 +23,9 @@ function App() {
   return (`
   <div>
   <LayuiPage></LayuiPage>
-  <Demo></Demo>
   </div>
     `)
 }
-
 
 
 export default App

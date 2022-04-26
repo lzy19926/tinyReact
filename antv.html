@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,height=device-height">
+    <title>基础柱状图</title>
+    <style>
+        ::-webkit-scrollbar {
+            display: none;
+        }
+
+        html,
+        body {
+            overflow: hidden;
+            height: 100%;
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="mountNode"></div>
+    <script>/*Fixing iframe window.innerHeight 0 issue in Safari*/document.body.clientHeight;</script>
+    <script src="https://gw.alipayobjects.com/os/antv/pkg/_antv.g2-3.5.1/dist/g2.min.js"></script>
+    <script src="https://gw.alipayobjects.com/os/antv/pkg/_antv.data-set-0.10.1/dist/data-set.min.js"></script>
+    <script>
+
+
+
+
+        var data = [{
+            version: '伏羲v0.1',
+            day: 16
+        }, {
+            version: '伏羲v0.2',
+            day: 12.5
+        }, {
+            version: '伏羲v0.3',
+            day: 24
+        }];
+
+        // 基本属性配置
+        var chart = new G2.Chart({
+            container: 'mountNode',
+            forceFit: true,
+            height: 400,
+            padding: [20, 20, 60, 60],
+        });
+
+        chart.source(data);
+
+        // 对应字段数据配置
+        chart.scale('day', {
+            alias: '需求设计平均周期时间:',//别名(用于tiptool的显示)
+            formatter: (val) => {
+                return val + '天'
+            }, // 格式化文本内容
+        });
+
+        // 对应字段坐标轴配置
+        chart.axis('version', {
+            label: {
+                textStyle: {
+                    fill: '#aaaaaa',
+                }
+            },
+        });
+
+        chart.axis('day', {
+            label: {
+                textStyle: {
+                    fill: '#aaaaaa'
+                },
+                formatter: function formatter(val) {
+                    return String(parseFloat(val)) + '天';
+                }
+            },
+        });
+
+        chart.legend(false) // 配置图例
+
+        //进行图表绘制 (注意alies在配置了color后会被覆盖)
+        chart.interval().position('version*day').color('version', (val) => {
+            return 'red'//修改柱子颜色
+        });
+
+
+        //平均值线绘制
+        function countAverage(data) {
+            let sum = 0
+            data.forEach((item) => {
+                sum += item.day
+            })
+            return (sum / data.length).toFixed(1) - 0
+        }
+        const average = countAverage(data)
+        chart.guide().line({
+            start: ['伏羲v0.1', average],
+            end: ['伏羲v0.8', average],
+            text: {
+                position: 'end',
+                autoRotate: false,
+                content: '平均值:' + average + '天',
+                style: {
+                    textAlign: 'end'
+                }
+            }
+        });
+
+
+        chart.render();
+
+    </script>
+</body>
+<style>
+    //在这里配置tooltip的样式
+    .g2-tooltip {
+        background-color: rgba(0, 0, 0, .8) !important;
+        color: #fff !important;
+    }
+</style>
+
+</html>

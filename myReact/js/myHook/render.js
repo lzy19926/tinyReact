@@ -7,11 +7,20 @@ const createFiberTree_1 = require("../myJsx/createFiberTree");
 //! ----------------模拟render部分------------------------
 //! 更改并生成fiber树  (结束后fiber由mount变为update)
 function renderPart(functionComponent) {
-    const html = functionComponent(); // 执行App 获取html模板
-    const fiberTree = (0, createFiberTree_1.createFiberTree)(html); //根据模板渲染子fiberTree
+    //todo根据组件构建fiberTree
+    const fiberTree = (0, createFiberTree_1.createFiberTree)(functionComponent);
     createRootFiberTree(fiberTree, functionComponent); //!根据子FiberTree生成根fiberTree
-    GlobalFiber_1.fiber.fiberFlags = 'update'; //render阶段结束fiber的状态由mount为update
-    return html;
+}
+//todo 获取上一次的fiberTree 执行所有打上tag的functionComponent进行state更新 再commit   
+function updateRenderPart(functionComponent) {
+    // 改变tag
+    GlobalFiber_1.global.renderTag = 'update';
+    // 执行App 获取html模板
+    const html = functionComponent();
+    //根据模板渲染子fiberTree
+    const childFiberTree = (0, createFiberTree_1.updateFiberTree)(html);
+    //根据子FiberTree生成根fiberTree
+    createRootFiberTree(childFiberTree, functionComponent);
 }
 //! 赋值虚拟节点的属性给fiberNode
 //! 注意 这里生成的fiberTree总树不包括app节点  需要调整
@@ -19,6 +28,7 @@ function createRootFiberTree(newFiber, functionComponent) {
     GlobalFiber_1.fiber.stateNode = functionComponent; // 挂载组件到fiber上
     GlobalFiber_1.fiber.children = [newFiber];
     GlobalFiber_1.fiber.tag = functionComponent.name;
+    GlobalFiber_1.fiber.fiberFlags = 'update'; //render阶段结束fiber的状态由mount为update
 }
 //! -----------------模拟Commit阶段-----------------------------
 //! 分为三部分  beforeMutation  mutation  layout阶段
@@ -189,15 +199,12 @@ function render(functionComponent, rootDom) {
     return app;
 }
 exports.render = render;
-//  !-----------updateRender方法(未完成)--------------------------
+//!-----------updateRender方法--------------------------
 function updateRender(functionComponent, rootDom) {
-    GlobalFiber_1.global.renderTag = 'update';
-    const html = functionComponent(); // 执行App 获取html模板
-    const fiberTree = (0, createFiberTree_1.updateFiberTree)(html); //根据模板渲染子fiberTree
-    GlobalFiber_1.fiber.children = fiberTree; //! 将更新后的子fiberTree挂载到App
-    createRootFiberTree(fiberTree, functionComponent); //!根据子FiberTree生成根fiberTree
-    // //todo 获取上一次的fiberTree 执行所有打上tag的functionComponent进行state更新 再commit   
+    console.log('------------updateRender-------------');
+    const app = updateRenderPart(functionComponent);
     commitPart(rootDom); //todo commit阶段
     unmountPart(); //todo unmount阶段
+    return app;
 }
 exports.updateRender = updateRender;

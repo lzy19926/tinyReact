@@ -1,4 +1,4 @@
-
+import { fiber } from '../myHook/GlobalFiber'
 
 //! 字符串扫描解析器
 class Scanner {
@@ -60,6 +60,65 @@ class Scanner {
     }
 }
 
+
+//! 拆分html中的属性  (键值对)
+function propsParser(propsStr: string) {
+
+    const propsArr = propsStr.trim().split(' ')//["id='root'", "class='btn1'"]
+
+    const props: any = {};
+
+    //! 将拆分好的kv数组转换成键值对放入props
+    propsArr.forEach(str => {
+
+        if (str.length > 3) {//!过滤空格和换行
+
+            //todo 解析key
+            const scanner = new Scanner(str);
+
+            let key = scanner.scanUntil('=');
+
+            const spaceIdx = key.indexOf(' ');
+
+            if (spaceIdx !== -1) {
+                const keys = key.replace(/\s+/g, ' ').split(' ');
+
+                const len = keys.length;
+                for (let i = 0; i < len - 1; i++) {
+                    props[keys[i]] = true;
+                }
+                key = keys[len - 1].trim();
+            }
+
+            scanner.scan("=");//! 略过=符号  从下一位开始
+
+            //! 同时解析" 和 ' 中的value    (不能使用三元 会执行扫描)
+            let val = scanner.scanUntil('"')
+            if (val === '') {
+                val = scanner.scanUntil("'")
+            }
+            //todo 普通属性value解析
+            if (val[0] === "'" || val[0] === '"') {
+                val = val.slice(1, val.length - 1); //去除多余的引号
+            }
+            //todo {{}}语法解析 获取挂载的方法 放入props
+            if (val[0] === '{' && val[1] === '{') {
+                val = val.slice(2, val.length - 2)
+                val = window['$' + val]
+            }
+
+
+            props[key] = val || true;
+            scanner.scan('"');
+
+        }
+
+
+
+    });
+
+    return props;
+}
 
 //! 拆分html中的事件  (键值对)
 function eventParser(html: string) {
@@ -173,6 +232,8 @@ function collectTokens(html: string) {
                 tokens.push(['#', word, { ...event, ...props },]);
             } else {
                 // 解析属性
+                const propsStr = word.slice(firstSpaceIdx)
+                // const data = propsParser(propsStr) || {}
                 tokens.push(['#', word.slice(0, firstSpaceIdx), { ...event, ...props }]);
             }
         }
@@ -259,15 +320,142 @@ function tokens2vdom(tokens: any) {
 }
 
 
-//! 总和方法 转换html模板为虚拟dom
-function tplToVDOM(html: string) {
-    const tokensArr = collectTokens(html)
-    const tokensTree = nestTokens(tokensArr)
-    const vdom = tokens2vdom(tokensTree);
-    return vdom;
+
+
+//! 创建fiberNode树(Vnode树)
+//! 深度优先遍历vnode树  包装成fiberNode
+function creatFiberNode(vnode: any) {
+
+    //todo 从vnode中解构出需要的值
+    let { children = [], props, tag, text } = vnode
+
+    //todo 创建新fiberNode
+    const fiberNode = {
+        memorizedState: null,// fiber上的所有hook链表(正在执行的hook会进入workInProgressHook)
+        stateNode: () => { },    // 对应的函数组件
+        updateQueue: null,  // Effects的更新链表
+        fiberFlags: global.renderTag === 'mount' ? 'mount' : 'update',// fiber的生命周期tag 判断是否初始化
+        hasRef: false,//ref相关tag
+        ref: null,
+        children,
+        props,
+        tag,
+        text,
+        hookIndex: 0
+    }
+    //todo 当前正在工作的fiber节点
+    global.currentFiberNode = fiberNode
+
+    //解析单标签  暂定
+    if (tag[tag.length - 1] == '/') {
+        tag = tag.slice(0, tag.length - 1)
+        fiberNode.tag = tag
+    }
+
+    //TODO -----------如果tag大写 解析为组件(此时无children) ----------------
+    if (tag[0] == tag[0].toUpperCase()) {
+        fiberNode.stateNode = window['$$' + tag]
+        const html: any = fiberNode.stateNode()
+        const childVnode = tplToVDOM(html)
+        children.unshift(childVnode)
+    }
+
+    //TODO ------------单fiber节点处理结束  更改flag
+    fiberNode.fiberFlags = 'update'
+
+    //todo 如果有children 深度优先遍历  包装成fiberNode
+    if (children) {
+        for (let i = 0; i < children.length; i++) {
+            const vnode = children[i]
+            fiberNode.children[i] = creatFiberNode(vnode)
+        }
+    }
+
+    return fiberNode
 }
 
 
 
-export { tplToVDOM }
+
+//! 总和方法 转换函数组件为FiberTree
+function fcToFiber(functionComponent: Function) {
+
+    //生成vnode
+    const html = functionComponent()
+    const tokensArr = collectTokens(html)
+    
+    const tokensTree = nestTokens(tokensArr)
+    const vnode = tokens2vdom(tokensTree);
+
+    //合并
+    const { children = [], props, tag, text } = vnode
+    fiber.props = props
+    fiber.tag = tag
+    fiber.text = text
+
+    //TODO -----------如果tag大写 解析为组件(此时无children) ----------------
+    if (tag[0] === tag[0].toUpperCase()) {
+        console.log('tag大写');
+        const fc = window['$$' + tag]
+        fiber.stateNode = fc
+        const childFiber = fcToFiber(fc)
+        fiber.children = [childFiber]
+    }
+
+    //TODO ------------单fiber节点处理结束  更改flag
+    fiber.fiberFlags = 'update'
+
+    //todo 如果有children 深度优先遍历  包装成fiberNode 挂到当前节点
+    if (children) {
+        for (let i = 0; i < children.length; i++) {
+            const vnode = children[i]
+            fiber.children[i] = creatFiberNode(vnode)
+        }
+    }
+
+
+
+    return fiber;
+}
+
+
+
+
+
+function creatFiberTree2(functionComponent: Function) {
+    const htmlStr = functionComponent()
+    const vnode = tplToVDOM(htmlStr)
+    const fiber = creatFiberNode(vnode)
+
+    //合并
+    const { children = [], props, tag, text } = vnode
+    fiber.props = props
+    fiber.tag = tag
+    fiber.text = text
+
+
+    //TODO -----------如果tag大写 解析为组件(此时无children) ----------------
+    if (tag[0] === tag[0].toUpperCase()) {
+        console.log('tag大写');
+        const fc = window['$$' + tag]
+        fiber.stateNode = fc
+        const childFiber = creatFiberTree2(fc)
+        fiber.children = [childFiber]
+    }
+
+    //TODO ------------单fiber节点处理结束  更改flag
+    fiber.fiberFlags = 'update'
+
+    //todo 如果有children 深度优先遍历  包装成fiberNode 挂到当前节点
+    if (children) {
+        for (let i = 0; i < children.length; i++) {
+            const vnode = children[i]
+            fiber.children[i] = creatFiberNode(vnode)
+        }
+    }
+
+    return fiber
+
+}
+
 

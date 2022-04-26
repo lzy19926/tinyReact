@@ -1,102 +1,145 @@
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <title>测试 - layui</title>
-  <link rel="stylesheet" href="layui/css/layui.css">
-</head>
-<body>
-
-<div class="layui-container">
-  <div class="layui-progress" style="margin: 15px 0 30px;">
-    <div class="layui-progress-bar" lay-percent="100%"></div>
-  </div>
-  
-  
-  <div class="layui-btn-container">
-    <button class="layui-btn" test-active="test-form">一个按钮</button>
-    <button class="layui-btn layui-btn-normal" id="test2">当前日期</button>
-  </div>
-  
-  <blockquote class="layui-elem-quote" style="margin-top: 30px;">
-    <div class="layui-text">
-      <ul>
-        <li>你当前预览的是：<span>layui-v<span id="version"></span></span></li>
-        <li>layui 是一套开源的 Web UI（界面）组件库。这是一个极其简洁的演示页面</li>
-      </ul>
-    </div>
-  </blockquote>
-</div>
-
-
-
-<!-- 引入 layui.js 的 <script> 标签最好放置在 html 末尾 -->
-<script src="layui/layui.js"></script>
-<script>
-layui.use(function(){
-  var layer = layui.layer
-  ,form = layui.form
-  ,laypage = layui.laypage
-  ,element = layui.element
-  ,laydate = layui.laydate
-  ,util = layui.util;
-  
-  //欢迎信息
-  layer.msg('Hello World');
-  
-  //输出版本号
-  lay('#version').html(layui.v);
-  
-  //日期
-  laydate.render({
-    elem: '#test2'
-    ,value: new Date()
-    ,isInitValue: true
-  });
-  
-  //触发事件
-  util.event('test-active', {
-    'test-form': function(){
-      layer.open({
-        type: 1
-        ,resize: false
-        ,shadeClose: true
-        ,area: '350px'
-        ,title: 'layer + form'
-        ,content: ['<ul class="layui-form layui-form-pane" style="margin: 15px;">'
-          ,'<li class="layui-form-item">'
-            ,'<label class="layui-form-label">输入框</label>'
-            ,'<div class="layui-input-block">'
-              ,'<input class="layui-input" lay-verify="required" name="field1">'
-            ,'</div>'
-          ,'</li>'
-          ,'<li class="layui-form-item">'
-            ,'<label class="layui-form-label">选择框</label>'
-            ,'<div class="layui-input-block">'
-              ,'<select name="field2">'
-                ,'<option value="A">A</option>'
-                ,'<option value="B">B</option>'
-              ,'<select>'
-            ,'</div>'
-          ,'</li>'
-          ,'<li class="layui-form-item" style="text-align:center;">'
-            ,'<button type="submit" lay-submit lay-filter="*" class="layui-btn">提交</button>'
-          ,'</li>'
-        ,'</ul>'].join('')
-        ,success: function(layero, index){
-          layero.find('.layui-layer-content').css('overflow', 'visible');
-          
-          form.render().on('submit(*)', function(data){
-            layer.msg(JSON.stringify(data.field), {icon: 1});
-            //layer.close(index); //关闭层
-          });
-        }
-      });
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,height=device-height">
+  <title>Netflix 公司市值增长</title>
+  <style>
+    ::-webkit-scrollbar {
+      display: none;
     }
-  });
-});
-</script>
+
+    html,
+    body {
+      overflow: hidden;
+      height: 100%;
+      margin: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="mountNode"></div>
+  <script>/*Fixing iframe window.innerHeight 0 issue in Safari*/document.body.clientHeight;</script>
+  <script src="https://gw.alipayobjects.com/os/antv/pkg/_antv.g2-3.5.1/dist/g2.min.js"></script>
+  <script src="https://gw.alipayobjects.com/os/antv/pkg/_antv.data-set-0.10.1/dist/data-set.min.js"></script>
+  <script src="https://gw.alipayobjects.com/os/antv/assets/lib/jquery-3.2.1.min.js"></script>
+  <script>
+
+
+    var data = [{
+      version: '伏羲v0.1',
+      day: 16
+    }, {
+      version: '伏羲v0.2',
+      day: 12.5
+    }, {
+      version: '伏羲v0.3',
+      day: 24
+    }, {
+      version: '伏羲v0.4',
+      day: 19
+    }, {
+      version: '伏羲v0.5',
+      day: 22
+    }, {
+      version: '伏羲v0.6',
+      day: 5
+    }, {
+      version: '伏羲v0.7',
+      day: 3
+    }, {
+      version: '伏羲v0.8',
+      day: 4.5
+    }];
+
+    var chart = new G2.Chart({
+      container: 'mountNode',
+      forceFit: true,
+      height: 600,
+      padding: [20, 20, 60, 60],
+      theme: 'default'
+    });
+
+
+
+
+
+
+
+    // 对应字段数据配置
+    chart.scale('day', {
+      alias: '需求设计平均周期时间:',//别名
+      formatter: (val) => {
+        return val + '天'
+      }, // 格式化文本内容
+    });
+
+
+    // 对应字段坐标轴配置
+    chart.axis('version', {
+      label: {
+        textStyle: {
+          fill: '#aaaaaa'
+        }
+      },
+      tickLine: {
+        alignWithLabel: false,
+        length: 0
+      }
+    });
+
+    chart.axis('day', {
+      label: {
+        textStyle: {
+          fill: '#aaaaaa'
+        },
+        formatter: function formatter(val) {
+          return String(parseFloat(val)) + '天';
+        }
+      },
+    });
+
+
+    // 配置鼠标hover提示信息 html
+    chart.tooltip({})
+
+    // chart.guide().line({
+    //   start: ['伏羲v0.1', 16],
+    //   end: ['伏羲v0.8', 16],
+    //   text: {
+    //     position: 'end',
+    //     autoRotate: false,
+    //     content: '价格均值:',
+    //     style: {
+    //       textAlign: 'end'
+    //     }
+    //   }
+    // });
+
+    var view1 = chart.view();
+    view1.source(data);
+    view1.interval().position('version*day').opacity(1);
+
+
+
+    // 配置平均线
+
+
+
+
+
+    chart.render();
+  </script>
 </body>
+
+
+<style>
+  .g2-tooltip {
+    background-color: rgba(0, 0, 0, .8) !important;
+    color: #fff !important;
+  }
+</style>
+
 </html>

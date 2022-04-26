@@ -1,35 +1,77 @@
 import { tplToVDOM } from "./tplToVnode";
 import { fiber, global } from '../myHook/GlobalFiber'
-import { FiberNode } from "../myHook/Interface";
 
 
 
 //! 创建fiberNode树(Vnode树)
 //! 深度优先遍历vnode树  包装成fiberNode
-//! 根据fiberNode和FunctionComponent创建FiberNode 生成Fiber树
-function createFiberTree(source: any) {
+function creatFiberNode(vnode: any) {
 
-    //todo 创建一个新的fiber节点 
-    let newFiberNode: FiberNode = {
+    //todo 从vnode中解构出需要的值
+    let { children = [], props, tag, text } = vnode
+
+    //todo 创建新fiberNode
+    const fiberNode = {
         memorizedState: null,// fiber上的所有hook链表(正在执行的hook会进入workInProgressHook)
         stateNode: () => { },    // 对应的函数组件
-        updateQueue: null, // Effects的更新链表
-        fiberFlags: 'mount',// fiber的生命周期 判断是否初始化
+        updateQueue: null,  // Effects的更新链表
+        fiberFlags: global.renderTag === 'mount' ? 'mount' : 'update',// fiber的生命周期tag 判断是否初始化
         hasRef: false,//ref相关tag
         ref: null,
-        children: [],
-        props: null,
-        tag: null,
-        text: null,
-        hookIndex: 0 // 用于记录hook的数量 以便查找
+        children,
+        props,
+        tag,
+        text,
+        hookIndex: 0
     }
-    //todo 当前工作节点变为这个
-    global.currentFiberNode = newFiberNode
+    //todo 当前正在工作的fiber节点
+    global.currentFiberNode = fiberNode
+
+    //解析单标签  暂定
+    if (tag[tag.length - 1] == '/') {
+        tag = tag.slice(0, tag.length - 1)
+        fiberNode.tag = tag
+    }
+
+    //TODO -----------如果tag大写 解析为组件(此时无children) ----------------
+    if (tag[0] == tag[0].toUpperCase()) {
+        fiberNode.stateNode = window['$$' + tag]
+        const html: any = fiberNode.stateNode()
+        const childVnode = tplToVDOM(html)
+        children.unshift(childVnode)
+    }
+
+    //TODO ------------单fiber节点处理结束  更改flag
+    fiberNode.fiberFlags = 'update'
+
+    //todo 如果有children 深度优先遍历  包装成fiberNode
+    if (children) {
+        for (let i = 0; i < children.length; i++) {
+            const vnode = children[i]
+            fiberNode.children[i] = creatFiberNode(vnode)
+        }
+    }
+
+    return fiberNode
+}
 
 
-    //todo 解析vnode  如果传入vnode直接执行  否则执行fc
+function createFiberTree(htmlTplStr: string) {
+    const vnode = tplToVDOM(htmlTplStr)
+    const fiberTree = creatFiberNode(vnode)
+    return fiberTree
+}
+
+
+
+
+
+
+
+function creatFiberTree2(source: any) {
+
     let vnode = null
-    //1 传入组件时 先解析为vnode 否则是直接传入vnode
+    //传入组件时 先解析为vnode 否则是直接传入vnode
     if (typeof source === 'function') {
         const htmlStr = source()
         vnode = tplToVDOM(htmlStr)
@@ -37,44 +79,42 @@ function createFiberTree(source: any) {
         vnode = source
     }
 
+    //根据vnode创建fiber
+    const fiber = creatFiberNode(vnode)
 
     //合并vnode和Fiber
     const { children = [], props, tag, text } = vnode
-    newFiberNode.props = props
-    newFiberNode.tag = tag
-    newFiberNode.text = text
+    fiber.props = props
+    fiber.tag = tag
+    fiber.text = text
 
 
     //TODO -----------如果tag大写 解析为组件(此时无children) ----------------
     if (tag[0] === tag[0].toUpperCase()) {
+        console.log('tag大写');
         const fc = window['$$' + tag]
-        newFiberNode.stateNode = fc//! 注意 需要在这里执行fn 挂载hooks
-        const htmlStr = fc()
-        const vnode = tplToVDOM(htmlStr)
-        const childFiber = createFiberTree(vnode)
-        newFiberNode.children = [childFiber]
+        fiber.stateNode = fc
+        const childFiber = creatFiberTree2(fc)
+        fiber.children = [childFiber]
     }
 
     //TODO ------------单fiber节点处理结束  更改flag
-    newFiberNode.fiberFlags = 'update'
-
+    fiber.fiberFlags = 'update'
 
     //todo 如果有children 深度优先遍历  包装成fiberNode 挂到当前节点
     if (children) {
         for (let i = 0; i < children.length; i++) {
             const vnode = children[i]
-            newFiberNode.children.push(createFiberTree(vnode))
+            fiber.children[i] = creatFiberTree2(vnode)
         }
     }
 
-
-    return newFiberNode
+    return fiber
 }
 
 
+//! 更新fiberTree
 
-
-//! ---------------更新fiberTree-------------------
 function updateFiberTree(htmlTplStr: string) {
     //! 因为之前创建了app外层 这里从fiber.children[0]开始更新
     const vnode = tplToVDOM(htmlTplStr)
@@ -104,12 +144,13 @@ function updateFiberNode(vnode: any, fiber: any) {
         children.unshift(childVnode)
     }
     //todo 如果有children 深度优先遍历  
+
     if (children) {
         for (let i = 0; i < children.length; i++) {
             const vnode = children[i]
             //! 当map添加item时  可能造成vnode和childrenFiber数量不等
             //! 如果发现没有此fiber 就再根据vnode创建一个fiber
-            const childFiber = currentFiber.children[i] || createFiberTree(vnode)
+            const childFiber = currentFiber.children[i] || creatFiberNode(vnode)
             currentFiber.children[i] = updateFiberNode(vnode, childFiber)
         }
     }
@@ -117,4 +158,4 @@ function updateFiberNode(vnode: any, fiber: any) {
     return currentFiber
 }
 
-export { createFiberTree, updateFiberTree }
+export { createFiberTree, updateFiberTree, creatFiberTree2 }
