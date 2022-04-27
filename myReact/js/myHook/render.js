@@ -137,9 +137,9 @@ function handleProps(curFiber, dom) {
                 break;
             //todo  处理点击事件
             case 'onClick':
-                //! 使用{addNun} 挂载到全局方法
-                const fn = window['$$' + value[0]];
-                dom.addEventListener("click", fn);
+                //! 从组件的资源池里找资源
+                const fn2 = curFiber.sourcePool[value[0]];
+                dom.addEventListener("click", fn2);
                 break;
             //todo  处理其他
             default:

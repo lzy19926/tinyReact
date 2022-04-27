@@ -14,6 +14,7 @@ let iniFiber = {
     props: null,
     tag: null,
     text: null,
+    sourcePool: null,
     hookIndex: 0 // 用于记录hook的数量 以便查找
 };
 //! -----需要使用的全局变量---------------

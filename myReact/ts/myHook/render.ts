@@ -159,6 +159,8 @@ function appendDom(fiber: any, container: any) {
 
 //! 对标签中的属性进行处理 给dom节点添加标签 (未完成)
 function handleProps(curFiber: any, dom: any) {
+
+
     const props = curFiber.props
 
     for (let key in props) {
@@ -184,9 +186,9 @@ function handleProps(curFiber: any, dom: any) {
 
             //todo  处理点击事件
             case 'onClick':
-                //! 使用{addNun} 挂载到全局方法
-                const fn = window['$$' + value[0]]
-                dom.addEventListener("click", fn);
+                //! 从组件的资源池里找资源
+                const fn2 = curFiber.sourcePool[value[0]]
+                dom.addEventListener("click", fn2);
                 break;
 
             //todo  处理其他
@@ -263,4 +265,4 @@ function updateRender(html: string, rootDom: any): any {
 }
 
 
-export { render, updateRender, resetFiber,commitPart,unmountPart } 
+export { render, updateRender, resetFiber, commitPart, unmountPart } 
