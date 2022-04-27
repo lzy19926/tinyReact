@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateWorkInProgressHook = exports.global = exports.fiber = void 0;
+exports.updateWorkInProgressHook = exports.global = void 0;
 //todo ------------------全局使用的结构和变量 方法-----------------------------
 //! --------组件对应的fiber---------------------
-let fiber = {
+let iniFiber = {
     memorizedState: null,
     stateNode: () => { },
     updateQueue: null,
@@ -16,11 +16,11 @@ let fiber = {
     text: null,
     hookIndex: 0 // 用于记录hook的数量 以便查找
 };
-exports.fiber = fiber;
 //! -----需要使用的全局变量---------------
 const global = {
+    rootFiber: iniFiber,
     workInProgressHook: { currentHook: null },
-    currentFiberNode: fiber,
+    currentFiberNode: iniFiber,
     destoryEffectsArr: [],
     renderTag: 'mount' // 用于判断是否是首次更新
 };

@@ -31,6 +31,9 @@ window.$$addNum = addNum
 
 ```
 
+### 组件中传递props 使用{{}}双大括号
+<Test  active={{1}}></Test>
+
 
 ## 使用注意
 1. 只能使用双标签<tag></tag>  暂时不支持单标签解析

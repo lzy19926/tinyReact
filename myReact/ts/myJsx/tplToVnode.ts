@@ -64,6 +64,7 @@ class Scanner {
 //! 拆分html中的事件  (键值对)
 function eventParser(html: string) {
 
+
     const jsEXP = /\w*\={{([\s\S]*?)}*}/
     let newHtml = html
     const event: any = {}
@@ -138,6 +139,7 @@ function allPropsParser(html: string) {
 //! 将html模板字符串转换成tokens数组
 function collectTokens(html: string) {
 
+
     const scanner = new Scanner(html);
     const tokens = [];
 
@@ -162,6 +164,9 @@ function collectTokens(html: string) {
         word = newHtml
         const { newHtml2, props } = allPropsParser(word)//todo 拆分事件
         word = newHtml2
+
+
+
 
         // 区分开始标签 # 和结束标签 /
         if (word.startsWith('/')) {
@@ -224,6 +229,8 @@ function nestTokens(tokens: any) {
 
 //! 将tokens树转化为虚拟dom树
 function tokens2vdom(tokens: any) {
+
+
     const vdom: any = {};
 
     for (let i = 0, len = tokens.length; i < len; i++) {
@@ -261,6 +268,7 @@ function tokens2vdom(tokens: any) {
 
 //! 总和方法 转换html模板为虚拟dom
 function tplToVDOM(html: string) {
+
     const tokensArr = collectTokens(html)
     const tokensTree = nestTokens(tokensArr)
     const vdom = tokens2vdom(tokensTree);
@@ -269,5 +277,5 @@ function tplToVDOM(html: string) {
 
 
 
-export { tplToVDOM }
+export { tplToVDOM, collectTokens, nestTokens, tokens2vdom }
 

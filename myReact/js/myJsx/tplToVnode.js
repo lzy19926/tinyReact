@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.tplToVDOM = void 0;
+exports.tokens2vdom = exports.nestTokens = exports.collectTokens = exports.tplToVDOM = void 0;
 //! 字符串扫描解析器
 class Scanner {
     constructor(text) {
@@ -152,6 +152,7 @@ function collectTokens(html) {
     }
     return tokens;
 }
+exports.collectTokens = collectTokens;
 //! 将tokens数组形成dom树形结构
 function nestTokens(tokens) {
     const nestedTokens = [];
@@ -184,6 +185,7 @@ function nestTokens(tokens) {
     }
     return nestedTokens;
 }
+exports.nestTokens = nestTokens;
 //! 将tokens树转化为虚拟dom树
 function tokens2vdom(tokens) {
     const vdom = {};
@@ -213,6 +215,7 @@ function tokens2vdom(tokens) {
     }
     return vdom;
 }
+exports.tokens2vdom = tokens2vdom;
 //! 总和方法 转换html模板为虚拟dom
 function tplToVDOM(html) {
     const tokensArr = collectTokens(html);

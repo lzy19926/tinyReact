@@ -23,9 +23,10 @@ function dispatchAction(queue, newVal, action) {
     queue.pending = updater;
     //! 重新render组件  这里需要调用unmount生命周期钩子
     //! 源码中使用切换fiber树的方式执行重新渲染 不需要执行生命周期(处理fiber树时变相执行了unmount阶段)
-    (0, render_1.resetFiber)(GlobalFiber_1.fiber);
+    const fiber = GlobalFiber_1.global.rootFiber;
+    (0, render_1.resetFiber)(fiber);
     //todo 多个setState会触发多个render  实际上会将多个setState合并执行
-    (0, render_1.updateRender)(GlobalFiber_1.fiber.stateNode, GlobalFiber_1.fiber.ref);
+    (0, render_1.updateRender)('<App></App>', fiber.ref);
 }
 //! 创建一个useStateHook并添加到链表中------------------------
 function createHook(initialState) {

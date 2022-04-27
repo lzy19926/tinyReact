@@ -2,11 +2,16 @@
 import Demo from './page/Demo'
 //layui组件库测试页面
 import LayuiPage from './page/Layui'
+// Tab组件测试
+import Tab from './myUI/tab'
+
 
 import { myUseState } from '../myReact/js/myHook/useState'
 
 
-function Test() {
+
+function Test(props) {
+  //! 可传入props 
   const [num, setNum] = myUseState(0)
   function addNum() {
     setNum(num + 1)
@@ -18,14 +23,13 @@ function Test() {
 
 window.$$Test = Test
 
-
 function App() {
-  return (`
-  <div>
-  <LayuiPage></LayuiPage>
-  </div>
-    `)
+  return `<Demo></Demo>`
 }
+
+window.$$App = App
+
+
 
 
 export default App

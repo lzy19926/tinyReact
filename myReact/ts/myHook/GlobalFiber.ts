@@ -5,7 +5,7 @@ import { FiberNode, Global } from './Interface'
 
 //todo ------------------全局使用的结构和变量 方法-----------------------------
 //! --------组件对应的fiber---------------------
-let fiber: FiberNode = {
+let iniFiber: FiberNode = {
     memorizedState: null,// fiber上的所有hook链表(正在执行的hook会进入workInProgressHook)
     stateNode: () => { },    // 对应的函数组件
     updateQueue: null, // Effects的更新链表
@@ -22,8 +22,9 @@ let fiber: FiberNode = {
 
 //! -----需要使用的全局变量---------------
 const global: Global = {
+    rootFiber: iniFiber,
     workInProgressHook: { currentHook: null },//React中使用链表来保存hooks 挂在全局
-    currentFiberNode: fiber,
+    currentFiberNode: iniFiber,
     destoryEffectsArr: [],
     renderTag: 'mount' // 用于判断是否是首次更新
 }
@@ -47,4 +48,4 @@ function updateWorkInProgressHook(fiber: FiberNode) {
 
 
 
-export { fiber, global, updateWorkInProgressHook }
+export { global, updateWorkInProgressHook }

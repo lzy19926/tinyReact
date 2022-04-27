@@ -1,57 +1,49 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.resetFiber = exports.updateRender = exports.render = void 0;
+exports.unmountPart = exports.commitPart = exports.resetFiber = exports.updateRender = exports.render = void 0;
 const GlobalFiber_1 = require("./GlobalFiber");
 const createFiberTree_1 = require("../myJsx/createFiberTree");
 //! render分为2部分  render阶段 - commit阶段  最后unmount
 //! ----------------模拟render部分------------------------
 //! 更改并生成fiber树  (结束后fiber由mount变为update)
-function renderPart(functionComponent) {
+function renderPart(html) {
     //todo根据组件构建fiberTree
-    const fiberTree = (0, createFiberTree_1.createFiberTree)(functionComponent);
-    createRootFiberTree(fiberTree, functionComponent); //!根据子FiberTree生成根fiberTree
+    const fiberTree = (0, createFiberTree_1.createFiberTree)(html);
+    GlobalFiber_1.global.rootFiber = fiberTree;
+    return fiberTree;
+    // createRootFiberTree(fiberTree, functionComponent) //!根据子FiberTree生成根fiberTree
 }
 //todo 获取上一次的fiberTree 执行所有打上tag的functionComponent进行state更新 再commit   
-function updateRenderPart(functionComponent) {
+function updateRenderPart(html) {
     // 改变tag
     GlobalFiber_1.global.renderTag = 'update';
-    // 执行App 获取html模板
-    const html = functionComponent();
-    //根据模板渲染子fiberTree
-    const childFiberTree = (0, createFiberTree_1.updateFiberTree)(html);
-    //根据子FiberTree生成根fiberTree
-    createRootFiberTree(childFiberTree, functionComponent);
-}
-//! 赋值虚拟节点的属性给fiberNode
-//! 注意 这里生成的fiberTree总树不包括app节点  需要调整
-function createRootFiberTree(newFiber, functionComponent) {
-    GlobalFiber_1.fiber.stateNode = functionComponent; // 挂载组件到fiber上
-    GlobalFiber_1.fiber.children = [newFiber];
-    GlobalFiber_1.fiber.tag = functionComponent.name;
-    GlobalFiber_1.fiber.fiberFlags = 'update'; //render阶段结束fiber的状态由mount为update
+    const newFiberTree = (0, createFiberTree_1.updateFiberTree)(html, GlobalFiber_1.global.rootFiber);
+    GlobalFiber_1.global.rootFiber = newFiberTree;
+    return newFiberTree;
 }
 //! -----------------模拟Commit阶段-----------------------------
 //! 分为三部分  beforeMutation  mutation  layout阶段
 //! before 前置处理  mutation 渲染dom节点   layout  处理useEffect useLayoutEffect
-function commitPart(rootDom) {
-    console.log('本次commit的fiber', GlobalFiber_1.fiber);
+function commitPart(fiber, rootDom) {
+    console.log('本次commit的fiber', fiber);
     //todo  mutation阶段
-    const html = createHtml(GlobalFiber_1.fiber); //根据fiberTree创建html
+    const html = createHtml(fiber); //根据fiberTree创建html
     const childDom = rootDom.children[0];
     if (childDom) {
         rootDom.removeChild(childDom);
     } //删除之前的dom
     rootDom.appendChild(html); //添加渲染好的dom
     //! 这里为了简化重新render  将root节点挂载上去了  需要更正
-    GlobalFiber_1.fiber.ref = rootDom; //挂载ref
+    fiber.ref = rootDom; //挂载ref
     //todo  layout阶段  调用Effects链表 执行create函数()
     //遍历fiber树  找到Effect列表执行
-    handleEffect(GlobalFiber_1.fiber);
+    handleEffect(fiber);
     //todo 处理ref
-    if (GlobalFiber_1.fiber.hasRef) {
+    if (fiber.hasRef) {
         // commitAttachRef()//绑定ref
     }
 }
+exports.commitPart = commitPart;
 //! 遍历树获取所有的Effect(执行create和生成destory函数数组)
 function handleEffect(fiber) {
     let destoryEffectsArr = [];
@@ -167,8 +159,9 @@ const createHtml = (fiberTree) => {
 //todo  清空上一次执行完的updateQueue 重置HookIndex 执行distory函数数组
 function unmountPart() {
     doDestoryQueue(GlobalFiber_1.global.destoryEffectsArr);
-    resetFiber(GlobalFiber_1.fiber);
+    resetFiber(GlobalFiber_1.global.rootFiber);
 }
+exports.unmountPart = unmountPart;
 //todo -----在unmounted时执行destorys数组
 function doDestoryQueue(destoryEffectsArr) {
     for (let i = 0; i < destoryEffectsArr.length; i++) {
@@ -191,20 +184,18 @@ function resetFiber(fiberTree) {
 }
 exports.resetFiber = resetFiber;
 //!--------------Render方法-------------------
-function render(functionComponent, rootDom) {
+function render(html, rootDom) {
     console.log('------------render-------------');
-    const app = renderPart(functionComponent); //todo render阶段
-    commitPart(rootDom); //todo commit阶段
+    const fiber = renderPart(html); //todo render阶段
+    commitPart(fiber, rootDom); //todo commit阶段
     unmountPart(); //todo unmount阶段
-    return app;
 }
 exports.render = render;
 //!-----------updateRender方法--------------------------
-function updateRender(functionComponent, rootDom) {
+function updateRender(html, rootDom) {
     console.log('------------updateRender-------------');
-    const app = updateRenderPart(functionComponent);
-    commitPart(rootDom); //todo commit阶段
+    const newFiber = updateRenderPart(html);
+    commitPart(newFiber, rootDom); //todo commit阶段
     unmountPart(); //todo unmount阶段
-    return app;
 }
 exports.updateRender = updateRender;

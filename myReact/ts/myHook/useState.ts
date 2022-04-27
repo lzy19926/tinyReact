@@ -4,7 +4,7 @@
 import { StateUpdater, UseStateHook } from './Interface'
 import { render, updateRender, resetFiber } from './render'
 // 全局变量和当前 Fiber
-import { fiber, global, updateWorkInProgressHook } from './GlobalFiber'
+import { global, updateWorkInProgressHook } from './GlobalFiber'
 
 //! ---------------useState返回的updater方法(updateState方法)-------------------
 function dispatchAction(queue: any, newVal?: any, action?: Function) {
@@ -29,10 +29,10 @@ function dispatchAction(queue: any, newVal?: any, action?: Function) {
     //! 重新render组件  这里需要调用unmount生命周期钩子
     //! 源码中使用切换fiber树的方式执行重新渲染 不需要执行生命周期(处理fiber树时变相执行了unmount阶段)
 
-
+    const fiber = global.rootFiber
     resetFiber(fiber)
     //todo 多个setState会触发多个render  实际上会将多个setState合并执行
-    updateRender(fiber.stateNode, fiber.ref)
+    updateRender('<App></App>', fiber.ref)
 }
 
 
@@ -106,7 +106,7 @@ function myUseState(initialState: any) {
         hook = updateWorkInProgressHook(fiber)
     }
 
-   
+
 
     //todo 更新hook上保存的state
     const baseState = updateUseStateHook(hook)
