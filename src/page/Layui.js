@@ -54,21 +54,22 @@ function tabChange(id) {
 }
 
 
-
 //todo 定义函数式组件
 function LayuiPage() {
 
     const [id, setId] = myUseState(0)
 
+
     myUseEffect(() => {
         tabChange(id)
     }, [id])
+
     const data = ['网站设置', '用户管理', '权限分配', '商品管理', '订单管理']
    
     function changeId() {
         setId(id + 1)
     }
-    window.$$changeId = changeId
+
 
     return (`
 
@@ -99,7 +100,7 @@ function LayuiPage() {
 
     `)
 }
-window.$$LayuiPage = LayuiPage
+
 
 export default LayuiPage
 

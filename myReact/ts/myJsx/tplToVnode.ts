@@ -1,5 +1,4 @@
 
-
 //! 字符串扫描解析器
 class Scanner {
     text: any
@@ -93,6 +92,7 @@ function eventParser(html: string) {
     })
     return { newHtml, event }
 }
+
 
 //! 拆分html中的属性222  (键值对)
 function allPropsParser(html: string) {
@@ -188,7 +188,6 @@ function collectTokens(html: string) {
 }
 
 
-
 //! 将tokens数组形成dom树形结构
 function nestTokens(tokens: any) {
     const nestedTokens: any[] = [];
@@ -229,7 +228,6 @@ function nestTokens(tokens: any) {
 
 //! 将tokens树转化为虚拟dom树
 function tokens2vdom(tokens: any) {
-
 
     const vdom: any = {};
 
@@ -274,7 +272,6 @@ function tplToVDOM(html: string) {
     const vdom = tokens2vdom(tokensTree);
     return vdom;
 }
-
 
 
 export { tplToVDOM, collectTokens, nestTokens, tokens2vdom }

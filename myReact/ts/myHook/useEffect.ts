@@ -27,6 +27,7 @@ function mountEffect(fiberFlags: string, hookFlags: string, create: Function, de
     hook.hookFlags = 'update'
 }
 
+
 //! --------创建一个Hook 形成环链表 添加到hook队列--------------
 function mountWorkInProgressHook() {
     const fiber = global.currentFiberNode//! 测试
@@ -54,6 +55,7 @@ function mountWorkInProgressHook() {
 
     return newHook
 }
+
 
 //! -------updateEffect(useEffect后续更新)-------------
 function updateEffect(fiberFlags: string, hookFlags: string, create: Function, deps: any[] | null) {
@@ -100,6 +102,7 @@ function updateEffect(fiberFlags: string, hookFlags: string, create: Function, d
     }
 }
 
+
 //! ------浅比较前后deps是否发生变化-------------------
 function shallowCompareDeps(nextDeps: any[], prveDeps: any[]) {
 
@@ -114,6 +117,7 @@ function shallowCompareDeps(nextDeps: any[], prveDeps: any[]) {
     }
     return res
 }
+
 
 //! --------pushEffect创建/增加Effects更新链表---------------
 function pushEffect(tag: string, create: Function, destory: any, deps: any[] | null) {
@@ -153,7 +157,6 @@ function pushEffect(tag: string, create: Function, destory: any, deps: any[] | n
     //todo 返回这个Effect 会被赋值给hook.memorizedState(最后一次更新的状态)
     return effect
 }
-
 
 
 //!------------useEffect主体--------------

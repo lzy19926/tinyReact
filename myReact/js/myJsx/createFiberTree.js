@@ -19,37 +19,35 @@ function createFiberTree(source, resources) {
         props: null,
         tag: null,
         text: null,
-        sourcePool: resources,
+        sourcePool: null,
         hookIndex: 0 // 用于记录hook的数量 以便查找
     };
     //todo 当前工作节点变为这个
     GlobalFiber_1.global.currentFiberNode = newFiberTree;
-    //todo 解析vnode  如果传入vnode直接执行  否则执行fc
-    let vnode = null;
-    //1 传入组件时 先解析为vnode 否则是直接传入vnode
-    if (typeof source === 'string') {
-        const htmlStr = source;
-        vnode = (0, tplToVnode_1.tplToVDOM)(htmlStr);
-    }
-    else {
-        vnode = source;
-    }
-    //合并vnode和Fiber
+    //todo 判断传入的source 转换成vnode
+    let vnode = typeof source === 'string'
+        ? (0, tplToVnode_1.tplToVDOM)(source)
+        : source;
+    //合并vnode和Fiber 挂载resource
     const { children = [], props, tag, text } = vnode;
     newFiberTree.props = props;
     newFiberTree.tag = tag;
     newFiberTree.text = text;
-    //TODO -----------如果tag大写 解析为组件(此时无children) ----------------
+    newFiberTree.sourcePool = resources;
+    //TODO -----------如果tag大写 解析为组件 ----------------
     if (tag[0] === tag[0].toUpperCase()) {
-        //! 挂载props
-        // window['$$' + tag] = window['$$' + tag].bind(null, props)
-        // newFiberNode.stateNode = fc.bind(null, props)
-        //! 注意 需要在这里执行fn 挂载hooks
-        //todo commit当前组件  重新render下一个组件
-        const fc = window['$$' + tag];
-        const { template, props } = fc();
-        const childFiber = createFiberTree(template, props);
-        newFiberTree.sourcePool = props;
+        //todo 从sourcePool中获取子组件
+        const fc = newFiberTree.sourcePool.components[tag];
+        if (!fc) {
+            console.error(`子组件${tag}未注册`);
+        }
+        //! 从资源池中拿取需要的props，给子函数组件绑定需要的props,并挂载子函数组件到fiber上
+        handleFunctionComponentProps(newFiberTree, fc);
+        //! 需要在这里执行fc 挂载hooks 生成新的resource
+        const { template, data = {}, components = {} } = newFiberTree.stateNode();
+        const resources = { data, components };
+        // ! 渲染组件子fiber树 (sourcePool仅保存了父组件返回的数据)   
+        const childFiber = createFiberTree(template, resources);
         newFiberTree.children = [childFiber];
     }
     //TODO ------------单fiber节点处理结束  更改flag
@@ -57,8 +55,8 @@ function createFiberTree(source, resources) {
     //todo 如果有children 深度优先遍历  包装成fiberNode 挂到当前节点
     if (children) {
         for (let i = 0; i < children.length; i++) {
-            const vnode = children[i];
-            newFiberTree.children.push(createFiberTree(vnode, newFiberTree.sourcePool));
+            const childFiberTree = createFiberTree(children[i], newFiberTree.sourcePool);
+            newFiberTree.children.push(childFiberTree);
         }
     }
     return newFiberTree;
@@ -66,43 +64,72 @@ function createFiberTree(source, resources) {
 exports.createFiberTree = createFiberTree;
 //! ---------------更新fiberTree-------------------
 function updateFiberTree(source, fiber, resources) {
-    //todo 解析vnode  如果传入vnode直接执行  否则执行fc
-    let vnode = null;
-    //1 更新组件时 先解析为vnode 否则是直接传入vnode
-    if (typeof source === 'string') {
-        const htmlStr = source;
-        vnode = (0, tplToVnode_1.tplToVDOM)(htmlStr);
-    }
-    else {
-        vnode = source;
-    }
-    const currentFiber = fiber;
+    //todo 判断传入的source 转换成vnode
+    let vnode = typeof source === 'string'
+        ? (0, tplToVnode_1.tplToVDOM)(source)
+        : source;
+    //todo 赋值当前正在工作的fiber节点
+    const currentFiber = GlobalFiber_1.global.currentFiberNode = fiber;
     //todo 合并vnode和当前fiber
     let { children = [], props, tag, text } = vnode;
     currentFiber.props = props;
     currentFiber.tag = tag;
     currentFiber.text = text;
     currentFiber.sourcePool = resources; //挂载事件资源
-    //todo 当前正在工作的fiber节点
-    GlobalFiber_1.global.currentFiberNode = currentFiber;
-    //TODO -----------如果tag大写 解析为组件 生成html(此时无children) ----------------
+    //TODO -----------如果tag大写 解析为组件 ----------------
     if (tag[0] == tag[0].toUpperCase()) {
-        currentFiber.stateNode = window['$$' + tag];
-        const { template, props } = currentFiber.stateNode();
+        //todo 从sourcePool中获取子组件
+        const fc = currentFiber.sourcePool.components[tag];
+        //! 给子函数组件绑定需要的props
+        //! (注意这里的props是上一个组件传递来的数据  上面的props是tag上的属性)
+        handleFunctionComponentProps(currentFiber, fc);
+        //! 需要在这里执行fc 挂载hooks
+        const { template, data = {}, components = {} } = currentFiber.stateNode();
+        const resources = { data, components };
+        // ! 渲染组件子fiber树 挂载resources(需修改)
+        currentFiber.sourcePool = resources;
         const childVnode = (0, tplToVnode_1.tplToVDOM)(template);
-        currentFiber.sourcePool = props;
         children.unshift(childVnode);
     }
     //todo 如果有children 深度优先遍历  
     if (children) {
         for (let i = 0; i < children.length; i++) {
-            const vnode = children[i];
             //! 当map添加item时  可能造成vnode和childrenFiber数量不等
             //! 如果发现没有此fiber 就再根据vnode创建一个fiber
-            const childFiber = currentFiber.children[i] || createFiberTree(vnode, currentFiber.sourcePool);
-            currentFiber.children[i] = updateFiberTree(vnode, childFiber, currentFiber.sourcePool);
+            const vnode = children[i];
+            const resources = currentFiber.sourcePool;
+            const childFiber = currentFiber.children[i] || createFiberTree(vnode, resources);
+            currentFiber.children[i] = updateFiberTree(vnode, childFiber, resources);
         }
     }
     return currentFiber;
 }
 exports.updateFiberTree = updateFiberTree;
+//! ------------从资源池中拿取子组件需要的Props 处理后传递给子组件----------
+//! 返回处理好的子组件函数传递出去
+function handleFunctionComponentProps(fiber, functionComponent) {
+    const needProps = fiber.props;
+    const data = fiber.sourcePool.data;
+    const nextProps = {};
+    for (let key in needProps) {
+        let value = needProps[key][0];
+        //! 对传入的props进行数据类型解析
+        if (data[value]) { //从需求池中找到了对应的数据
+            nextProps[key] = data[value];
+        }
+        else if (!isNaN((value - 0))) { //传入数字
+            value = value - 0;
+            nextProps[key] = value;
+        }
+        else if (value[0] === '"' || value[0] === "'") { //传入字符串
+            nextProps[key] = value.slice(1, value.length - 1).trim();
+        }
+        else { // 传入普通字符串
+            nextProps[key] = value;
+        }
+    }
+    //给函数组件绑定props  挂载到fiber上
+    const newFc = functionComponent.bind(null, nextProps);
+    fiber.stateNode = newFc;
+    return newFc;
+}

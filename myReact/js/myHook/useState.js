@@ -1,9 +1,13 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.myUseState = void 0;
 const render_1 = require("./render");
 // 全局变量和当前 Fiber
 const GlobalFiber_1 = require("./GlobalFiber");
+const App_1 = __importDefault(require("../../../src/App"));
 //! ---------------useState返回的updater方法(updateState方法)-------------------
 function dispatchAction(queue, newVal, action) {
     //创建updater环链表
@@ -26,7 +30,7 @@ function dispatchAction(queue, newVal, action) {
     const fiber = GlobalFiber_1.global.rootFiber;
     (0, render_1.resetFiber)(fiber);
     //todo 多个setState会触发多个render  实际上会将多个setState合并执行
-    (0, render_1.updateRender)('<App></App>', fiber.ref);
+    (0, render_1.updateRender)(App_1.default, fiber.ref);
 }
 //! 创建一个useStateHook并添加到链表中------------------------
 function createHook(initialState) {
@@ -96,4 +100,3 @@ function myUseState(initialState) {
     return [baseState, dispatchAction.bind(null, hook.updateStateQueue)];
 }
 exports.myUseState = myUseState;
-//useState执行逻辑

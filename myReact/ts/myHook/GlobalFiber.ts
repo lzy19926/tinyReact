@@ -1,6 +1,3 @@
-
-
-
 import { FiberNode, Global } from './Interface'
 
 //todo ------------------全局使用的结构和变量 方法-----------------------------
@@ -44,9 +41,6 @@ function updateWorkInProgressHook(fiber: FiberNode) {
     fiber.hookIndex += 1
     return currentHook
 }
-
-
-
 
 
 export { global, updateWorkInProgressHook }

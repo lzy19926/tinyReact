@@ -2,13 +2,14 @@
 
 // 类型声明
 import { StateUpdater, UseStateHook } from './Interface'
-import { render, updateRender, resetFiber } from './render'
+import { updateRender, resetFiber } from './render'
 // 全局变量和当前 Fiber
 import { global, updateWorkInProgressHook } from './GlobalFiber'
+import App from '../../../src/App'
+
 
 //! ---------------useState返回的updater方法(updateState方法)-------------------
 function dispatchAction(queue: any, newVal?: any, action?: Function) {
-
 
     //创建updater环链表
     const updater: StateUpdater = {
@@ -31,10 +32,10 @@ function dispatchAction(queue: any, newVal?: any, action?: Function) {
 
     const fiber = global.rootFiber
     resetFiber(fiber)
-    //todo 多个setState会触发多个render  实际上会将多个setState合并执行
-    updateRender('<App></App>', fiber.ref)
-}
 
+    //todo 多个setState会触发多个render  实际上会将多个setState合并执行
+    updateRender(App, fiber.ref)
+}
 
 
 //! 创建一个useStateHook并添加到链表中------------------------
@@ -61,6 +62,7 @@ function createHook(initialState: any) {
     fiber.memorizedState = hook
     return hook
 }
+
 
 //! 更新该Hook的memorizedState-----------------------------
 function updateUseStateHook(hook: UseStateHook) {
@@ -121,7 +123,6 @@ function myUseState(initialState: any) {
 export { myUseState }
 
 
-//useState执行逻辑
 
 
 

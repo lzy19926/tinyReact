@@ -1,4 +1,3 @@
-
 //todo ----------------------Interface----------------------------------------
 //!--------------单个UseEffectHook结构-------------------
 //todo 通过判断tag 'useEffect','useLayoutEffect' 来判断何种钩子  改变执行时机
@@ -8,6 +7,7 @@ interface UseEffectHook {
     memorizedState: any,
     next: any
 }
+
 //!------------单个Effect(EffectUpdater)结构--------------------
 interface Effect {
     tag: string,
@@ -25,11 +25,13 @@ interface UseStateHook {
     updateStateQueue: { pending: any },//! hook.queue中保存了需要执行的update
     next: any
 }
+
 //!-------------单个StateUpdater结构--------------------
 interface StateUpdater {
     action: Function | any,
     next: StateUpdater | null
 }
+
 //!------------fiberNode结构----------------------
 interface FiberNode {
     memorizedState: any,
@@ -42,8 +44,10 @@ interface FiberNode {
     props: any,
     tag: any,
     text: any,
+    sourcePool: any,
     hookIndex: number
 }
+
 //!-------------全局需要的变量结构---------------
 interface Global {
     rootFiber: FiberNode,
@@ -52,6 +56,5 @@ interface Global {
     destoryEffectsArr: Effect[],
     renderTag: string
 }
-
 
 export type { FiberNode, StateUpdater, Effect, UseStateHook, UseEffectHook, Global }

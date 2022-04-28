@@ -5,14 +5,18 @@ import { myUseState } from '../../myReact/js/myHook/useState'
 //! 使用说明: 支持onclick事件绑定  渲染子组件  className设置  map渲染列表
 //! 定义的组件和方法需要使用$$挂载到全局
 
+
 //!定义子组件
 function Item() {
-    return `<button>子组件</button>`
+    return {
+        template: `<button>子组件</button>`
+    }
 }
-window.$$Item = Item
 
 
+//! Demo组件
 function Demo() {
+
     const [age, setAge] = myUseState(18)
     const [num, setNum] = myUseState(0)
     const [arr, setArr] = myUseState([])
@@ -44,34 +48,37 @@ function Demo() {
     function addArr() {
         setArr([...arr, 'item'])
     }
-    window.$$addNum = addNum
-    window.$$addAge = addAge
-    window.$$addArr = addArr
 
 
-    return (`
-    <div>
+    return ({
+        components: { Item },
 
-    <h1>Demo</h1>
+        data: { addNum, addAge, addArr },
+
+        template: `
+        <div>
     
-    <button onClick={addNum}>增加Num</button>
-    <button onClick={addAge}>增加Age和Num</button>
-    <button onClick={addArr}>增加Arr</button>
-
-    <h3 className="red">当前Num:${num}</h3>
-    <h3 className='red'>当前Age:${age}</h3>
-    <Item></Item>
+        <h1>Demo</h1>
+        
+        <button onClick={addNum}>增加Num</button>
+        <button onClick={addAge}>增加Age和Num</button>
+        <button onClick={addArr}>增加Arr</button>
     
-    <h4 className='red'>列表渲染测试</h4>
-
-    ${arr.map((item) => {
-        return `<div>${item}</div>`
-    })}
+        <h3 className="red">当前Num:${num}</h3>
+        <h3 className='red'>当前Age:${age}</h3>
+        <Item></Item>
+        
+        <h4 className='red'>列表渲染测试</h4>
     
-    </div>
-        `)
+        ${arr.map((item) => {
+            return `<div>${item}</div>`
+        })}
+        
+        </div>
+            `
+    })
 }
-window.$$Demo = Demo
+
 
 export default Demo
 
