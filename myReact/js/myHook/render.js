@@ -8,23 +8,34 @@ const createFiberTree_1 = require("../myJsx/createFiberTree");
 //! 更改并生成fiber树  (结束后fiber由mount变为update)
 function renderPart(functionComponent) {
     //todo 首次执行App函数
-    const { template, data, components } = functionComponent();
-    const resource = { data, components };
+    const { template, resource, rootFiberNode } = firstRenderApp(functionComponent);
     //todo根据组件构建fiberTree(首次)
     const fiberTree = (0, createFiberTree_1.createFiberTree)(template, resource);
-    GlobalFiber_1.global.rootFiber = fiberTree;
-    return fiberTree;
+    rootFiberNode.children.push(fiberTree);
+    return rootFiberNode;
 }
 //todo 获取上一次的fiberTree 执行所有打上tag的functionComponent进行state更新 再commit   
 function updateRenderPart(functionComponent) {
     // 改变tag
     GlobalFiber_1.global.renderTag = 'update';
-    // 更新函数组件
+    // 处理根App节点
+    const { template, resource, rootFiberNode } = firstRenderApp(functionComponent);
+    // 更新函数组件(因为处理了根节点 从根节点的第一个子节点开始递归)
+    const secondNode = rootFiberNode.children[0];
+    // 此时不需要创建fiberNode  所以不需要添加childFiber  直接在根fiber树上更新
+    (0, createFiberTree_1.updateFiberTree)(template, secondNode, resource);
+    return rootFiberNode;
+}
+//对render根Fiber节点进行处理(否则无法渲染第一个根节点)
+function firstRenderApp(functionComponent) {
+    const rootFiberNode = GlobalFiber_1.global.rootFiber;
+    GlobalFiber_1.global.currentFiberNode = rootFiberNode;
+    rootFiberNode.stateNode = functionComponent;
+    rootFiberNode.tag = functionComponent.name;
     const { template, data, components } = functionComponent();
     const resource = { data, components };
-    const newFiberTree = (0, createFiberTree_1.updateFiberTree)(template, GlobalFiber_1.global.rootFiber, resource);
-    GlobalFiber_1.global.rootFiber = newFiberTree;
-    return newFiberTree;
+    rootFiberNode.fiberFlags = 'update';
+    return { template, resource, rootFiberNode };
 }
 //! -----------------模拟Commit阶段-----------------------------
 //! 分为三部分  beforeMutation  mutation  layout阶段
@@ -61,19 +72,26 @@ function createHtml(fiberTree, rootDom) {
 //!  -------------根据fiberTree创建html------------------
 //todo 根据tag创建节点  填充text  递归appendChild
 function appendDom(fiber, container) {
-    //todo 如果是小写 判断为html标签  填充文本 处理属性
-    const dom = document.createElement(fiber.tag);
-    handleProps(fiber, dom);
-    if (fiber.text) {
-        dom.innerHTML = fiber.text;
+    //todo 如果是组件节点  挂载ref 走到下一个节点
+    if (fiber.tag[0] === fiber.tag[0].toUpperCase()) {
+        fiber.ref = container;
+        appendDom(fiber.children[0], container);
     }
-    //todo 如果有children深度优先递归渲染dom节点 
-    if (fiber.children) {
-        fiber.children.forEach((fiber) => {
-            appendDom(fiber, dom);
-        });
+    else {
+        //todo 如果是小写 判断为html标签  填充文本 处理属性
+        const dom = document.createElement(fiber.tag);
+        handleProps(fiber, dom);
+        if (fiber.text) {
+            dom.innerHTML = fiber.text;
+        }
+        //todo 如果有children深度优先递归渲染dom节点 
+        if (fiber.children) {
+            fiber.children.forEach((fiber) => {
+                appendDom(fiber, dom);
+            });
+        }
+        container.appendChild(dom);
     }
-    container.appendChild(dom);
 }
 //! 对标签中的属性进行处理 给dom节点添加标签 (未完成)
 function handleProps(curFiber, dom) {

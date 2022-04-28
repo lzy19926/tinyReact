@@ -9,15 +9,14 @@ import { Effect, FiberNode } from './Interface'
 function renderPart(functionComponent: Function) {
 
     //todo 首次执行App函数
-    const { template, data, components } = functionComponent()
-    const resource = { data, components }
-    
+    const { template, resource, rootFiberNode } = firstRenderApp(functionComponent)
+
     //todo根据组件构建fiberTree(首次)
     const fiberTree = createFiberTree(template, resource)
 
-    global.rootFiber = fiberTree
+    rootFiberNode.children.push(fiberTree)
 
-    return fiberTree
+    return rootFiberNode
 
 }
 
@@ -26,22 +25,37 @@ function updateRenderPart(functionComponent: Function) {
     // 改变tag
     global.renderTag = 'update'
 
-    // 更新函数组件
+    // 处理根App节点
+    const { template, resource, rootFiberNode } = firstRenderApp(functionComponent)
+
+    // 更新函数组件(因为处理了根节点 从根节点的第一个子节点开始递归)
+    const secondNode = rootFiberNode.children[0]
+
+    // 此时不需要创建fiberNode  所以不需要添加childFiber  直接在根fiber树上更新
+    updateFiberTree(template, secondNode, resource)
+
+    return rootFiberNode
+}
+
+//对render根Fiber节点进行处理(否则无法渲染第一个根节点)
+function firstRenderApp(functionComponent: Function) {
+    const rootFiberNode = global.rootFiber
+    global.currentFiberNode = rootFiberNode
+    rootFiberNode.stateNode = functionComponent
+    rootFiberNode.tag = functionComponent.name
     const { template, data, components } = functionComponent()
     const resource = { data, components }
 
-    const newFiberTree = updateFiberTree(template, global.rootFiber, resource)
+    rootFiberNode.fiberFlags = 'update'
 
-    global.rootFiber = newFiberTree
-
-    return newFiberTree
+    return { template, resource, rootFiberNode }
 }
+
 
 
 //! -----------------模拟Commit阶段-----------------------------
 //! 分为三部分  beforeMutation  mutation  layout阶段
 //! before 前置处理  mutation 渲染dom节点   layout  处理useEffect useLayoutEffect
-
 function commitPart(fiber: FiberNode, rootDom: HTMLBodyElement) {
 
     console.log('本次commit的fiber', fiber);
@@ -61,15 +75,32 @@ function commitPart(fiber: FiberNode, rootDom: HTMLBodyElement) {
     if (fiber.hasRef) {
         // commitAttachRef()//绑定ref
     }
-
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //! 删除子节点
 function removeHtml(rootDom: HTMLBodyElement) {
     const childDom = rootDom.children[0]
     if (childDom) { rootDom.removeChild(childDom) }
 }
-
 
 //! 根据fiberTree创建html
 //此方法可以随时停止  传入需要改变的fiberNode实现最小量更新
@@ -82,28 +113,49 @@ function createHtml(fiberTree: any, rootDom: HTMLBodyElement) {
     rootDom.appendChild(container)//添加渲染好的dom
 }
 
+
+
+
 //!  -------------根据fiberTree创建html------------------
 //todo 根据tag创建节点  填充text  递归appendChild
 function appendDom(fiber: any, container: any) {
+    //todo 如果是组件节点  挂载ref 走到下一个节点
+    if (fiber.tag[0] === fiber.tag[0].toUpperCase()) {
 
-    //todo 如果是小写 判断为html标签  填充文本 处理属性
-    const dom = document.createElement(fiber.tag)
+        fiber.ref = container
 
-    handleProps(fiber, dom)
-    if (fiber.text) {
-        dom.innerHTML = fiber.text
+        appendDom(fiber.children[0], container)
+
+    } else {
+
+        //todo 如果是小写 判断为html标签  填充文本 处理属性
+        const dom = document.createElement(fiber.tag)
+
+        handleProps(fiber, dom)
+        if (fiber.text) {
+            dom.innerHTML = fiber.text
+        }
+        //todo 如果有children深度优先递归渲染dom节点 
+        if (fiber.children) {
+            fiber.children.forEach((fiber: any) => {
+                appendDom(fiber, dom)
+            });
+        }
+        container.appendChild(dom)
+
     }
-    //todo 如果有children深度优先递归渲染dom节点 
-    if (fiber.children) {
-        fiber.children.forEach((fiber: any) => {
-            appendDom(fiber, dom)
-        });
-    }
-    container.appendChild(dom)
+
+
+
+
+
+
+
+
+
 
 
 }
-
 
 //! 对标签中的属性进行处理 给dom节点添加标签 (未完成)
 function handleProps(curFiber: any, dom: any) {
@@ -148,7 +200,6 @@ function handleProps(curFiber: any, dom: any) {
     }
 }
 
-
 //! 遍历树获取所有的Effect(执行create和生成destory函数数组)
 function handleEffect(fiber: FiberNode) {
 
@@ -167,7 +218,6 @@ function handleEffect(fiber: FiberNode) {
 
     global.destoryEffectsArr.push(...destoryEffectsArr)
 }
-
 
 //todo 遍历Effect链表 将需要执行的Effect推入数组--------------
 function createCallbackQueue(fiber: FiberNode) {
@@ -202,7 +252,6 @@ function createCallbackQueue(fiber: FiberNode) {
     return createEffectsArr
 }
 
-
 //todo 遍历执行需要执行的Effect---生成destory---------
 function doCreateQueue(createEffectsArr: Effect[]) {
 
@@ -224,15 +273,12 @@ function doCreateQueue(createEffectsArr: Effect[]) {
 
 
 
-
-
 //! ----------模拟unmount阶段 -------------------------
 //todo  清空上一次执行完的updateQueue 重置HookIndex 执行distory函数数组
 function unmountPart() {
     doDestoryQueue(global.destoryEffectsArr)
     resetFiber(global.rootFiber)
 }
-
 
 //todo -----在unmounted时执行destorys数组
 function doDestoryQueue(destoryEffectsArr: Effect[]) {
@@ -270,7 +316,6 @@ function render(functionComponent: Function, rootDom: any): any {
 
 }
 
-
 function updateRender(functionComponent: Function, rootDom: any): any {
     console.log('------------updateRender-------------');
 
@@ -280,6 +325,8 @@ function updateRender(functionComponent: Function, rootDom: any): any {
 
     unmountPart()//todo unmount阶段
 }
+
+
 
 
 export { render, updateRender, resetFiber, commitPart, unmountPart } 

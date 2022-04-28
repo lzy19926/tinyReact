@@ -9,7 +9,7 @@ let iniFiber: FiberNode = {
     fiberFlags: 'mount',// fiber的生命周期 判断是否初始化
     hasRef: false,//ref相关tag
     ref: null,
-    children: null,
+    children: [],
     props: null,
     tag: null,
     text: null,

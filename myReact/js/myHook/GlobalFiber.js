@@ -10,7 +10,7 @@ let iniFiber = {
     fiberFlags: 'mount',
     hasRef: false,
     ref: null,
-    children: null,
+    children: [],
     props: null,
     tag: null,
     text: null,

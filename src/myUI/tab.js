@@ -2,8 +2,48 @@
 
 import { myUseEffect } from '../../myReact/js/myHook/useEffect';
 import { myUseState } from '../../myReact/js/myHook/useState';
+import '../../public/layui'
+import ModalContent from '../components/modalContent'
+
+layui.use(function () {
+    var layer = layui.layer
+        , form = layui.form
+        , laypage = layui.laypage
+        , element = layui.element
+        , laydate = layui.laydate
+        , util = layui.util;
 
 
+
+    //日期
+    laydate.render({
+        elem: '#test2'
+        , value: undefined
+        , isInitValue: true
+    });
+
+    //触发事件
+    util.event('test-active', {
+        'test-form': function () {
+            layer.open({
+                type: 1
+                , resize: false
+                , shadeClose: true
+                , area: '350px'
+                , title: 'layer + form'
+                , content: ModalContent()
+                , success: function (layero, index) {
+                    layero.find('.layui-layer-content').css('overflow', 'visible');
+
+                    form.render().on('submit(*)', function (data) {
+                        layer.msg(JSON.stringify(data.field), { icon: 1 });
+                        //layer.close(index); //关闭层
+                    });
+                }
+            });
+        }
+    });
+});
 
 
 
