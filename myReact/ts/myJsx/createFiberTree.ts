@@ -96,6 +96,7 @@ function updateFiberTree(source: any, fiber: FiberNode, resources: any) {
     //TODO -----------如果tag大写 解析为组件 ----------------
     if (tag[0] == tag[0].toUpperCase()) {
 
+
         //todo 从sourcePool中获取子组件
         const fc = currentFiber.sourcePool.components[tag]
 
@@ -165,3 +166,9 @@ function handleFunctionComponentProps(fiber, functionComponent) {
 
 
 export { createFiberTree, updateFiberTree }
+
+
+
+// 错误记录
+// 函数name被webpack打包后会变为bound+函数名
+// 不能直接给tag赋值 

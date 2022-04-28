@@ -15,11 +15,11 @@ function renderPart(functionComponent) {
     return rootFiberNode;
 }
 //todo 获取上一次的fiberTree 执行所有打上tag的functionComponent进行state更新 再commit   
-function updateRenderPart(functionComponent) {
+function updateRenderPart(functionComponent, rootFiber) {
     // 改变tag
     GlobalFiber_1.global.renderTag = 'update';
     // 处理根App节点
-    const { template, resource, rootFiberNode } = firstRenderApp(functionComponent);
+    const { template, resource, rootFiberNode } = firstUpdateRenderApp(functionComponent, rootFiber);
     // 更新函数组件(因为处理了根节点 从根节点的第一个子节点开始递归)
     const secondNode = rootFiberNode.children[0];
     // 此时不需要创建fiberNode  所以不需要添加childFiber  直接在根fiber树上更新
@@ -31,7 +31,27 @@ function firstRenderApp(functionComponent) {
     const rootFiberNode = GlobalFiber_1.global.rootFiber;
     GlobalFiber_1.global.currentFiberNode = rootFiberNode;
     rootFiberNode.stateNode = functionComponent;
-    rootFiberNode.tag = functionComponent.name;
+    //! 用于解决webpack 函数名出现bound问题
+    const functionNameArr = functionComponent.name.split(' ');
+    let functionName = functionNameArr[0] === 'bound'
+        ? functionNameArr[1]
+        : functionNameArr[0];
+    rootFiberNode.tag = functionName;
+    const { template, data, components } = functionComponent();
+    const resource = { data, components };
+    rootFiberNode.fiberFlags = 'update';
+    return { template, resource, rootFiberNode };
+}
+function firstUpdateRenderApp(functionComponent, fiber) {
+    const rootFiberNode = fiber;
+    GlobalFiber_1.global.currentFiberNode = rootFiberNode;
+    rootFiberNode.stateNode = functionComponent;
+    //! 用于解决webpack 函数名出现bound问题
+    const functionNameArr = functionComponent.name.split(' ');
+    let functionName = functionNameArr[0] === 'bound'
+        ? functionNameArr[1]
+        : functionNameArr[0];
+    rootFiberNode.tag = functionName;
     const { template, data, components } = functionComponent();
     const resource = { data, components };
     rootFiberNode.fiberFlags = 'update';
@@ -55,43 +75,35 @@ function commitPart(fiber, rootDom) {
     }
 }
 exports.commitPart = commitPart;
-//! 删除子节点
+//! 清空子节点 换nodeList为数组 再循环清空
 function removeHtml(rootDom) {
-    const childDom = rootDom.children[0];
-    if (childDom) {
-        rootDom.removeChild(childDom);
-    }
+    //转换nodeList为数组
+    const childDomArr = [].slice.apply(rootDom.childNodes);
+    childDomArr.forEach((dom) => {
+        rootDom.removeChild(dom);
+    });
 }
-//! 根据fiberTree创建html
-//此方法可以随时停止  传入需要改变的fiberNode实现最小量更新
-function createHtml(fiberTree, rootDom) {
-    const container = document.createDocumentFragment();
-    appendDom(fiberTree, container);
-    rootDom.appendChild(container); //添加渲染好的dom
-}
-//!  -------------根据fiberTree创建html------------------
-//todo 根据tag创建节点  填充text  递归appendChild
-function appendDom(fiber, container) {
-    //todo 如果是组件节点  挂载ref 走到下一个节点
+//! (从更新的rootDom处开始)根据fiberTree创建html
+function createHtml(fiber, rootDom) {
+    //不同的tag标签创建不同的html标签
+    let dom = document.createElement(fiber.tag);
+    //todo 如果是组件节点   挂载ref 
     if (fiber.tag[0] === fiber.tag[0].toUpperCase()) {
-        fiber.ref = container;
-        appendDom(fiber.children[0], container);
+        dom = document.createElement('fc-' + fiber.tag);
+        fiber.ref = dom;
+        //todo 如果是小写 判断为html标签 填充文本 处理属性
     }
     else {
-        //todo 如果是小写 判断为html标签  填充文本 处理属性
-        const dom = document.createElement(fiber.tag);
         handleProps(fiber, dom);
         if (fiber.text) {
             dom.innerHTML = fiber.text;
         }
-        //todo 如果有children深度优先递归渲染dom节点 
-        if (fiber.children) {
-            fiber.children.forEach((fiber) => {
-                appendDom(fiber, dom);
-            });
-        }
-        container.appendChild(dom);
     }
+    //todo 深度优先递归children 从dom开始渲染子dom节点 
+    fiber.children.forEach((fiber) => {
+        createHtml(fiber, dom);
+    });
+    rootDom.appendChild(dom);
 }
 //! 对标签中的属性进行处理 给dom节点添加标签 (未完成)
 function handleProps(curFiber, dom) {
@@ -217,9 +229,9 @@ function render(functionComponent, rootDom) {
     unmountPart(); //todo unmount阶段
 }
 exports.render = render;
-function updateRender(functionComponent, rootDom) {
+function updateRender(functionComponent, rootDom, rootFiber) {
     console.log('------------updateRender-------------');
-    const newFiber = updateRenderPart(functionComponent);
+    const newFiber = updateRenderPart(functionComponent, rootFiber);
     commitPart(newFiber, rootDom); //todo commit阶段
     unmountPart(); //todo unmount阶段
 }

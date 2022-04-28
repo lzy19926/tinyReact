@@ -133,3 +133,6 @@ function handleFunctionComponentProps(fiber, functionComponent) {
     fiber.stateNode = newFc;
     return newFc;
 }
+// 错误记录
+// 函数name被webpack打包后会变为bound+函数名
+// 不能直接给tag赋值 

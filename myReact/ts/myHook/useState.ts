@@ -1,15 +1,14 @@
 
 
 // 类型声明
-import { StateUpdater, UseStateHook } from './Interface'
+import { FiberNode, StateUpdater, UseStateHook } from './Interface'
 import { updateRender, resetFiber } from './render'
 // 全局变量和当前 Fiber
 import { global, updateWorkInProgressHook } from './GlobalFiber'
-import App from '../../../src/App'
 
 
 //! ---------------useState返回的updater方法(updateState方法)-------------------
-function dispatchAction(queue: any, newVal?: any, action?: Function) {
+function dispatchAction(queue: any, curFiber: FiberNode, newVal?: any, action?: Function) {
 
     //创建updater环链表
     const updater: StateUpdater = {
@@ -27,14 +26,13 @@ function dispatchAction(queue: any, newVal?: any, action?: Function) {
     queue.pending = updater
 
 
-    //! 重新render组件  这里需要调用unmount生命周期钩子
+    //! 从当前fiber节点开始 重新render组件  这里需要调用unmount生命周期钩子
     //! 源码中使用切换fiber树的方式执行重新渲染 不需要执行生命周期(处理fiber树时变相执行了unmount阶段)
-
-    const fiber = global.rootFiber
-    resetFiber(fiber)
-
+    //! 从当前fiber节点  重新执行函数式组件  更新子fiber树
+    //! (需要传入当前fiber进行递归)
+    resetFiber(curFiber)
     //todo 多个setState会触发多个render  实际上会将多个setState合并执行
-    updateRender(App, fiber.ref)
+    updateRender(curFiber.stateNode, curFiber.ref, curFiber)
 }
 
 
@@ -108,15 +106,14 @@ function myUseState(initialState: any) {
         hook = updateWorkInProgressHook(fiber)
     }
 
-
-
     //todo 更新hook上保存的state
     const baseState = updateUseStateHook(hook)
     //todo 执行完useState 钩子状态变为update
     hook.hookFlags = 'update'
 
-    //todo 返回最新的状态 和updateAction
-    return [baseState, dispatchAction.bind(null, hook.updateStateQueue)]
+    //todo 返回最新的状态 和updateAction 
+    //todo bind本次useState的fiber节点 用于从当前组件开始更新
+    return [baseState, dispatchAction.bind(null, hook.updateStateQueue, fiber)]
 }
 
 

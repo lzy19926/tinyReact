@@ -21,12 +21,12 @@ function renderPart(functionComponent: Function) {
 }
 
 //todo 获取上一次的fiberTree 执行所有打上tag的functionComponent进行state更新 再commit   
-function updateRenderPart(functionComponent: Function) {
+function updateRenderPart(functionComponent: Function, rootFiber: FiberNode) {
     // 改变tag
     global.renderTag = 'update'
 
     // 处理根App节点
-    const { template, resource, rootFiberNode } = firstRenderApp(functionComponent)
+    const { template, resource, rootFiberNode } = firstUpdateRenderApp(functionComponent, rootFiber)
 
     // 更新函数组件(因为处理了根节点 从根节点的第一个子节点开始递归)
     const secondNode = rootFiberNode.children[0]
@@ -42,7 +42,17 @@ function firstRenderApp(functionComponent: Function) {
     const rootFiberNode = global.rootFiber
     global.currentFiberNode = rootFiberNode
     rootFiberNode.stateNode = functionComponent
-    rootFiberNode.tag = functionComponent.name
+
+
+    //! 用于解决webpack 函数名出现bound问题
+    const functionNameArr = functionComponent.name.split(' ')
+    let functionName = functionNameArr[0] === 'bound'
+        ? functionNameArr[1]
+        : functionNameArr[0]
+
+    rootFiberNode.tag = functionName
+
+
     const { template, data, components } = functionComponent()
     const resource = { data, components }
 
@@ -50,6 +60,33 @@ function firstRenderApp(functionComponent: Function) {
 
     return { template, resource, rootFiberNode }
 }
+
+function firstUpdateRenderApp(functionComponent: Function, fiber: FiberNode) {
+
+
+    const rootFiberNode = fiber
+    global.currentFiberNode = rootFiberNode
+    rootFiberNode.stateNode = functionComponent
+
+
+    //! 用于解决webpack 函数名出现bound问题
+    const functionNameArr = functionComponent.name.split(' ')
+    let functionName = functionNameArr[0] === 'bound'
+        ? functionNameArr[1]
+        : functionNameArr[0]
+
+    rootFiberNode.tag = functionName
+
+
+    const { template, data, components } = functionComponent()
+    const resource = { data, components }
+
+    rootFiberNode.fiberFlags = 'update'
+
+    return { template, resource, rootFiberNode }
+}
+
+
 
 
 
@@ -78,90 +115,52 @@ function commitPart(fiber: FiberNode, rootDom: HTMLBodyElement) {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//! 删除子节点
+//! 清空子节点 换nodeList为数组 再循环清空
 function removeHtml(rootDom: HTMLBodyElement) {
-    const childDom = rootDom.children[0]
-    if (childDom) { rootDom.removeChild(childDom) }
+
+
+
+    //转换nodeList为数组
+    const childDomArr = [].slice.apply(rootDom.childNodes)
+
+    childDomArr.forEach((dom) => {
+        rootDom.removeChild(dom)
+    })
+
 }
 
-//! 根据fiberTree创建html
-//此方法可以随时停止  传入需要改变的fiberNode实现最小量更新
-function createHtml(fiberTree: any, rootDom: HTMLBodyElement) {
+//! (从更新的rootDom处开始)根据fiberTree创建html
+function createHtml(fiber: any, rootDom: HTMLBodyElement) {
 
-    const container = document.createDocumentFragment()
+    //不同的tag标签创建不同的html标签
 
-    appendDom(fiberTree, container)
-
-    rootDom.appendChild(container)//添加渲染好的dom
-}
-
-
-
-
-//!  -------------根据fiberTree创建html------------------
-//todo 根据tag创建节点  填充text  递归appendChild
-function appendDom(fiber: any, container: any) {
-    //todo 如果是组件节点  挂载ref 走到下一个节点
+    let dom = document.createElement(fiber.tag)
+    //todo 如果是组件节点   挂载ref 
     if (fiber.tag[0] === fiber.tag[0].toUpperCase()) {
-
-        fiber.ref = container
-
-        appendDom(fiber.children[0], container)
-
+        dom = document.createElement('fc-' + fiber.tag)
+        fiber.ref = dom
+        //todo 如果是小写 判断为html标签 填充文本 处理属性
     } else {
-
-        //todo 如果是小写 判断为html标签  填充文本 处理属性
-        const dom = document.createElement(fiber.tag)
-
         handleProps(fiber, dom)
-        if (fiber.text) {
-            dom.innerHTML = fiber.text
-        }
-        //todo 如果有children深度优先递归渲染dom节点 
-        if (fiber.children) {
-            fiber.children.forEach((fiber: any) => {
-                appendDom(fiber, dom)
-            });
-        }
-        container.appendChild(dom)
-
+        if (fiber.text) { dom.innerHTML = fiber.text }
     }
 
 
 
+    //todo 深度优先递归children 从dom开始渲染子dom节点 
+    fiber.children.forEach((fiber: any) => {
+        createHtml(fiber, dom)
+    });
 
-
-
-
-
-
-
-
+    rootDom.appendChild(dom)
 }
+
+
 
 //! 对标签中的属性进行处理 给dom节点添加标签 (未完成)
 function handleProps(curFiber: any, dom: any) {
 
     const props = curFiber.props
-
 
     for (let key in props) {
         const value = props[key]
@@ -316,10 +315,10 @@ function render(functionComponent: Function, rootDom: any): any {
 
 }
 
-function updateRender(functionComponent: Function, rootDom: any): any {
+function updateRender(functionComponent: Function, rootDom: any, rootFiber: FiberNode): any {
     console.log('------------updateRender-------------');
 
-    const newFiber = updateRenderPart(functionComponent)
+    const newFiber = updateRenderPart(functionComponent, rootFiber)
 
     commitPart(newFiber, rootDom)//todo commit阶段
 

@@ -1,15 +1,11 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.myUseState = void 0;
 const render_1 = require("./render");
 // 全局变量和当前 Fiber
 const GlobalFiber_1 = require("./GlobalFiber");
-const App_1 = __importDefault(require("../../../src/App"));
 //! ---------------useState返回的updater方法(updateState方法)-------------------
-function dispatchAction(queue, newVal, action) {
+function dispatchAction(queue, curFiber, newVal, action) {
     //创建updater环链表
     const updater = {
         action: newVal || action,
@@ -25,12 +21,13 @@ function dispatchAction(queue, newVal, action) {
     }
     // 让此updater成为lastUpdater
     queue.pending = updater;
-    //! 重新render组件  这里需要调用unmount生命周期钩子
+    //! 从当前fiber节点开始 重新render组件  这里需要调用unmount生命周期钩子
     //! 源码中使用切换fiber树的方式执行重新渲染 不需要执行生命周期(处理fiber树时变相执行了unmount阶段)
-    const fiber = GlobalFiber_1.global.rootFiber;
-    (0, render_1.resetFiber)(fiber);
+    //! 从当前fiber节点  重新执行函数式组件  更新子fiber树
+    //! (需要传入当前fiber进行递归)
+    (0, render_1.resetFiber)(curFiber);
     //todo 多个setState会触发多个render  实际上会将多个setState合并执行
-    (0, render_1.updateRender)(App_1.default, fiber.ref);
+    (0, render_1.updateRender)(curFiber.stateNode, curFiber.ref, curFiber);
 }
 //! 创建一个useStateHook并添加到链表中------------------------
 function createHook(initialState) {
@@ -96,7 +93,8 @@ function myUseState(initialState) {
     const baseState = updateUseStateHook(hook);
     //todo 执行完useState 钩子状态变为update
     hook.hookFlags = 'update';
-    //todo 返回最新的状态 和updateAction
-    return [baseState, dispatchAction.bind(null, hook.updateStateQueue)];
+    //todo 返回最新的状态 和updateAction 
+    //todo bind本次useState的fiber节点 用于从当前组件开始更新
+    return [baseState, dispatchAction.bind(null, hook.updateStateQueue, fiber)];
 }
 exports.myUseState = myUseState;

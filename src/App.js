@@ -13,14 +13,16 @@ import LayuiTab from './myUI/tab'
 
 function App() {
 
-  const [age, setAge] = myUseState(20)
-
   return {
     components: { Demo, LayuiTab, Test },
 
     data: {},
 
-    template: `<Test></Test> `,
+    template: `<div>
+    <Demo></Demo>
+    <LayuiTab></LayuiTab>
+    <Test></Test>
+    </div>`,
   }
 }
 

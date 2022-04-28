@@ -66,7 +66,10 @@ function Demo() {
     
         <h3 className="red">当前Num:${num}</h3>
         <h3 className='red'>当前Age:${age}</h3>
+        
+        <div>
         <Item></Item>
+        </div>
         
         <h4 className='red'>列表渲染测试</h4>
     
