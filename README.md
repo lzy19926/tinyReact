@@ -1,40 +1,34 @@
-##  使用说明 (需要跑在webpack环境下)
+#  使用说明 (需要跑在webpack环境下)
 npm install
+
+npm run dev 
 
 
 ##   创建组件
 ```tsx
-// js 引入方法 创建函数组件  渲染到页面
-import { render,myUseEffect, myUseState } from './js/myReact.dev'
 
-
-
-function App(props) {
-
-    const [num,addNum] = myUseState(0)
-
-    function addNum(){addNum(num+1)}
-
-
+function App() {
+  
   return {
     //注册子组件 
-    components: { Test },  
+    components: { },  
     //注册使用的state数据,事件,下发的props
-    data: { addNum,num }, 
+    data: { }, 
     //html模板 (可以给标签设置属性  绑定事件 给子组件传递props)
-    template: `<div className='red' id='1'>
-                
-                <Test props={num}></Test>
-
-                <button onClick={addNum}>点击num+1</button>
-
-               </div>`,
+    template: `<div>App</div>`,
   }
 }
 
-
 render(App, document.getElementById('root'))
 ```
+## 使用Hook
+```tsx
+import { myUseState } from '../myReact/js/myHook/useState'
+import { myUseEffect } from '../myReact/js/myHook/useEffect'
+
+```
+
+
 
 
 

@@ -2,7 +2,8 @@
 
 import { myUseEffect } from '../../myReact/js/myHook/useEffect';
 import { myUseState } from '../../myReact/js/myHook/useState';
-import '../../public/layui'
+//! 引入并配置Layui
+import layui from 'layui';
 import ModalContent from '../components/modalContent'
 
 layui.use(function () {
@@ -46,60 +47,62 @@ layui.use(function () {
 });
 
 
-
 function tabChange(id) {
     var element = layui.element;
+    console.log(element);
     element.tabChange('docDemoTabBrief', id);
 }
 
 
 //todo 定义函数式组件
-function LayuiTab() {
+function LayuiPage() {
 
-    const [tabId, setTabId] = myUseState(0)
-    const data = ['网站设置', '用户管理', '权限分配', '商品管理', '订单管理']
+    const [id, setId] = myUseState(0)
+
 
     myUseEffect(() => {
-        tabChange(tabId)
-    }, [tabId])
+        tabChange(id)
+    }, [id])
 
-    function changeTabId(id) {
-        tabChange(3)
+    const data = ['网站设置', '用户管理', '权限分配', '商品管理', '订单管理']
+
+    function changeId() {
+        setId(id + 1)
     }
 
-    return {
 
-        data: { changeTabId },
+    return (`
 
-        template: `
-        <blockquote class="layui-elem-quote">
-          <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
-              
-              <ul class="layui-tab-title">
-                ${data.map((item, index) => {
-            return `<li lay-id="${index}">${item}</li>`
-        })}
-              </ul>
-      
-              <div class="layui-tab-content" lay-filter="mytab">
-                  ${data.map((item, index) => {
-            if (index === 0) {
-                return `<div class="layui-tab-item layui-show">${item}内容id:${tabId}</div>`
-            }
-            return `<div class="layui-tab-item ">${item}内容</div>`
-        })}
-              </div>
-      
-           <button onClick={changeTabId}>改变tab</button>
-          </div>  
-        </blockquote>
-      
-          `
-    }
+  <blockquote class="layui-elem-quote">
+  <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+  <ul class="layui-tab-title">
+    ${data.map((item, index) => {
+        return `<li lay-id="${index}">${item}</li>`
+    })}
+  </ul>
+
+  <div class="layui-tab-content" lay-filter="mytab">
+    ${data.map((item, index) => {
+        if (index === 0) {
+            return `<div class="layui-tab-item layui-show">${item}内容id:${id}</div>`
+        }
+        return `<div class="layui-tab-item ">${item}内容</div>`
+    })}
+  </div>
+
+</div>  
+
+    <button class="layui-btn" onClick={changeId}>更改id</button>
+    <button class="layui-btn" test-active="test-form">弹框按钮</button>
+    <button class="layui-btn" id="test2">日历按钮</button>
+  
+</blockquote>
+
+    `)
 }
 
 
-export default LayuiTab
+export default LayuiPage
 
 
 
