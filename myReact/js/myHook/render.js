@@ -193,10 +193,11 @@ function doCreateQueue(createEffectsArr) {
     }
     return destoryEffectsArr;
 }
-//! ----------模拟unmount阶段 -------------------------
+//! ----------模拟unmount阶段(需要修改) -------------------------
 //todo  清空上一次执行完的updateQueue 重置HookIndex 执行distory函数数组
 function unmountPart() {
-    doDestoryQueue(GlobalFiber_1.global.destoryEffectsArr);
+    // 注意 这里并不是真实的unmount阶段  所以不会执行destoryQueue 
+    // doDestoryQueue(global.destoryEffectsArr)
     resetFiber(GlobalFiber_1.global.rootFiber);
 }
 exports.unmountPart = unmountPart;

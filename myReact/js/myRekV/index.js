@@ -16,7 +16,6 @@ class Rekv {
         //todo ---------传入state的key  使用useEffect监听_state中的[key] ---------------- 
         this.useState = (...keys) => {
             const [value, setValue] = (0, useState_1.myUseState)(this._state); //!_state对象
-            console.log('本次的updater', setValue);
             //声明updater   
             const updater = () => {
                 setValue(this._state);
@@ -24,7 +23,6 @@ class Rekv {
             //todo 监听keys数组  对其中每个添加/删除listener(on/off)
             (0, useEffect_1.myUseEffect)(() => {
                 for (let i = 0, len = keys.length; i < len; i++) {
-                    console.log('on挂载updater', keys[i], updater);
                     this.on(keys[i], updater);
                 }
                 return () => {
@@ -56,18 +54,17 @@ class Rekv {
     //todo 每次执行on 都会往_event中推入一个[name]:updater项
     on(name, callback) {
         const s = this._events[name]; // _events =  {'name':undefined}
-        console.log('事件key', s);
         if (!s) { // 如果event中没有[name]属性  则将callback作为数组存入_event[name]
-            console.log('event中没有' + name);
             this._events[name] = [callback]; // _events =  {'name':[setValue(name1),setValue(name2)]}
-            console.log('挂载updater后的events', this._events);
         }
         else if (s.indexOf(callback) < 0) { // 如果有[name]属性  且其中无cb  则存入cb
             s.push(callback);
         }
+        console.log('执行on挂载updater', this._events);
     }
     // 从_event[name]中移除callback(listener)
     off(name, callback) {
+        console.log('执行off卸载updater', this._events);
         const s = this._events[name];
         this._events[name] = [callback];
         if (s) {
@@ -80,6 +77,7 @@ class Rekv {
     //! --------- 两种setState方法  传入{...states} 或者(state)=> ({...states})---------
     setState(param) {
         let kvs; // {...states}
+        console.log('执行setState 此时的events', this._events);
         //todo 将state保存到kvs上
         if ((0, utils_1.isFunction)(param)) {
             kvs = param(this._state);

@@ -8,16 +8,15 @@ import store from './store'
 import StoreTest from './components/StoreTest'
 
 
+
 function App() {
 
-  const { name, age } = store.useState('name', 'age')
+  // const { name, age } = store.useState('name', 'age')
+
 
   function changeState() {
     store.setState({ age: 20 })
   }
-
-
-
 
   return {
     //注册子组件

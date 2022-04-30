@@ -1,8 +1,16 @@
 
 import store from "../store";
+import { myUseEffect } from "../../myReact/js/myHook/useEffect";
+
 
 function StoreTest() {
+    
     const { age } = store.useState('age')
+
+    //! 全局状态可作为依赖项 适配useEffect
+    myUseEffect(() => {
+        console.log('age全局状态发生变化');
+    }, [])
 
     return {
         template: `<div>
