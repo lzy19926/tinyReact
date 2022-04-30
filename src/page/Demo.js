@@ -2,17 +2,6 @@ import { myUseEffect } from '../../myReact/js/myHook/useEffect'
 import { myUseState } from '../../myReact/js/myHook/useState'
 import './Demo.css'
 
-//! 使用说明: 支持onclick事件绑定  渲染子组件  className设置  map渲染列表
-//! 定义的组件和方法需要使用$$挂载到全局
-
-
-//!定义子组件
-function Item() {
-    return {
-        template: `<button>子组件</button>`
-    }
-}
-
 
 //! Demo组件
 function Demo() {
@@ -51,7 +40,7 @@ function Demo() {
 
 
     return ({
-        components: { Item },
+        components: { },
 
         data: { addNum, addAge, addArr },
 
@@ -66,10 +55,6 @@ function Demo() {
     
         <h3 className="blue">当前Num:${num}</h3>
         <h3 className='blue'>当前Age:${age}</h3>
-        
-        <div>
-        <Item></Item>
-        </div>
         
         <h4 className='red'>列表渲染测试</h4>
     

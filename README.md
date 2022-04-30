@@ -77,13 +77,17 @@ function Test(props){ ... }
 
 
 ## 使用map渲染列表(diff开发未完成 暂时不需要传入key)
+### 注意使用map渲染时需要使用根标签包裹起来
 ```tsx
 const [arr,setArr] = useState([1,2,3])
 
 return {
-  template:`${arr.map((index,item)=>{
+  template:
+  `<div>
+  ${arr.map((index,item)=>{
     return `<div>${item}</div>`
-  })}`
+  })}
+  </div>`
 }
 ```
 
