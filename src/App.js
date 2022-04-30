@@ -11,11 +11,11 @@ import StoreTest from './components/StoreTest'
 
 function App() {
 
-  // const { name, age } = store.useState('name', 'age')
+  const { age } = store.useState('age')
 
 
   function changeState() {
-    store.setState({ age: 20 })
+    store.setState({ age: age + 1 })
   }
 
   return {
@@ -26,20 +26,22 @@ function App() {
     //html模板
     template: `<div>
 
-      
+      <h2>------全局状态管理器演示页面------</h2>
       <button onClick={changeState}>点击改变全局状态age</button>
       <StoreTest></StoreTest>
       <StoreTest></StoreTest>
       <StoreTest></StoreTest>
 
-      <h2>CSS样式演示页面</h2>
+      <h2>-----CSS样式演示页面------</h2>
       <div className="red">支持import样式文件</div>
       
       <div>简单适配了bootStarp组件库</div>
       <button type="button" class="btn btn-primary">primary</button>
-
-      <h2>hooks,响应式,组件化功能演示页面</h2>
+      <button type="button" class="btn btn-secondary">Secondary</button>
+      <button type="button" class="btn btn-success">Success</button>
       
+      <h2>-----hooks,响应式,组件化功能演示页面------</h2>
+      <Demo></Demo>
 
     </div>`,
   }

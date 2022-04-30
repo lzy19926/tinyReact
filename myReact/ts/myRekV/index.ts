@@ -102,14 +102,11 @@ export class Rekv<
       s.push(callback);
     }
 
-    console.log('执行on挂载updater', this._events);
-
   }
 
 
   // 从_event[name]中移除callback(listener)
   off<K extends keyof T>(name: K, callback: SubscribeCallback<T[K]>): void {
-    console.log('执行off卸载updater', this._events);
 
     const s = this._events[name];
     this._events[name] = [callback]
@@ -127,7 +124,6 @@ export class Rekv<
   //! --------- 两种setState方法  传入{...states} 或者(state)=> ({...states})---------
   setState(param: Partial<T> | ((s: T) => Partial<T>)): void {
     let kvs: Partial<T>; // {...states}
-    console.log('执行setState 此时的events', this._events);
 
     //todo 将state保存到kvs上
     if (isFunction(param)) {
@@ -245,11 +241,9 @@ export class Rekv<
 
     for (let i = 0, keysLen = keys.length; i < keysLen; i++) {
       const key = keys[i]; //'name'
+      
       //todo 每次执行on 都会往_event中推入一个[name]:updater项
       const updaters: any[] = this._events[key];//取出该key的updater
-
-      console.log('执行更新的updaters队列', this._events);//! events队列里没有dispatcher
-
 
       if (Array.isArray(updaters)) {
         for (let j = 0, updaterLen = updaters.length; j < updaterLen; j++) {

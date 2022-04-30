@@ -76,16 +76,31 @@ function Test(props){ ... }
 ```
 
 
-## 使用CSS(注意暂时仅支持原生CSS  需要注意样式名冲突) 
+## 使用map渲染列表(diff开发未完成 暂时不需要传入key)
+```tsx
+const [arr,setArr] = useState([1,2,3])
+
+return {
+  template:`${arr.map((index,item)=>{
+    return `<div>${item}</div>`
+  })}`
+}
+```
+
+
+## 使用独立CSS(注意暂时仅支持原生CSS  需要注意样式名冲突) 
 ```tsx
 import './App.css'
 ```
+
+### 使用专用的全局状态管理器REKV (详见myRekV文件夹下的Readme)
+
 
 ### 在html中预装了Bootstarp5的全局CSS样式 
 
 
 
-## 使用注意
+## 补充说明  使用注意
 1. 只能使用双标签<tag></tag> , <App></App>  暂时不支持单标签解析
 2. 传递的props和绑定事件需要在data里面注册
 3. 事件暂时仅支持onClick  
