@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.unmountPart = exports.commitPart = exports.resetFiber = exports.updateRender = exports.render = void 0;
 //! render分为2部分  render阶段 - commit阶段  最后unmount
 const GlobalFiber_1 = require("./GlobalFiber");
-const createFiberTree_1 = require("../myJsx/createFiberTree");
+const createFiberTree_1 = require("../myJSX/createFiberTree");
 //! ----------------模拟render部分------------------------
 //! 更改并生成fiber树  (结束后fiber由mount变为update)
 function renderPart(functionComponent) {

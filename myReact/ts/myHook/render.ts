@@ -1,6 +1,6 @@
 //! render分为2部分  render阶段 - commit阶段  最后unmount
 import { global } from './GlobalFiber'
-import { updateFiberTree, createFiberTree } from '../myJsx/createFiberTree'
+import { updateFiberTree, createFiberTree } from '../myJSX/createFiberTree'
 import { Effect, FiberNode } from './Interface'
 
 
