@@ -31,11 +31,12 @@ function App() {
       <StoreTest></StoreTest>
       <StoreTest></StoreTest>
       <StoreTest></StoreTest>
-      <div>
+      
+      
       ${nameData.map((item) => {
       return `<div>${item}</div>`
     })}
-      </div>
+      
 
       <h2>-----CSS样式演示页面------</h2>
       <div className="red">支持import样式文件</div>
@@ -46,7 +47,7 @@ function App() {
       <button type="button" class="btn btn-success">Success</button>
 
       <h2>-----hooks,响应式,组件化功能演示页面------</h2>
-      <Demo></Demo>
+      <StoreTest></StoreTest>
 
     </div>`,
   }

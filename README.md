@@ -30,13 +30,13 @@ function App(){
   const [num,setNum] = myUseState(0)
 
   // myUseEffect可以通过传入不同的参数,当作生命周期钩子进行使用
-  myUseEffect({}=>{
+  myUseEffect(()=>{
     console.log('组件mount阶段时执行')
   },[])
-  myUseEffect({}=>{
+  myUseEffect(()=>{
     console.log('num发生变化时执行')
   },[num])
-    myUseEffect({}=>{
+    myUseEffect(()=>{
     console.log('组件umMount阶段时执行')
   })
 
