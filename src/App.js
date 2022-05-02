@@ -18,11 +18,13 @@ function App() {
     store.setState({ age: age + 1, nameData: [...nameData, '王五'] })
   }
 
+  const arr = [1, 2, 3]
+
   return {
     //注册子组件
     components: { Demo, StoreTest },
     //绑定的事件和传递给组件的props需要在这里注册
-    data: { changeState },
+    data: { changeState, arr },
     //html模板
     template: `<div>
 
@@ -33,10 +35,7 @@ function App() {
       <StoreTest></StoreTest>
       
       
-      ${nameData.map((item) => {
-      return `<div>${item}</div>`
-    })}
-      
+    
 
       <h2>-----CSS样式演示页面------</h2>
       <div className="red">支持import样式文件</div>
@@ -47,7 +46,7 @@ function App() {
       <button type="button" class="btn btn-success">Success</button>
 
       <h2>-----hooks,响应式,组件化功能演示页面------</h2>
-      <StoreTest></StoreTest>
+      <StoreTest id={1}></StoreTest>
 
     </div>`,
   }

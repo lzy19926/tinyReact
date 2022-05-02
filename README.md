@@ -71,7 +71,7 @@ function App(){
   }
 }
 
-// 在子组件中接收props
+// 在子组件中接收props(单向数据流  子组件修改props会发出警告 )
 function Test(props){ ... }
 ```
 

@@ -106,30 +106,44 @@ function updateFiberTree(source, fiber, resources) {
 }
 exports.updateFiberTree = updateFiberTree;
 //! ------------从资源池中拿取子组件需要的Props 处理后传递给子组件----------
-//! 返回处理好的子组件函数传递出去
+//! 将props设置为单向数据流   并返回处理好的子组件函数传递出去
 function handleFunctionComponentProps(fiber, functionComponent) {
     const needProps = fiber.props;
     const data = fiber.sourcePool.data;
     const nextProps = {};
     for (let key in needProps) {
-        let value = needProps[key][0];
+        const originValue = needProps[key][0];
+        let value;
         //! 对传入的props进行数据类型解析
-        if (data[value]) { //从需求池中找到了对应的数据
-            nextProps[key] = data[value];
+        if (data[originValue]) { //从需求池中找到了对应的数据
+            value = data[originValue];
         }
-        else if (!isNaN((value - 0))) { //传入数字
-            value = value - 0;
-            nextProps[key] = value;
+        else if (!isNaN((originValue - 0))) { //传入数字
+            value = originValue - 0;
         }
-        else if (value[0] === '"' || value[0] === "'") { //传入字符串
-            nextProps[key] = value.slice(1, value.length - 1).trim();
+        else if (originValue[0] === '"' || originValue[0] === "'") { //传入字符串
+            value = originValue.slice(1, originValue.length - 1).trim();
         }
         else { // 传入普通字符串
-            nextProps[key] = value;
+            value = originValue;
         }
+        nextProps[key] = value;
     }
-    //给函数组件绑定props  挂载到fiber上
-    const newFc = functionComponent.bind(null, nextProps);
+    //todo 使用Objdect.defineoroperty包装props为只读(get set方法)
+    //todo 定义一个新对象  添加对应的属性并添加描述器get set 
+    const newProps = {};
+    for (let key in nextProps) {
+        let val = nextProps[key]; // 设置该属性的初始值
+        Object.defineProperty(newProps, key, {
+            get: () => val,
+            set: (newVal) => {
+                console.warn('您正在尝试修改props, 不推荐此操作, 请保证数据单向流动');
+                val = newVal; // 修改时修改属性
+            }
+        });
+    }
+    //给函数组件绑定newProps  挂载到fiber上
+    const newFc = functionComponent.bind(null, newProps);
     fiber.stateNode = newFc;
     return newFc;
 }
