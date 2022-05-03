@@ -3,6 +3,16 @@ npm install
 
 npm run dev 
 
+# 脚手架初始化项目
+```tsx
+npm i lzy-tinyreact-cli  -g //全局安装脚手架
+
+tinyReact -v // 查看版本号
+
+tinyReact -create <projectName> // 对应目录下创建项目
+
+npm install // 项目中安装依赖包
+```
 
 ##   创建组件
 ```tsx
@@ -56,8 +66,8 @@ function App(){
 
 
 ## 使用子组件   给子组件传递props
-### 可以传递函数  实现事件冒泡和下发 (父子组件之间的事件传递)
 ```tsx
+//可以传递函数  实现事件冒泡和下发 (父子组件之间的事件传递)
 import Test from './components/Test'
 
 function App(){
@@ -77,8 +87,8 @@ function Test(props){ ... }
 
 
 ## 使用map渲染列表(diff开发未完成 暂时不需要传入key)
-### 注意使用map渲染时需要使用根标签包裹起来
 ```tsx
+//注意使用map渲染时需要使用根标签包裹起来
 const [arr,setArr] = useState([1,2,3])
 
 return {
