@@ -1,4 +1,4 @@
-import { myUseState } from '../../myReact/js/myHook/useState'
+import { myUseState } from '../../myReact/js/myReact'
 
 
 

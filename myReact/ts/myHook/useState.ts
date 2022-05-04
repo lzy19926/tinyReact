@@ -1,18 +1,21 @@
-
-
 // 类型声明
 import { FiberNode, StateUpdater, UseStateHook } from './Interface'
-import { updateRender, resetFiber } from './render'
+import { updateRender } from './render'
 // 全局变量和当前 Fiber
 import { global, updateWorkInProgressHook } from './GlobalFiber'
 
 
 //! ---------------useState返回的updater方法(updateState方法)-------------------
-function dispatchAction(queue: any, curFiber: FiberNode, newVal?: any, action?: Function) {
+function dispatchAction(queue: any, curFiber: FiberNode, newVal?: any) {
 
-    //创建updater环链表
+
+    //todo 如果newVal未发生变化不执行更新
+    const oldVal = curFiber.memorizedState.memorizedState
+    if (newVal === oldVal) return
+
+    //创建updater环链表 如果传入函数 则设置参数为oldVal
     const updater: StateUpdater = {
-        action: newVal || action,
+        action: typeof newVal === 'function' ? newVal().bind(null, oldVal) : newVal,
         next: null
     }
     //pending上没有updater 自己形成环状链表  ; 有updater链表  插入一个updater
@@ -26,11 +29,9 @@ function dispatchAction(queue: any, curFiber: FiberNode, newVal?: any, action?: 
     queue.pending = updater
 
 
-    //! 从当前fiber节点开始 重新render组件  这里需要调用unmount生命周期钩子
-    //! 源码中使用切换fiber树的方式执行重新渲染 不需要执行生命周期(处理fiber树时变相执行了unmount阶段)
-    //! 从当前fiber节点  重新执行函数式组件  更新子fiber树
-    //! (需要传入当前fiber进行递归)
-    resetFiber(curFiber)
+    //! 源码中使用切换fiber树的方式执行重新渲染 
+    //! 从当前fiber节点  重新执行函数式组件  更新子fiber树(需要传入当前fiber进行递归)
+
     //todo 多个setState会触发多个render  实际上会将多个setState合并执行
     updateRender(curFiber.stateNode, curFiber.ref, curFiber)
 }

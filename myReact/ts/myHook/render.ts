@@ -102,23 +102,29 @@ function commitPart(fiber: FiberNode, rootDom: HTMLBodyElement) {
 
     createHtml(fiber, rootDom)//根据fiberTree创建html
 
-    //! 这里为了简化重新render  将root节点挂载上去了  需要更正
-    fiber.ref = rootDom //挂载ref
+    //todo  layout阶段  调用Effects链表 执行create函数()
+    handleEffect(fiber)
+
+    //todo 处理ref
+}
+
+function updateCommitPart(fiber: FiberNode, rootDom: HTMLBodyElement) {
+    //TODO  此时的fiber包含组件节点  rootDom包含组件节点
+    console.log('本次updateCommit的fiber', fiber);
+
+    //todo  mutation阶段
+    removeHtml(rootDom)
+    updateHtml(fiber, rootDom)//根据fiberTree创建html
 
     //todo  layout阶段  调用Effects链表 执行create函数()
     handleEffect(fiber)
 
     //todo 处理ref
-    if (fiber.hasRef) {
-        // commitAttachRef()//绑定ref
-    }
 }
 
 
 //! 清空子节点 换nodeList为数组 再循环清空
 function removeHtml(rootDom: HTMLBodyElement) {
-
-
 
     //转换nodeList为数组
     const childDomArr = [].slice.apply(rootDom.childNodes)
@@ -133,19 +139,18 @@ function removeHtml(rootDom: HTMLBodyElement) {
 function createHtml(fiber: any, rootDom: HTMLBodyElement) {
 
     //不同的tag标签创建不同的html标签
-
     let dom = document.createElement(fiber.tag)
+
     //todo 如果是组件节点   挂载ref 
     if (fiber.tag[0] === fiber.tag[0].toUpperCase()) {
         dom = document.createElement('fc-' + fiber.tag)
         fiber.ref = dom
         //todo 如果是小写 判断为html标签 填充文本 处理属性
-    } else {
+    }
+    else {
         handleProps(fiber, dom)
         if (fiber.text) { dom.innerHTML = fiber.text }
     }
-
-
 
     //todo 深度优先递归children 从dom开始渲染子dom节点 
     fiber.children.forEach((fiber: any) => {
@@ -153,6 +158,13 @@ function createHtml(fiber: any, rootDom: HTMLBodyElement) {
     });
 
     rootDom.appendChild(dom)
+}
+
+function updateHtml(fiber: any, rootDom: HTMLBodyElement) {
+    //todo 深度优先递归children 从dom下一层渲染子dom节点 
+    fiber.children.forEach((fiber: any) => {
+        createHtml(fiber, rootDom)
+    });
 }
 
 
@@ -272,12 +284,12 @@ function doCreateQueue(createEffectsArr: Effect[]) {
 
 
 
-//! ----------模拟unmount阶段(需要修改) -------------------------
+//! ----------模拟unmount阶段(暂时不需要) -------------------------
 //todo  清空上一次执行完的updateQueue 重置HookIndex 执行distory函数数组
 function unmountPart() {
     // 注意 这里并不是真实的unmount阶段  所以不会执行destoryQueue 
     // doDestoryQueue(global.destoryEffectsArr)
-    resetFiber(global.rootFiber)
+    // resetFiber(global.rootFiber)
 }
 
 //todo -----在unmounted时执行destorys数组
@@ -312,21 +324,19 @@ function render(functionComponent: Function, rootDom: any): any {
 
     commitPart(fiber, rootDom)//todo commit阶段
 
-    unmountPart()//todo unmount阶段
-
 }
 
 function updateRender(functionComponent: Function, rootDom: any, rootFiber: FiberNode): any {
+    //更新render时需要先将fiber的数据重置  重新挂载数据
+    resetFiber(rootFiber)
+
     console.log('------------updateRender-------------');
 
     const newFiber = updateRenderPart(functionComponent, rootFiber)
 
-    commitPart(newFiber, rootDom)//todo commit阶段
+    updateCommitPart(newFiber, rootDom)//todo commit阶段
 
-    unmountPart()//todo unmount阶段
 }
 
 
-
-
-export { render, updateRender, resetFiber, commitPart, unmountPart } 
+export { render, updateRender, resetFiber, } 

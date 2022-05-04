@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.unmountPart = exports.commitPart = exports.resetFiber = exports.updateRender = exports.render = void 0;
+exports.resetFiber = exports.updateRender = exports.render = void 0;
 //! render分为2部分  render阶段 - commit阶段  最后unmount
 const GlobalFiber_1 = require("./GlobalFiber");
 const createFiberTree_1 = require("../myJSX/createFiberTree");
@@ -65,16 +65,20 @@ function commitPart(fiber, rootDom) {
     //todo  mutation阶段
     removeHtml(rootDom);
     createHtml(fiber, rootDom); //根据fiberTree创建html
-    //! 这里为了简化重新render  将root节点挂载上去了  需要更正
-    fiber.ref = rootDom; //挂载ref
     //todo  layout阶段  调用Effects链表 执行create函数()
     handleEffect(fiber);
     //todo 处理ref
-    if (fiber.hasRef) {
-        // commitAttachRef()//绑定ref
-    }
 }
-exports.commitPart = commitPart;
+function updateCommitPart(fiber, rootDom) {
+    //TODO  此时的fiber包含组件节点  rootDom包含组件节点
+    console.log('本次updateCommit的fiber', fiber);
+    //todo  mutation阶段
+    removeHtml(rootDom);
+    updateHtml(fiber, rootDom); //根据fiberTree创建html
+    //todo  layout阶段  调用Effects链表 执行create函数()
+    handleEffect(fiber);
+    //todo 处理ref
+}
 //! 清空子节点 换nodeList为数组 再循环清空
 function removeHtml(rootDom) {
     //转换nodeList为数组
@@ -104,6 +108,12 @@ function createHtml(fiber, rootDom) {
         createHtml(fiber, dom);
     });
     rootDom.appendChild(dom);
+}
+function updateHtml(fiber, rootDom) {
+    //todo 深度优先递归children 从dom下一层渲染子dom节点 
+    fiber.children.forEach((fiber) => {
+        createHtml(fiber, rootDom);
+    });
 }
 //! 对标签中的属性进行处理 给dom节点添加标签 (未完成)
 function handleProps(curFiber, dom) {
@@ -193,14 +203,13 @@ function doCreateQueue(createEffectsArr) {
     }
     return destoryEffectsArr;
 }
-//! ----------模拟unmount阶段(需要修改) -------------------------
+//! ----------模拟unmount阶段(暂时不需要) -------------------------
 //todo  清空上一次执行完的updateQueue 重置HookIndex 执行distory函数数组
 function unmountPart() {
     // 注意 这里并不是真实的unmount阶段  所以不会执行destoryQueue 
     // doDestoryQueue(global.destoryEffectsArr)
-    resetFiber(GlobalFiber_1.global.rootFiber);
+    // resetFiber(global.rootFiber)
 }
-exports.unmountPart = unmountPart;
 //todo -----在unmounted时执行destorys数组
 function doDestoryQueue(destoryEffectsArr) {
     for (let i = 0; i < destoryEffectsArr.length; i++) {
@@ -227,13 +236,13 @@ function render(functionComponent, rootDom) {
     console.log('------------render-------------');
     const fiber = renderPart(functionComponent); //todo render阶段
     commitPart(fiber, rootDom); //todo commit阶段
-    unmountPart(); //todo unmount阶段
 }
 exports.render = render;
 function updateRender(functionComponent, rootDom, rootFiber) {
+    //更新render时需要先将fiber的数据重置  重新挂载数据
+    resetFiber(rootFiber);
     console.log('------------updateRender-------------');
     const newFiber = updateRenderPart(functionComponent, rootFiber);
-    commitPart(newFiber, rootDom); //todo commit阶段
-    unmountPart(); //todo unmount阶段
+    updateCommitPart(newFiber, rootDom); //todo commit阶段
 }
 exports.updateRender = updateRender;

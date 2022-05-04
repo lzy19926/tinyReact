@@ -1,5 +1,4 @@
-import { myUseEffect } from '../../myReact/js/myHook/useEffect'
-import { myUseState } from '../../myReact/js/myHook/useState'
+import { myUseState, myUseEffect } from '../../myReact/js/myReact'
 import './Demo.css'
 
 
@@ -40,7 +39,7 @@ function Demo() {
 
 
     return ({
-        components: { },
+        components: {},
 
         data: { addNum, addAge, addArr },
 
@@ -49,9 +48,11 @@ function Demo() {
     
         <h1>Demo</h1>
         
-        <button onClick={addNum}>增加Num</button>
-        <button onClick={addAge}>增加Age和Num</button>
-        <button onClick={addArr}>增加Arr</button>
+        <div>简单适配了bootStarp组件库</div>
+        <button type="button" class="btn btn-primary" onClick={addNum}>增加Num</button>
+        <button type="button" class="btn btn-secondary" onClick={addAge}>增加Age和Num</button>
+        <button type="button" class="btn btn-success" onClick={addArr}>增加Arr</button>
+
     
         <h3 className="blue">当前Num:${num}</h3>
         <h3 className='blue'>当前Age:${age}</h3>
