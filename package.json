@@ -7,7 +7,6 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "compile": "babel tpl.jsx -o tpl_out.js",
     "dev": "webpack-dev-server",
     "build": "webpack"
   },
@@ -24,7 +23,9 @@
   "main": "webpack.config.js",
   "dependencies": {
     "bootstrap": "^3.4.1",
-    "jquery": "^3.6.0"
+    "jquery": "^3.6.0",
+    "lzy-react": "^1.4.3",
+    "lzy-rekv": "^1.4.2"
   },
   "keywords": [],
   "description": ""

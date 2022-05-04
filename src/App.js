@@ -22,7 +22,8 @@ function App() {
     //html模板
     template:
       `<div>
-      <Test></Test>
+      <RekvTest></RekvTest>
+      <Demo></Demo>
     </div>`,
   }
 }

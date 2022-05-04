@@ -1,8 +1,9 @@
-import Rekv from '../../myReact/js/myRekV/index'
+
+import Rekv from 'lzy-rekv'
 
 export default new Rekv({
     allStates: {
-        nameData: ['张三','李四'],
+        nameData: ['张三', '李四'],
         age: 18,
     }
 })

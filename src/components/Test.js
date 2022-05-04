@@ -1,4 +1,4 @@
-import { myUseState } from '../../myReact/js/myReact'
+import { myUseState } from 'lzy-react'
 
 
 

@@ -1,4 +1,4 @@
-import { myUseState, myUseEffect } from '../../myReact/js/myReact'
+import { myUseState, myUseEffect } from 'lzy-react'
 import './Demo.css'
 
 
