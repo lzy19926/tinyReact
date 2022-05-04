@@ -4,15 +4,29 @@ exports.myUseState = void 0;
 const render_1 = require("./render");
 // 全局变量和当前 Fiber
 const GlobalFiber_1 = require("./GlobalFiber");
+let timer;
 //! ---------------useState返回的updater方法(updateState方法)-------------------
 function dispatchAction(queue, curFiber, newVal) {
+    clearTimeout(timer);
     //todo 如果newVal未发生变化不执行更新
     const oldVal = curFiber.memorizedState.memorizedState;
     if (newVal === oldVal)
         return;
-    //创建updater环链表 如果传入函数 则设置参数为oldVal
+    //todo 更新state队列(在render阶段执行)
+    updateQueue(queue, newVal);
+    //todo 多个setState会触发多个render  使用防抖将render推到后面的任务队列一并执行
+    //每次setState会挂载一个queue 当所有queue挂载完再执行render
+    timer = setTimeout(() => {
+        //! 源码中使用切换fiber树的方式执行重新渲染 
+        //! 从当前fiber节点  重新执行函数式组件  更新子fiber树(需要传入当前fiber进行递归)
+        (0, render_1.updateRender)(curFiber.stateNode, curFiber.ref, curFiber);
+    }, 0);
+}
+//! 更新setate更新队列
+function updateQueue(queue, newVal) {
+    //创建updater环链表 将action挂载上去
     const updater = {
-        action: typeof newVal === 'function' ? newVal().bind(null, oldVal) : newVal,
+        action: newVal,
         next: null
     };
     //pending上没有updater 自己形成环状链表  ; 有updater链表  插入一个updater
@@ -25,10 +39,6 @@ function dispatchAction(queue, curFiber, newVal) {
     }
     // 让此updater成为lastUpdater
     queue.pending = updater;
-    //! 源码中使用切换fiber树的方式执行重新渲染 
-    //! 从当前fiber节点  重新执行函数式组件  更新子fiber树(需要传入当前fiber进行递归)
-    //todo 多个setState会触发多个render  实际上会将多个setState合并执行
-    (0, render_1.updateRender)(curFiber.stateNode, curFiber.ref, curFiber);
 }
 //! 创建一个useStateHook并添加到链表中------------------------
 function createHook(initialState) {
