@@ -1,4 +1,5 @@
-import { myUseState } from 'lzy-react'
+import { myUseState } from '../../lzy-React-dev/index'
+
 
 
 

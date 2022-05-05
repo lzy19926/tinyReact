@@ -1,6 +1,6 @@
 
 import store from "../store";
-import { myUseEffect } from 'lzy-react'
+import { myUseEffect } from '../../lzy-React-dev/index'
 
 
 function StoreTest(props) {

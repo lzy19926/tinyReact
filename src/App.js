@@ -23,7 +23,7 @@ function App() {
     template:
       `<div>
       <RekvTest></RekvTest>
-      <Demo></Demo>
+      <Test></Test>
     </div>`,
   }
 }

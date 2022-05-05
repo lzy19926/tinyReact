@@ -1,4 +1,4 @@
-import { render } from 'lzy-react'
+import { render } from '../lzy-React-dev/index'
 import App from './App'
 
 // 渲染app
