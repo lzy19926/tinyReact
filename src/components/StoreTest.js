@@ -4,7 +4,6 @@ import { myUseEffect } from '../../lzy-React-dev/index'
 
 
 function StoreTest(props) {
-
     const { age } = store.useState('age')
 
     //! 全局状态可作为依赖项 适配useEffect

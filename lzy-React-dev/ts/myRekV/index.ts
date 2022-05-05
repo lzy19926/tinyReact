@@ -164,6 +164,7 @@ export class Rekv<
     //todo 前后states对象进行遍历对比(for循环)  
     for (let i = 0, len = keys.length; i < len; i++) {
       const key = keys[i];
+      
       if (this._state[key] !== kvs[key]) {//todo 不同的属性
         needUpdateKeys.push(key); // key推入needUpdateKeys数组 //!最小量更新
         updatedValues[key] = kvs[key]; // value推入updatedValue数组
@@ -241,11 +242,13 @@ export class Rekv<
 
     for (let i = 0, keysLen = keys.length; i < keysLen; i++) {
       const key = keys[i]; //'name'
-      
+
       //todo 每次执行on 都会往_event中推入一个[name]:updater项
       const updaters: any[] = this._events[key];//取出该key的updater
 
       if (Array.isArray(updaters)) {
+        console.log(updaters.length);
+
         for (let j = 0, updaterLen = updaters.length; j < updaterLen; j++) {
           const updater = updaters[j];
           // check whether the updater has been updated, the same updater may watch different keys

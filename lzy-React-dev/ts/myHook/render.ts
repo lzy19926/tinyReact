@@ -8,7 +8,7 @@ import { Effect, FiberNode } from './Interface'
 //! 更改并生成fiber树  (结束后fiber由mount变为update)
 function renderPart(functionComponent: Function, initFiber: FiberNode) {
 
-    //todo 首次执行App函数
+    //todo 如果initFiber是全局根节点 则首次处理App函数
     const { template, resource, rootFiberNode } = firstRenderApp(functionComponent, initFiber)
 
     //todo根据组件构建fiberTree(首次)
@@ -61,6 +61,7 @@ function firstRenderApp(functionComponent: Function, initFiber: FiberNode) {
     return { template, resource, rootFiberNode }
 }
 
+
 function firstUpdateRenderApp(functionComponent: Function, fiber: FiberNode) {
 
 
@@ -95,7 +96,7 @@ function firstUpdateRenderApp(functionComponent: Function, fiber: FiberNode) {
 //! before 前置处理  mutation 渲染dom节点   layout  处理useEffect useLayoutEffect
 function commitPart(fiber: FiberNode, rootDom: HTMLBodyElement) {
 
-    console.log('本次commit的fiber', fiber);
+    // console.log('本次commit的fiber', fiber);
 
     //todo  mutation阶段
     removeHtml(rootDom)
@@ -110,7 +111,7 @@ function commitPart(fiber: FiberNode, rootDom: HTMLBodyElement) {
 
 function updateCommitPart(fiber: FiberNode, rootDom: HTMLBodyElement) {
     //TODO  此时的fiber包含组件节点  rootDom包含组件节点
-    console.log('本次updateCommit的fiber', fiber);
+    // console.log('本次updateCommit的fiber', fiber);
 
     //todo  mutation阶段
     removeHtml(rootDom)
@@ -302,7 +303,6 @@ function doDestoryQueue(destoryEffectsArr: Effect[]) {
 
 //todo ----遍历清空fiber树上的hookIndex 和 queue
 function resetFiber(fiberTree: FiberNode) {
-
     fiberTree.hookIndex = 0
     fiberTree.updateQueue = null
     global.destoryEffectsArr = []

@@ -10,15 +10,13 @@ import RoutePage from './page/routePage'
 import './App.css'
 
 
-
 function App() {
-
 
   return {
     //注册子组件
     components: { RekvTest, Demo, Test, RoutePage },
     //绑定的事件和传递给组件的props需要在这里注册
-    data: {},
+    data: {  },
     //html模板
     template:
       `<div>

@@ -7,7 +7,7 @@ const createFiberTree_1 = require("../myJSX/createFiberTree");
 //! ----------------模拟render部分------------------------
 //! 更改并生成fiber树  (结束后fiber由mount变为update)
 function renderPart(functionComponent, initFiber) {
-    //todo 首次执行App函数
+    //todo 如果initFiber是全局根节点 则首次处理App函数
     const { template, resource, rootFiberNode } = firstRenderApp(functionComponent, initFiber);
     //todo根据组件构建fiberTree(首次)
     const fiberTree = (0, createFiberTree_1.createFiberTree)(template, resource);
@@ -61,7 +61,7 @@ function firstUpdateRenderApp(functionComponent, fiber) {
 //! 分为三部分  beforeMutation  mutation  layout阶段
 //! before 前置处理  mutation 渲染dom节点   layout  处理useEffect useLayoutEffect
 function commitPart(fiber, rootDom) {
-    console.log('本次commit的fiber', fiber);
+    // console.log('本次commit的fiber', fiber);
     //todo  mutation阶段
     removeHtml(rootDom);
     createHtml(fiber, rootDom); //根据fiberTree创建html
@@ -71,7 +71,7 @@ function commitPart(fiber, rootDom) {
 }
 function updateCommitPart(fiber, rootDom) {
     //TODO  此时的fiber包含组件节点  rootDom包含组件节点
-    console.log('本次updateCommit的fiber', fiber);
+    // console.log('本次updateCommit的fiber', fiber);
     //todo  mutation阶段
     removeHtml(rootDom);
     updateHtml(fiber, rootDom); //根据fiberTree创建html

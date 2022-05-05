@@ -7,9 +7,8 @@ const GlobalFiber_1 = require("./GlobalFiber");
 //! ---------------useState返回的updater方法(updateState方法)-------------------
 function dispatchAction(queue, curFiber, newVal) {
     //todo 如果newVal未发生变化不执行更新
-    const oldVal = curFiber.memorizedState.memorizedState;
-    if (newVal === oldVal)
-        return;
+    // const oldVal = curFiber.memorizedState.memorizedState
+    // if (newVal === oldVal) return
     //todo 更新state队列(在render阶段执行)
     updateQueue(queue, newVal);
     //todo 这里使用防抖 所有queue更新完后再执行render  将timer设置在fiber上以适配Rekv

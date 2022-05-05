@@ -93,6 +93,7 @@ function updateFiberTree(source: any, fiber: FiberNode, resources: any) {
 
     //todo 赋值当前正在工作的fiber节点
     const currentFiber = global.currentFiberNode = fiber
+    
 
     //todo 合并vnode和当前fiber
     let { children = [], props, tag, text } = vnode

@@ -11,8 +11,8 @@ import { global, updateWorkInProgressHook } from './GlobalFiber'
 function dispatchAction(queue: any, curFiber: FiberNode, newVal?: any) {
 
     //todo 如果newVal未发生变化不执行更新
-    const oldVal = curFiber.memorizedState.memorizedState
-    if (newVal === oldVal) return
+    // const oldVal = curFiber.memorizedState.memorizedState
+    // if (newVal === oldVal) return
 
     //todo 更新state队列(在render阶段执行)
     updateQueue(queue, newVal)
@@ -28,6 +28,10 @@ function dispatchAction(queue: any, curFiber: FiberNode, newVal?: any) {
         updateRender(curFiber.stateNode, curFiber.ref, curFiber)
     }, 0)
 
+
+
+
+       
 }
 
 
