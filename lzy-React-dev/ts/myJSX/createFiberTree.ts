@@ -75,7 +75,7 @@ function createFiberTree(source: any, resources: any) {
 
     //todo  如果是Route组件 将container的fiber传递给子组件 (暂时放到全局)
     //! 用于适配路由
-    if (newFiberTree.tag === 'Route') {
+    if (newFiberTree.tag === 'RouteContainer') {
         window.$$routeContainerFiber = newFiberTree
     }
 
@@ -93,7 +93,7 @@ function updateFiberTree(source: any, fiber: FiberNode, resources: any) {
 
     //todo 赋值当前正在工作的fiber节点
     const currentFiber = global.currentFiberNode = fiber
-    
+
 
     //todo 合并vnode和当前fiber
     let { children = [], props, tag, text } = vnode
@@ -138,7 +138,7 @@ function updateFiberTree(source: any, fiber: FiberNode, resources: any) {
 
     //todo  如果是Route组件 将container的fiber传递给子组件 (暂时放到全局)
     //! 用于适配路由
-    if (fiber.tag === 'Route') {
+    if (fiber.tag === 'RouteContainer') {
         window.$$routeContainerFiber = fiber
     }
 

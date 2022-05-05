@@ -62,7 +62,7 @@ function createFiberTree(source, resources) {
     }
     //todo  如果是Route组件 将container的fiber传递给子组件 (暂时放到全局)
     //! 用于适配路由
-    if (newFiberTree.tag === 'Route') {
+    if (newFiberTree.tag === 'RouteContainer') {
         window.$$routeContainerFiber = newFiberTree;
     }
     return newFiberTree;
@@ -110,7 +110,7 @@ function updateFiberTree(source, fiber, resources) {
     }
     //todo  如果是Route组件 将container的fiber传递给子组件 (暂时放到全局)
     //! 用于适配路由
-    if (fiber.tag === 'Route') {
+    if (fiber.tag === 'RouteContainer') {
         window.$$routeContainerFiber = fiber;
     }
     return currentFiber;

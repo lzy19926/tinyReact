@@ -1,4 +1,5 @@
-import { Route, Link } from '../../lzy-React-dev/js/myRouter/index'
+import { RouteContainer, Link } from '../../lzy-React-dev/js/myRouter/index'
+// import { Link, RouteContainer } from 'lzy-react-router'
 import RekvTest from './RekvTest'
 import Demo from './Demo'
 import Test from '../components/Test'
@@ -6,12 +7,12 @@ import Test from '../components/Test'
 function RoutePage() {
 
     return {
-        components: { Link, Route },
+        components: { Link, RouteContainer },
         data: { RekvTest, Demo, Test },
         template: `
             <div>
 
-                    <Route></Route>
+                    <RouteContainer></RouteContainer>
                  
                     <Link to="/" component={RekvTest} title='跳转Rekv(重定向)'></Link>
                     <br></br>

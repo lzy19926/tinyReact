@@ -25,6 +25,7 @@
     "bootstrap": "^3.4.1",
     "jquery": "^3.6.0",
     "lzy-react": "^1.5.3",
+    "lzy-react-router": "^0.4.3",
     "lzy-rekv": "^1.4.2"
   },
   "keywords": [],
