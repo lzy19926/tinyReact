@@ -11,7 +11,10 @@ function RoutePage() {
             <div>
 
                 <Route>
+                    <Link to="/" component={RekvTest} title='跳转Rekv(重定向)'></Link>
+                    <br></br>
                     <Link to="#rekvTest" component={RekvTest} title='跳转Rekv页面'></Link>
+                    <br></br>
                     <Link to="#demo" component={Demo} title='跳转Demo页面'></Link>
                 </Route>
                 

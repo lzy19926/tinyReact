@@ -1,7 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const index_1 = require("../../index");
+const index_2 = require("../../index");
 function Link({ to, title, component }) {
+    (0, index_2.myUseEffect)(() => {
+        if (to === '/') {
+            console.log('执行');
+            switchRoute();
+        }
+    });
     //todo 切换路由页面简易逻辑
     function switchRoute() {
         //todo 修改页面path
