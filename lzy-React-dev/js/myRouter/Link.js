@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const index_1 = require("../../../lzy-React-dev/index");
+const index_1 = require("../../index");
 function Link({ to, title, component }) {
     //todo 切换路由页面简易逻辑
     function switchRoute() {

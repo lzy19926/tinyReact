@@ -60,6 +60,11 @@ function createFiberTree(source, resources) {
             newFiberTree.children.push(childFiberTree);
         }
     }
+    //todo  如果是Route组件 将container的fiber传递给子组件 (暂时放到全局)
+    //! 用于适配路由
+    if (newFiberTree.tag === 'Route') {
+        window.$$routeContainerFiber = newFiberTree;
+    }
     return newFiberTree;
 }
 exports.createFiberTree = createFiberTree;
@@ -103,6 +108,11 @@ function updateFiberTree(source, fiber, resources) {
             currentFiber.children[i] = updateFiberTree(vnode, childFiber, resources);
         }
     }
+    //todo  如果是Route组件 将container的fiber传递给子组件 (暂时放到全局)
+    //! 用于适配路由
+    if (fiber.tag === 'Route') {
+        window.$$routeContainerFiber = fiber;
+    }
     return currentFiber;
 }
 exports.updateFiberTree = updateFiberTree;
@@ -111,6 +121,7 @@ exports.updateFiberTree = updateFiberTree;
 function handleFunctionComponentProps(fiber, functionComponent) {
     const needProps = fiber.props;
     const data = fiber.sourcePool.data;
+    //否则对其他组件进行处理
     const nextProps = {};
     for (let key in needProps) {
         const originValue = needProps[key][0];

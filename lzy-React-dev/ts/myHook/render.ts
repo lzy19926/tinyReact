@@ -6,10 +6,10 @@ import { Effect, FiberNode } from './Interface'
 
 //! ----------------模拟render部分------------------------
 //! 更改并生成fiber树  (结束后fiber由mount变为update)
-function renderPart(functionComponent: Function) {
+function renderPart(functionComponent: Function, initFiber: FiberNode) {
 
     //todo 首次执行App函数
-    const { template, resource, rootFiberNode } = firstRenderApp(functionComponent)
+    const { template, resource, rootFiberNode } = firstRenderApp(functionComponent, initFiber)
 
     //todo根据组件构建fiberTree(首次)
     const fiberTree = createFiberTree(template, resource)
@@ -38,8 +38,8 @@ function updateRenderPart(functionComponent: Function, rootFiber: FiberNode) {
 }
 
 //对render根Fiber节点进行处理(否则无法渲染第一个根节点)
-function firstRenderApp(functionComponent: Function) {
-    const rootFiberNode = global.rootFiber
+function firstRenderApp(functionComponent: Function, initFiber: FiberNode) {
+    const rootFiberNode = initFiber
     global.currentFiberNode = rootFiberNode
     rootFiberNode.stateNode = functionComponent
 
@@ -317,10 +317,18 @@ function resetFiber(fiberTree: FiberNode) {
 
 
 //!--------------综合Render方法-------------------
-function render(functionComponent: Function, rootDom: any): any {
+function render(functionComponent: Function, rootDom: any, initFiber?: FiberNode): any {
+
+
     console.log('------------render-------------');
 
-    const fiber = renderPart(functionComponent)//todo render阶段
+    //用于适配路由  需要从该fiber节点开始render
+    if (!initFiber) {
+        initFiber = global.rootFiber
+    }
+
+
+    const fiber = renderPart(functionComponent, initFiber)//todo render阶段
 
     commitPart(fiber, rootDom)//todo commit阶段
 

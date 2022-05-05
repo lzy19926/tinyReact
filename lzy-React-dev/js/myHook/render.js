@@ -6,9 +6,9 @@ const GlobalFiber_1 = require("./GlobalFiber");
 const createFiberTree_1 = require("../myJSX/createFiberTree");
 //! ----------------模拟render部分------------------------
 //! 更改并生成fiber树  (结束后fiber由mount变为update)
-function renderPart(functionComponent) {
+function renderPart(functionComponent, initFiber) {
     //todo 首次执行App函数
-    const { template, resource, rootFiberNode } = firstRenderApp(functionComponent);
+    const { template, resource, rootFiberNode } = firstRenderApp(functionComponent, initFiber);
     //todo根据组件构建fiberTree(首次)
     const fiberTree = (0, createFiberTree_1.createFiberTree)(template, resource);
     rootFiberNode.children.push(fiberTree);
@@ -27,8 +27,8 @@ function updateRenderPart(functionComponent, rootFiber) {
     return rootFiberNode;
 }
 //对render根Fiber节点进行处理(否则无法渲染第一个根节点)
-function firstRenderApp(functionComponent) {
-    const rootFiberNode = GlobalFiber_1.global.rootFiber;
+function firstRenderApp(functionComponent, initFiber) {
+    const rootFiberNode = initFiber;
     GlobalFiber_1.global.currentFiberNode = rootFiberNode;
     rootFiberNode.stateNode = functionComponent;
     //! 用于解决webpack 函数名出现bound问题
@@ -232,9 +232,13 @@ function resetFiber(fiberTree) {
 }
 exports.resetFiber = resetFiber;
 //!--------------综合Render方法-------------------
-function render(functionComponent, rootDom) {
+function render(functionComponent, rootDom, initFiber) {
     console.log('------------render-------------');
-    const fiber = renderPart(functionComponent); //todo render阶段
+    //用于适配路由  需要从该fiber节点开始render
+    if (!initFiber) {
+        initFiber = GlobalFiber_1.global.rootFiber;
+    }
+    const fiber = renderPart(functionComponent, initFiber); //todo render阶段
     commitPart(fiber, rootDom); //todo commit阶段
 }
 exports.render = render;

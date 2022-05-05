@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-function RouteContainer() {
+function Route({ fiber }) {
     return {
         template: `<div id='routeContainer'></div>`
     };
 }
-exports.default = RouteContainer;
+exports.default = Route;

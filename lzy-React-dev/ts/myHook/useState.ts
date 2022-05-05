@@ -10,8 +10,6 @@ import { global, updateWorkInProgressHook } from './GlobalFiber'
 //! ---------------useState返回的updater方法(updateState方法)-------------------
 function dispatchAction(queue: any, curFiber: FiberNode, newVal?: any) {
 
-
-
     //todo 如果newVal未发生变化不执行更新
     const oldVal = curFiber.memorizedState.memorizedState
     if (newVal === oldVal) return

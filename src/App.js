@@ -5,7 +5,7 @@ import Test from './components/Test'
 //Rekv适配测试页面
 import RekvTest from './page/RekvTest'
 //路由测试页面
-import RoutePage from './page/routeTest'
+import RoutePage from './page/routePage'
 //引入CSS
 import './App.css'
 
