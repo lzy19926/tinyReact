@@ -14,9 +14,9 @@ function RoutePage() {
 
                     <RouteContainer></RouteContainer>
                  
-                    <Link to="/" component={RekvTest} title='跳转Rekv(重定向)'></Link>
+                    <Link to="/#rekv" component={RekvTest} title='跳转Rekv(重定向)'></Link>
                     <br></br>
-                    <Link to="/#Test" component={Test} title='跳转Test'></Link>
+                    <Link to="/#test" component={Test} title='跳转Test'></Link>
                     <br></br>
                     <Link to="/#demo" component={Demo} title='跳转Demo页面'></Link>
                                                 

@@ -31,7 +31,7 @@ class Rekv {
                     }
                 };
             }, keys);
-            return value; //todo 返回useState中保存的_state
+            return this._state; //todo 直接返回当前状态
         };
         if (!(0, utils_1.isPlainObject)(args.allStates)) {
             throw new Error('init state is not a plain object');
@@ -149,7 +149,6 @@ class Rekv {
             //todo 每次执行on 都会往_event中推入一个[name]:updater项
             const updaters = this._events[key]; //取出该key的updater
             if (Array.isArray(updaters)) {
-                console.log(updaters.length);
                 for (let j = 0, updaterLen = updaters.length; j < updaterLen; j++) {
                     const updater = updaters[j];
                     // check whether the updater has been updated, the same updater may watch different keys
