@@ -1,5 +1,5 @@
 import { render } from '../lzy-React-dev/index'
-import App from './App'
+import App from './App.lzy'
 
 // 渲染app
 console.time('first-render');

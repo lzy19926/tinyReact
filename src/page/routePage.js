@@ -18,6 +18,7 @@ function RoutePage() {
                     <br></br>
                     <Link to="/#demo" component={Demo} title='跳转Demo页面'></Link>
                     <br></br>
+                    <RouteContainer></RouteContainer>
                     </div>
         `
     }

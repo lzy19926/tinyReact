@@ -3,13 +3,13 @@ const useJSY = require('./useJSY')
 function lzyLoader(source) {
 
     //todo 匹配获取<TEMPLATE></TEMPLATE>中的内容
-    const templateEXP = /<TEMPLATE[^>]*>(?:.|[\r\n])*?<\/TEMPLATE>/g
+    const templateEXP = /<LZY-TEMPLATE[^>]*>(?:.|[\r\n])*?<\/LZY-TEMPLATE>/g
     const templateArr = source.match(templateEXP)
     //todo 将<TEMPLATE>标签替换为<div> 
     const newOptionsArr = templateArr.map((tpl) => {
         const newTpl = tpl
-            .replace('<TEMPLATE>', '`<div>')
-            .replace('</TEMPLATE>', '</div>`')
+            .replace('<LZY-TEMPLATE>', '`<div>')
+            .replace('</LZY-TEMPLATE>', '</div>`')
         //todo 转换内部的模板为options对象
         return useJSY(newTpl)
     })
