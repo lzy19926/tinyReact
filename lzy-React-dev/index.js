@@ -3,5 +3,5 @@ import { myUseState } from "./js/myHook/useState";
 import { render, updateRender } from "./js/myHook/render";
 import { global } from "./js/myHook/GlobalFiber";
 import Rekv from './js/myRekV/index'
-
-export { myUseState, myUseEffect, render, updateRender, Rekv, global }
+import useJSY from './js/myJSX/useJSY'
+export { myUseState, myUseEffect, render, updateRender, Rekv, global, useJSY }

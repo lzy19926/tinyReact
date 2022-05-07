@@ -1,0 +1,18 @@
+import Demo from "./Demo"
+
+
+function JsyTest() {
+
+    const name = '张三'
+
+    return (
+        <TEMPLATE>
+            <Demo name={name} id={'张三'}></Demo>
+        </TEMPLATE>
+    )
+}
+
+export default JsyTest
+
+
+

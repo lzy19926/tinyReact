@@ -1,54 +1,10 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.tokens2vdom = exports.nestTokens = exports.collectTokens = exports.tplToVDOM = void 0;
-//! 字符串扫描解析器
-class Scanner {
-    constructor(text) {
-        this.text = text;
-        // 指针
-        this.pos = 0;
-        // 尾巴  剩余字符
-        this.tail = text;
-    }
-    /**
-     * 路过指定内容
-     *
-     * @memberof Scanner
-     */
-    scan(tag) {
-        if (this.tail.indexOf(tag) === 0) {
-            // 直接跳过指定内容的长度
-            this.pos += tag.length;
-            // 更新tail
-            this.tail = this.text.substring(this.pos);
-        }
-    }
-    /**
-     * 让指针进行扫描，直到遇见指定内容，返回路过的文字
-     *
-     * @memberof Scanner
-     * @return str 收集到的字符串
-     */
-    scanUntil(stopTag) {
-        // 记录开始扫描时的初始值
-        const startPos = this.pos;
-        // 当尾巴的开头不是stopTg的时候，说明还没有扫描到stopTag
-        while (!this.eos() && this.tail.indexOf(stopTag) !== 0) {
-            // 改变尾巴为当前指针这个字符到最后的所有字符
-            this.tail = this.text.substring(++this.pos);
-        }
-        // 返回经过的文本数据
-        return this.text.substring(startPos, this.pos).trim();
-    }
-    /**
-     * 判断指针是否到达文本末尾（end of string）
-     *
-     * @memberof Scanner
-     */
-    eos() {
-        return this.pos >= this.text.length;
-    }
-}
+const tplScanner_1 = __importDefault(require("./tplScanner"));
 //! 拆分html中的事件  (键值对)
 function eventParser(html) {
     const jsEXP = /\w*\={{([\s\S]*?)}*}/;
@@ -115,7 +71,7 @@ function allPropsParser(html) {
 }
 //! 将html模板字符串转换成tokens数组
 function collectTokens(html) {
-    const scanner = new Scanner(html);
+    const scanner = new tplScanner_1.default(html);
     const tokens = [];
     let word = '';
     while (!scanner.eos()) {
