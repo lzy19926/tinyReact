@@ -10,7 +10,7 @@ module.exports = {
     mode: 'development',//配置环境  生产模式不会压缩代码  利于调试
 
     entry: './src/index.js',
-    
+
     output: {
         filename: 'bundle.js',
         path: path.resolve(__dirname, 'dist')
@@ -43,21 +43,24 @@ module.exports = {
     ],
 
     //配置CSS模块化  --可以引入和打包CSS文件(使用普通css文件  如需使用less需要其他配置)
+    //所有的.css文件都要经过css-loader的解析
     module: {
         rules: [
             {
                 test: /\.css$/i,
                 use: [MiniCssExtractPlugin.loader, "css-loader"],
+            },
+            {
+                test: /\.lzy$/,
+                use: [
+                    'babel-loader',
+                    { loader: path.resolve(__dirname, './lzy-loader/index.js') }
+                ]
             }
         ],
     },
 
 
-    //配置CDN引入----
-    // externalsType: 'script',
-    // externals: {
-
-    // },
 }
 
 

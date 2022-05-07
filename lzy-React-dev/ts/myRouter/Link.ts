@@ -15,7 +15,7 @@ function Link({ to, title, component }) {
 
 
     function handleRouteChange() {
-        if (to === '/') return
+        if (location.hash === to.slice(1)) return
         switchRouteHistory()
     }
 
@@ -27,8 +27,6 @@ function Link({ to, title, component }) {
         const container = document.getElementById('routeContainer')
         //todo 创建到容器节点时  将容器节点的fiber挂载到全局  以便获取(需修改)
         const containerFiber = window.$$routeContainerFiber.children[0]
-
-        
 
         //todo 改变fiebrFlag，以便创建新的组件节点(需要修改)
         containerFiber.fiberFlags = 'mount'

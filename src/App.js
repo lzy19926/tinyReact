@@ -6,22 +6,25 @@ import Test from './components/Test'
 import RekvTest from './page/RekvTest'
 //路由测试页面
 import RoutePage from './page/routePage'
+//JSX测试页面
+import LoaderTest from './page/JsxTest.lzy'
 //引入CSS
 import './App.css'
+
 
 
 function App() {
 
   return {
     //注册子组件
-    components: { RekvTest, Demo, Test, RoutePage },
+    components: { RekvTest, Demo, Test, RoutePage, LoaderTest },
     //绑定的事件和传递给组件的props需要在这里注册
-    data: {  },
+    data: {},
     //html模板
     template:
       `<div>
-      <RoutePage></RoutePage>
-    </div>`,
+      <LoaderTest></LoaderTest>
+      </div>`,
   }
 }
 

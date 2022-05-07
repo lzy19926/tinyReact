@@ -10,7 +10,7 @@ function Link({ to, title, component }) {
         }
     });
     function handleRouteChange() {
-        if (to === '/')
+        if (location.hash === to.slice(1))
             return;
         switchRouteHistory();
     }

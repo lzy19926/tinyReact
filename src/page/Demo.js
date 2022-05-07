@@ -4,7 +4,9 @@ import { myUseState, myUseEffect } from '../../lzy-React-dev/index'
 
 
 //! Demo组件
-function Demo() {
+function Demo(props) {
+
+    console.log(props);
 
     const [age, setAge] = myUseState(18)
     const [num, setNum] = myUseState(0)

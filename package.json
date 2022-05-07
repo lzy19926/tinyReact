@@ -22,6 +22,8 @@
   },
   "main": "webpack.config.js",
   "dependencies": {
+    "@babel/core": "^7.17.10",
+    "babel-loader": "^8.2.5",
     "bootstrap": "^3.4.1",
     "jquery": "^3.6.0",
     "lzy-react": "^1.5.3",
