@@ -46,7 +46,9 @@ interface FiberNode {
     tag: any,
     text: any,
     sourcePool: any,
-    hookIndex: number
+    hookIndex: number,
+    parentFiberNode: FiberNode | null,
+    next: FiberNode | null
 }
 
 //!-------------全局需要的变量结构---------------

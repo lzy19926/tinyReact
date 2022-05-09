@@ -243,10 +243,12 @@ function render(functionComponent, rootDom, initFiber) {
 }
 exports.render = render;
 function updateRender(functionComponent, rootDom, rootFiber) {
+    console.time('updateRender');
     //更新render时需要先将fiber的数据重置  重新挂载数据
     resetFiber(rootFiber);
     console.log('------------updateRender-------------');
     const newFiber = updateRenderPart(functionComponent, rootFiber);
     updateCommitPart(newFiber, rootDom); //todo commit阶段
+    console.timeEnd('updateRender');
 }
 exports.updateRender = updateRender;

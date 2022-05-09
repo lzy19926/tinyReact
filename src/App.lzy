@@ -7,7 +7,7 @@ import RekvTest from './page/RekvTest'
 //路由测试页面
 import RoutePage from './page/routePage'
 //JSX测试页面
-import JsyTest from './page/JsyTest.lzy'
+import JsyTest from './lzy page/JsyTest.lzy'
 //引入CSS
 import './App.css'
 
@@ -18,7 +18,7 @@ function App() {
 
   return (
     <LZY-TEMPLATE>
-      <RoutePage></RoutePage>
+      <JsyTest></JsyTest>
     </LZY-TEMPLATE>
   )
 }

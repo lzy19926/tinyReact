@@ -50,13 +50,20 @@ module.exports = {
                 test: /\.css$/i,
                 use: [MiniCssExtractPlugin.loader, "css-loader"],
             },
+            // loader开发测试用配置
             {
                 test: /\.lzy$/,
                 use: [
                     'babel-loader',
                     { loader: path.resolve(__dirname, './lzy-loader/index.js') }
                 ]
-            }
+            },
+
+
+            // {
+            //     test: /\.lzy$/,
+            //     use: ['babel-loader', 'lzy-loader']
+            // }
         ],
     },
 

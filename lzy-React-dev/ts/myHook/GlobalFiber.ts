@@ -15,7 +15,8 @@ let rootFiber: FiberNode = {
     tag: null,
     text: null,
     sourcePool: null, ///! 组件返回的资源  props和事件
-    hookIndex: 0 // 用于记录hook的数量 以便查找
+    hookIndex: 0, // 用于记录hook的数量 以便查找
+    next: null // 下一个遍历的fiber节点
 }
 
 

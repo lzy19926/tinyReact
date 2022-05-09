@@ -1,6 +1,8 @@
-const useJSY = require('./useJSY')
+const useJSY = require('./utils/useJSY')
 
 function lzyLoader(source) {
+
+    console.log(source);
 
     //todo 匹配获取<TEMPLATE></TEMPLATE>中的内容
     const templateEXP = /<LZY-TEMPLATE[^>]*>(?:.|[\r\n])*?<\/LZY-TEMPLATE>/g
@@ -14,16 +16,21 @@ function lzyLoader(source) {
         return useJSY(newTpl)
     })
 
+
+
+
+
     //todo 将所有的template标签字符替换成options对象
-    //todo 一个标签内字符对应一个options对象
-    let newSource = source
+    //todo 一个标签内字符对应一个options对象i
     for (let i = 0; i < templateArr.length; i++) {
-        newSource = newSource.replace(templateArr[0], newOptionsArr[0])
+        source = source.replace(templateArr[i], newOptionsArr[i])
     }
 
     //todo 将新的js字符串返回  交给babel转换为js代码
-    return `${newSource}`
+    return `${source}`
 }
+
+
 
 
 
@@ -31,9 +38,3 @@ module.exports = lzyLoader
 
 
 
-//!------ 转换<TEMPLATE/>模板为options对象:---------
-// const options = `{
-//     components:{ Demo },
-//     data: ${needData},
-//     template:'<div><Demo id={1}></Demo></div>',
-// }`;

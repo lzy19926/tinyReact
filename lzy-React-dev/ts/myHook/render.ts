@@ -335,6 +335,8 @@ function render(functionComponent: Function, rootDom: any, initFiber?: FiberNode
 }
 
 function updateRender(functionComponent: Function, rootDom: any, rootFiber: FiberNode): any {
+    console.time('updateRender');
+
     //更新render时需要先将fiber的数据重置  重新挂载数据
     resetFiber(rootFiber)
 
@@ -343,6 +345,7 @@ function updateRender(functionComponent: Function, rootDom: any, rootFiber: Fibe
     const newFiber = updateRenderPart(functionComponent, rootFiber)
 
     updateCommitPart(newFiber, rootDom)//todo commit阶段
+    console.timeEnd('updateRender');
 
 }
 

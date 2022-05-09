@@ -44,8 +44,6 @@ class Scanner {
 
     /**
      * 判断指针是否到达文本末尾（end of string）
-     *
-     * @memberof Scanner
      */
 
 
@@ -53,5 +51,6 @@ class Scanner {
         return this.pos >= this.text.length;
     }
 }
+
 
 module.exports = Scanner

@@ -17,7 +17,10 @@ function Test(props) {
 
     return {
         data: { addNum },
-        template: `<button onClick={addNum}>Num:${num} Age:${age}</button>`,
+        template: `<div>
+        <button onClick={addNum}>Num:${num} Age:${age}</button>
+        <button onClick={addNum}>Num:${num} Age:${age}</button>
+        </div>`,
     }
 }
 

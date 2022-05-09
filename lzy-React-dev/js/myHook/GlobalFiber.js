@@ -16,7 +16,8 @@ let rootFiber = {
     tag: null,
     text: null,
     sourcePool: null,
-    hookIndex: 0 // 用于记录hook的数量 以便查找
+    hookIndex: 0,
+    next: null // 下一个遍历的fiber节点
 };
 //! -----需要使用的全局变量---------------
 const global = {
