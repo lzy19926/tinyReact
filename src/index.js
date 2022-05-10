@@ -1,6 +1,6 @@
-import { render } from '../lzy-React-dev/index'
+import { render } from '../lzy-React/index'
 import App from './App.lzy'
-import { linkRender } from '../lzy-React-dev/js/myHook/linkRender'
+import { linkRender } from '../lzy-React/js/myHook/linkRender'
 // 渲染app
 
 

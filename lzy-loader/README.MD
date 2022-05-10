@@ -14,4 +14,4 @@ npm i lzy-loader  babel-loader @babel/core
 ## 创建  App.lzy 文件   语言模式设置为js 即可使用<LZY-TEMPLATE>标签
 
 
-##  新增功能  可以在模板中使用 {(  )} 包裹JS代码并执行
+##  新增功能  可以在模板中使用 {( )} 包裹JS代码并执行

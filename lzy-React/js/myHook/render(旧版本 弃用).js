@@ -239,7 +239,7 @@ function render(functionComponent, rootDom, initFiber) {
         initFiber = GlobalFiber_1.global.rootFiber;
     }
     const fiber = renderPart(functionComponent, initFiber); //todo render阶段
-    commitPart(fiber, rootDom); //todo commit阶段
+    // commitPart(fiber, rootDom)//todo commit阶段
 }
 exports.render = render;
 function updateRender(functionComponent, rootDom, rootFiber) {

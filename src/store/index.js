@@ -1,5 +1,5 @@
 
-import { Rekv } from '../../lzy-React-dev/index'
+import { Rekv } from '../../lzy-React/index'
 
 export default new Rekv({
     allStates: {

@@ -37,6 +37,7 @@ function updateRenderPart(functionComponent: Function, rootFiber: FiberNode) {
     return rootFiberNode
 }
 
+
 //对render根Fiber节点进行处理(否则无法渲染第一个根节点)
 function firstRenderApp(functionComponent: Function, initFiber: FiberNode) {
     const rootFiberNode = initFiber
@@ -327,10 +328,9 @@ function render(functionComponent: Function, rootDom: any, initFiber?: FiberNode
         initFiber = global.rootFiber
     }
 
-
     const fiber = renderPart(functionComponent, initFiber)//todo render阶段
 
-    commitPart(fiber, rootDom)//todo commit阶段
+    // commitPart(fiber, rootDom)//todo commit阶段
 
 }
 

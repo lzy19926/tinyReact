@@ -1,5 +1,5 @@
 // import { myUseState, myUseEffect } from 'lzy-react'
-import { myUseState, myUseEffect } from '../../lzy-React-dev/index'
+import { myUseState, myUseEffect } from '../../lzy-React/index'
 
 
 

@@ -1,15 +1,14 @@
 // import { myUseState, myUseEffect } from 'lzy-react'
-import { myUseState, myUseEffect } from '../../lzy-React-dev/index'
+import { myUseState, myUseEffect } from '../../lzy-React/index'
 
 
 
 //! Demo组件
 function Demo(props) {
 
-    console.log(props);
 
     const [age, setAge] = myUseState(18)
-    const [num, setNum] = myUseState(0)
+    const [num, setNum] = myUseState(1)
     const [arr, setArr] = myUseState([])
 
     const longList = new Array(5000).fill(1)
@@ -23,10 +22,10 @@ function Demo(props) {
         console.log('不传 任意时候执行');
     })
 
-    myUseEffect(() => {
-        setNum(num + 1)
-        console.log('监听age,age改变时执行');
-    }, [age])
+    // myUseEffect(() => {
+    //     setNum(num + 1)
+    //     console.log('监听age,age改变时执行');
+    // }, [age])
 
 
 

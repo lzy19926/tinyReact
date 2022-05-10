@@ -1,4 +1,4 @@
-import { myUseState } from '../../lzy-React-dev/index'
+import { myUseState } from '../../lzy-React/index'
 
 
 
@@ -8,6 +8,7 @@ function Test(props) {
     const [num, setNum] = myUseState(0)
     const [age, setAge] = myUseState(18)
 
+    console.log(num);
 
     function addNum() {
         //多个setState合并执行 一次render
@@ -17,10 +18,7 @@ function Test(props) {
 
     return {
         data: { addNum },
-        template: `<div>
-        <button onClick={addNum}>Num:${num} Age:${age}</button>
-        <button onClick={addNum}>Num:${num} Age:${age}</button>
-        </div>`,
+        template: `<button onClick={addNum}>Num:${num} Age:${age}</button>`,
     }
 }
 

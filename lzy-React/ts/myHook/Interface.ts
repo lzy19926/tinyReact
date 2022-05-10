@@ -35,7 +35,7 @@ interface StateUpdater {
 //!------------fiberNode结构----------------------
 interface FiberNode {
     memorizedState: any,
-    stateNode: Function,
+    stateNode: Function | HTMLElement | null,
     updateQueue: any,
     stateQueueTimer: any,
     fiberFlags: string,
@@ -47,8 +47,7 @@ interface FiberNode {
     text: any,
     sourcePool: any,
     hookIndex: number,
-    parentFiberNode: FiberNode | null,
-    next: FiberNode | null
+    parentNode: FiberNode | null,
 }
 
 //!-------------全局需要的变量结构---------------

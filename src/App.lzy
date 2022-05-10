@@ -18,7 +18,7 @@ function App() {
 
   return (
     <LZY-TEMPLATE>
-      <JsyTest></JsyTest>
+      <Demo></Demo>
     </LZY-TEMPLATE>
   )
 }

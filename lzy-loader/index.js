@@ -4,14 +4,14 @@ function lzyLoader(source) {
 
     console.log(source);
 
-    //todo 匹配获取<TEMPLATE></TEMPLATE>中的内容
+    //todo 匹配获取<LZY-TEMPLATE></LZY-TEMPLATE>中的内容
     const templateEXP = /<LZY-TEMPLATE[^>]*>(?:.|[\r\n])*?<\/LZY-TEMPLATE>/g
     const templateArr = source.match(templateEXP)
     //todo 将<TEMPLATE>标签替换为<div> 
     const newOptionsArr = templateArr.map((tpl) => {
         const newTpl = tpl
-            .replace('<LZY-TEMPLATE>', '`<div>')
-            .replace('</LZY-TEMPLATE>', '</div>`')
+            .replace('<LZY-TEMPLATE>', '`')
+            .replace('</LZY-TEMPLATE>', '`')
         //todo 转换内部的模板为options对象
         return useJSY(newTpl)
     })
