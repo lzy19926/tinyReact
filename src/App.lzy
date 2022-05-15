@@ -20,9 +20,8 @@ function App() {
   return (
     <LZY-TEMPLATE>
       <div>
-          <Demo></Demo>
+        <Demo></Demo>
       </div>
-
     </LZY-TEMPLATE>
   )
 }

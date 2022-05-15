@@ -17,7 +17,8 @@ let rootFiber = {
     text: null,
     sourcePool: null,
     hookIndex: 0,
-    next: null // 下一个遍历的fiber节点
+    parentNode: null,
+    nodeType: undefined
 };
 //! -----需要使用的全局变量---------------
 const global = {

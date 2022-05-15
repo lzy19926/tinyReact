@@ -16,8 +16,10 @@ function dispatchAction(queue, curFiber, newVal) {
     clearTimeout(curFiber.stateQueueTimer);
     curFiber.stateQueueTimer = setTimeout(() => {
         //! 源码中使用切换fiber树的方式执行重新渲染 
-        //! 从当前fiber节点  重新执行函数式组件  更新子fiber树(需要传入当前fiber进行递归)
-        (0, render_1.updateRender)(curFiber.stateNode, curFiber);
+        //! 从当前fiber节点  重新执行函数式组件  更新子fiber树(需要传入当前fiber进行递归) 
+        if (typeof curFiber.stateNode === 'function') {
+            (0, render_1.updateRender)(curFiber.stateNode, curFiber);
+        }
     }, 0);
 }
 //! 更新setate更新队列

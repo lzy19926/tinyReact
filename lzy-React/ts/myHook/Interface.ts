@@ -48,6 +48,7 @@ interface FiberNode {
     sourcePool: any,
     hookIndex: number,
     parentNode: FiberNode | null,
+    nodeType: 'HostText' | 'HostComponent' | 'FunctionComponent' | 'AppNode' | undefined
 }
 
 //!-------------全局需要的变量结构---------------

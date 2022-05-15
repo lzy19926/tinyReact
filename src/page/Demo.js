@@ -1,6 +1,6 @@
 // import { myUseState, myUseEffect } from 'lzy-react'
 import { myUseState, myUseEffect } from '../../lzy-React/index'
-
+import Test from '../components/Test'
 
 
 //! Demo组件
@@ -49,7 +49,8 @@ function Demo(props) {
 
         template: `
         <div>
-    
+       
+
         <h1>Demo</h1>
         
         <div>简单适配了bootStarp组件库</div>

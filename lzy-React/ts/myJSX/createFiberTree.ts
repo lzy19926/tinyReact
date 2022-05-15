@@ -16,14 +16,14 @@ let initFiberNode: FiberNode = {
     text: null,
     sourcePool: null, ///! 组件返回的资源  props和事件
     hookIndex: 0, // 用于记录hook的数量 以便查找
-    parentNode: null
+    parentNode: null,
+    nodeType: undefined
 }
 
 //! 创建fiberNode树(Vnode树) 深度优先遍历vnode树  包装成fiberNode
 //! 根据fiberNode和FunctionComponent创建FiberNode 生成Fiber树
 //todo 传入parentNode 给子fiber挂载parentNode属性  用于向上查找dom节点和fiber
 function createFiberTree(source: any, resources: any, parentNode: FiberNode) {
-
 
     //todo 创建一个新的fiber节点(浅拷贝) 更新当前工作节点
     let newFiberNode = JSON.parse(JSON.stringify(initFiberNode))
@@ -39,9 +39,9 @@ function createFiberTree(source: any, resources: any, parentNode: FiberNode) {
 
 
 
-    //TODO -----------如果tag大写 解析为组件(无children) ----------------
+    //TODO -----------如果tag大写 解析为组件节点(无children) ----------------
     if (tag[0] === tag[0].toUpperCase()) {
-
+        newFiberNode.nodeType = 'FunctionComponent'
         //todo 从sourcePool中获取子组件
         const fc = newFiberNode.sourcePool.components[tag]
         if (!fc) { console.error(`子组件${tag}未注册`) }
@@ -51,8 +51,9 @@ function createFiberTree(source: any, resources: any, parentNode: FiberNode) {
         renderFunctionComponent(newFiberNode)
     }
 
-    //TODO ----------小写的情况  是dom节点  创建对应的dom并添加--------
+    //TODO ----------小写的情况  是domComponent节点/text节点  创建对应的dom并添加--------
     else {
+        newFiberNode.nodeType = 'HostText'
         createDomElement(newFiberNode)
     }
 
@@ -60,7 +61,8 @@ function createFiberTree(source: any, resources: any, parentNode: FiberNode) {
 
     //todo 如果有children 深度优先遍历  包装成fiberNode 挂到当前节点
 
-    if (children) {
+    if (children.length > 0) {
+        newFiberNode.nodeType = 'HostComponent'
         for (let i = 0; i < children.length; i++) {
             const childFiberNode = createFiberTree(children[i], newFiberNode.sourcePool, newFiberNode)
             newFiberNode.children.push(childFiberNode)
@@ -79,6 +81,8 @@ function createFiberTree(source: any, resources: any, parentNode: FiberNode) {
 
 //! -------------创建html并挂载到fiber节点上--------------------
 function createDomElement(fiber: FiberNode) {
+
+
     //找到父dom节点 将创建好的dom节点添加进去
     const parentDom = getParentDom(fiber)
 
@@ -98,7 +102,6 @@ function createDomElement(fiber: FiberNode) {
 // //! ---------------更新fiberTree-------------------
 function updateFiberTree(source: any, fiber: FiberNode, resources: any) {
 
-
     //todo 判断传入的source 转换成vnode
     let vnode = typeof source === 'string' ? tplToVDOM(source) : source
 
@@ -108,9 +111,11 @@ function updateFiberTree(source: any, fiber: FiberNode, resources: any) {
 
     //todo 合并处理vnode和Fiber 挂载resource
     const { children = [], tag, text, props } = vnode
-    const fiberText = currentFiber.text
+
     //todo 合并vnode和fiber属性
     currentFiber = conbineVnodAndFiber(currentFiber, vnode, resources)
+
+
 
     //TODO -----------如果tag大写 解析为组件 ----------------
     if (tag[0] == tag[0].toUpperCase()) {
@@ -128,7 +133,7 @@ function updateFiberTree(source: any, fiber: FiberNode, resources: any) {
     //TODO -----------小写情况  则是HoseComponent----------
     // todo 在这里进行分情况更新
     else {
-        updateDomElement(currentFiber)
+        // updateDomElement(currentFiber)
     }
 
 
@@ -151,16 +156,6 @@ function updateFiberTree(source: any, fiber: FiberNode, resources: any) {
     }
 
     return currentFiber
-}
-
-
-function updateDomElement(fiber: FiberNode) {
-
-    let domElement = fiber.stateNode
-    handleProps(fiber, domElement)
-    if (fiber.text) { domElement.innerHTML = fiber.text }
-
-    return domElement
 }
 
 
@@ -317,3 +312,18 @@ export { createFiberTree, updateFiberTree }
 // 错误记录
 // 函数name被webpack打包后会变为bound+函数名
 // 不能直接给tag赋值 
+
+
+
+//! -------------废弃部分------------------------------
+{
+    //这个应该在commit阶段执行
+    function updateDomElement(fiber: FiberNode) {
+
+        let domElement = fiber.stateNode
+        handleProps(fiber, domElement)
+        if (fiber.text) { domElement.innerHTML = fiber.text }
+
+        return domElement
+    }
+}

@@ -32,6 +32,7 @@ function updateRenderPart(functionComponent, rootFiber) {
 function firstRenderApp(functionComponent, currentRootFiber) {
     GlobalFiber_1.global.currentFiberNode = currentRootFiber;
     currentRootFiber.stateNode = functionComponent;
+    currentRootFiber.nodeType = 'AppNode';
     //! 用于解决webpack 函数名出现bound问题 并赋值给此fiber的tag
     const functionNameArr = functionComponent.name.split(' ');
     currentRootFiber.tag = functionNameArr[0] === 'bound'
@@ -63,21 +64,79 @@ function firstUpdateRenderApp(functionComponent, fiber) {
 //! before 前置处理  mutation 渲染dom节点   layout  处理useEffect useLayoutEffect
 function commitPart(finishedWorkFiber) {
     //todo  mutation阶段 
-    commitMutation(finishedWorkFiber);
+    commitFiberNodeMutation(finishedWorkFiber);
     //todo  layout阶段  调用Effects链表 执行create函数()
     //todo 处理ref
 }
 function updateCommitPart(finishedWorkFiber) {
     //todo  mutation阶段
-    commitMutation(finishedWorkFiber);
+    commitFiberNodeMutation(finishedWorkFiber);
     //todo  layout阶段  调用Effects链表 执行create函数()
     //todo 处理ref
 }
-//! mutation阶段  遍历effect更新链表  执行每个上一次的destory和本次create,并挂载destory
-function commitMutation(finishedWorkFiber) {
-    //在之前finishedWork阶段已经将所有effects收集 挂载到finishedWorkFiber上
-    callDestoryAndUnmountDestoryList(finishedWorkFiber);
-    callCreateAndMountDestoryList(finishedWorkFiber);
+//! mutation阶段  遍历fiber树  每个节点执行更新(分为添加  删除  更新 三大部分 )
+// 递归遍历fiber树(todo: 需要更改为二叉树)
+function commitFiberNodeMutation(finishedWorkFiber) {
+    let finishedWorkFlag = 'update';
+    //! 经过相应处理 最后执行commitWork方法
+    switch (finishedWorkFlag) {
+        case 'placement': //todo  添加
+            // commitPlacement()
+            break;
+        case 'delete': //todo  删除
+            // commitDelete()
+            break;
+        case 'update': //todo  更新
+            commitWork(finishedWorkFiber);
+            break;
+    }
+    if (finishedWorkFiber.children) {
+        finishedWorkFiber.children.forEach((finishedWorkFiber) => {
+            commitFiberNodeMutation(finishedWorkFiber);
+        });
+    }
+}
+// todo 不同类型的fiberNode执行不同的更新
+function commitWork(finishedWorkFiber) {
+    const fiberType = finishedWorkFiber.nodeType;
+    switch (fiberType) {
+        //todo 函数组件 处理effects链表  
+        case 'FunctionComponent':
+            //遍历effect更新链表  执行每个上一次的destory和本次create,并挂载destory
+            //在之前finishedWork阶段已经将所有effects收集 挂载到finishedWorkFiber上
+            callDestoryAndUnmountDestoryList(finishedWorkFiber);
+            callCreateAndMountDestoryList(finishedWorkFiber);
+            break;
+        //todo dom节点  执行dom更新操作
+        case 'HostComponent':
+            commitUpdateDom(finishedWorkFiber);
+            break;
+        //todo text节点 单独更新
+        case 'HostText':
+            commitUpdateText(finishedWorkFiber);
+    }
+}
+// 错误记录 : 赋值dom节点新的text后   没有handleProps   
+// 因为新的click函数的获取在这里   如果不执行  每次点击执行的都是上一次的点击事件 
+// 所以不更新视图
+// todo dom节点的更新
+function commitUpdateDom(finishedWorkFiber) {
+    // const domElement = finishedWorkFiber.stateNode
+    // handleProps(finishedWorkFiber, domElement)
+}
+//TODO text节点的更新
+function commitUpdateText(finishedWorkFiber) {
+    const domElement = finishedWorkFiber.stateNode;
+    // 这里更改的是dom.firstChild  会新建一个nodeValue
+    //! 注意 这里需要处理props  不然点击事件不会更新  第二次点击num不会++  
+    //! 点击时获取的num变量还是上一次的变量
+    handleProps(finishedWorkFiber, domElement);
+    // ! 比较text是否变化 变化则更改dom
+    let fiberText = finishedWorkFiber.text;
+    let domText = domElement.firstChild.nodeValue;
+    if (domText !== fiberText) {
+        domElement.firstChild.nodeValue = fiberText;
+    }
 }
 //! 执行所有上一次挂载的destory  并销毁 
 function callDestoryAndUnmountDestoryList(finishedWorkFiber) {
@@ -207,6 +266,42 @@ function resetFiber(fiberTree) {
     }
 }
 exports.resetFiber = resetFiber;
+//! 对标签中的属性进行处理 给dom节点添加标签 (未完成)
+function handleProps(curFiber, dom) {
+    const props = curFiber.props;
+    for (let key in props) {
+        const value = props[key];
+        switch (key) {
+            //todo  处理className (合并所有的类名)
+            case 'className':
+                let classNameStr = '';
+                for (let i = 0; i < value.length; i++) {
+                    classNameStr += value[i] + ' ';
+                }
+                dom.setAttribute("class", classNameStr.trim());
+                break;
+            //todo  处理class (合并所有的类名)
+            case 'class':
+                let classStr = '';
+                for (let i = 0; i < value.length; i++) {
+                    classStr += value[i] + ' ';
+                }
+                dom.setAttribute("class", classStr.trim());
+                break;
+            //todo  处理点击事件
+            case 'onClick':
+                //! 从组件的资源池里找对应的事件
+                const dataPool = curFiber.sourcePool.data;
+                const callback = dataPool[value[0]];
+                dom.addEventListener("click", callback);
+                break;
+            //todo  处理其他
+            default:
+                dom.setAttribute(key, value[0]);
+                break;
+        }
+    }
+}
 //! --------------废弃部分   handleProps 和 createElement放在了createFiber文件中----------------
 {
     //! (从更新的rootDom处开始)根据fiberTree创建html
@@ -236,42 +331,6 @@ exports.resetFiber = resetFiber;
             createHtml(fiber, dom);
         });
         rootDom.appendChild(dom);
-    }
-    //! 对标签中的属性进行处理 给dom节点添加标签 (未完成)
-    function handleProps(curFiber, dom) {
-        const props = curFiber.props;
-        for (let key in props) {
-            const value = props[key];
-            switch (key) {
-                //todo  处理className (合并所有的类名)
-                case 'className':
-                    let classNameStr = '';
-                    for (let i = 0; i < value.length; i++) {
-                        classNameStr += value[i] + ' ';
-                    }
-                    dom.setAttribute("class", classNameStr.trim());
-                    break;
-                //todo  处理class (合并所有的类名)
-                case 'class':
-                    let classStr = '';
-                    for (let i = 0; i < value.length; i++) {
-                        classStr += value[i] + ' ';
-                    }
-                    dom.setAttribute("class", classStr.trim());
-                    break;
-                //todo  处理点击事件
-                case 'onClick':
-                    //! 从组件的资源池里找对应的事件
-                    const dataPool = curFiber.sourcePool.data;
-                    const callback = dataPool[value[0]];
-                    dom.addEventListener("click", callback);
-                    break;
-                //todo  处理其他
-                default:
-                    dom.setAttribute(key, value[0]);
-                    break;
-            }
-        }
     }
     //! 遍历树获取所有的Effect(执行create和生成destory函数数组)
     function handleEffect(fiber) {

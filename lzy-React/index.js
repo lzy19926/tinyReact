@@ -9,5 +9,4 @@ import { render, updateRender } from "./js/myHook/render";
 
 import { global } from "./js/myHook/GlobalFiber";
 import Rekv from './js/myRekV/index'
-import useJSY from './js/myJSX/useJSY'
-export { myUseState, myUseEffect, render, updateRender, Rekv, global, useJSY }
+export { myUseState, myUseEffect, render, updateRender, Rekv, global }
