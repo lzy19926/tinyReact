@@ -15,13 +15,22 @@ import './App.css'
 
 function App() {
 
+  const arr = new Array(100).fill(1)
 
   return (
     <LZY-TEMPLATE>
-      <Demo></Demo>
+      <div>
+          <Demo></Demo>
+      </div>
+
     </LZY-TEMPLATE>
   )
 }
+
+
+// {(arr.map(() => {
+//   return `<Test></Test>`
+// }))}
 
 
 

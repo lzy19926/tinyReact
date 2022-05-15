@@ -1,6 +1,6 @@
 // 类型声明
 import { FiberNode, StateUpdater, UseStateHook } from './Interface'
-import { updateRender } from './render$1'
+import { updateRender } from './render'
 // 全局变量和当前 Fiber
 import { global, updateWorkInProgressHook } from './GlobalFiber'
 

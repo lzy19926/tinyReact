@@ -18,14 +18,15 @@ function Demo(props) {
         console.log('传入[],仅仅mount时执行');
     }, [])
 
+
     myUseEffect(() => {
         console.log('不传 任意时候执行');
     })
 
-    // myUseEffect(() => {
-    //     setNum(num + 1)
-    //     console.log('监听age,age改变时执行');
-    // }, [age])
+    myUseEffect(() => {
+        console.log('监听age,age改变时执行');
+        return () => { console.log('返回的destory函数') }
+    }, [age])
 
 
 

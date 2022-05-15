@@ -8,7 +8,6 @@ function Test(props) {
     const [num, setNum] = myUseState(0)
     const [age, setAge] = myUseState(18)
 
-    console.log(num);
 
     function addNum() {
         //多个setState合并执行 一次render

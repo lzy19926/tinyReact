@@ -61,19 +61,125 @@ function firstUpdateRenderApp(functionComponent, fiber) {
 //! -----------------模拟Commit阶段-----------------------------
 //! 分为三部分  beforeMutation  mutation  layout阶段
 //! before 前置处理  mutation 渲染dom节点   layout  处理useEffect useLayoutEffect
-function commitPart(fiber) {
-    //todo  mutation阶段
+function commitPart(finishedWorkFiber) {
+    //todo  mutation阶段 
+    commitMutation(finishedWorkFiber);
     //todo  layout阶段  调用Effects链表 执行create函数()
-    handleEffect(fiber);
     //todo 处理ref
 }
-function updateCommitPart(fiber) {
+function updateCommitPart(finishedWorkFiber) {
     //todo  mutation阶段
+    commitMutation(finishedWorkFiber);
     //todo  layout阶段  调用Effects链表 执行create函数()
-    handleEffect(fiber);
     //todo 处理ref
+}
+//! mutation阶段  遍历effect更新链表  执行每个上一次的destory和本次create,并挂载destory
+function commitMutation(finishedWorkFiber) {
+    //在之前finishedWork阶段已经将所有effects收集 挂载到finishedWorkFiber上
+    callDestoryAndUnmountDestoryList(finishedWorkFiber);
+    callCreateAndMountDestoryList(finishedWorkFiber);
+}
+//! 执行所有上一次挂载的destory  并销毁 
+function callDestoryAndUnmountDestoryList(finishedWorkFiber) {
+    //! (此时生成了新的fiber  老fiber会被unmount) 所以destory是在组件unmount时执行的
+    var updateQueue = finishedWorkFiber.updateQueue;
+    var lastEffect = updateQueue !== null ? updateQueue.lastEffect : null;
+    if (lastEffect !== null) {
+        var firstEffect = lastEffect.next;
+        var currentEffect = firstEffect;
+        do {
+            //todo 判断是否需要执行 执行destory
+            callCreateByTag(currentEffect);
+            currentEffect = currentEffect.next;
+        } while (currentEffect !== firstEffect);
+    }
+}
+//! 执行所有的create 挂载destory
+function callCreateAndMountDestoryList(finishedWorkFiber) {
+    const updateQueue = finishedWorkFiber.updateQueue;
+    var lastEffect = updateQueue !== null ? updateQueue.lastEffect : null;
+    //todo do while遍历effect环链表 执行destory
+    if (lastEffect !== null) {
+        var firstEffect = lastEffect.next;
+        var currentEffect = firstEffect;
+        do {
+            //todo 判断是否需要执行 执行create
+            callDestoryByTag(currentEffect);
+            currentEffect = currentEffect.next;
+        } while (currentEffect !== firstEffect);
+    }
+}
+//! 判断tag  执行create函数
+function callCreateByTag(effect) {
+    //判断effectTag决定是否执行Effect(mount和dep变更时执行)
+    //React底层通过二进制来打tag
+    const isFiberMount = Boolean(GlobalFiber_1.global.renderTag === 'mount');
+    const isDepChange = Boolean(effect.tag === 'depChanged');
+    const isNullDeps = Boolean(effect.tag === 'nullDeps');
+    const isNoDeps = Boolean(effect.tag === 'noDeps');
+    let needCallCreate = false;
+    //根据不同情况 决定是否执行create 
+    if ((isFiberMount || isDepChange || isNullDeps) || (isFiberMount && isNoDeps)) {
+        needCallCreate = true;
+    }
+    //判断tag如果需要执行  执行create 挂载destory
+    if (needCallCreate) {
+        const create = effect.create;
+        effect.destory = create();
+    }
+}
+//! 判断tag  执行destory函数(需要修改)
+function callDestoryByTag(effect) {
+    //判断effectTag决定是否执行Effect(mount和dep变更时执行)
+    //React底层通过二进制来打tag
+    const isFiberMount = Boolean(GlobalFiber_1.global.renderTag === 'mount');
+    const isDepChange = Boolean(effect.tag === 'depChanged');
+    const isNullDeps = Boolean(effect.tag === 'nullDeps');
+    const isNoDeps = Boolean(effect.tag === 'noDeps');
+    let needCallDestory = false;
+    //根据不同情况 决定是否执行create 
+    if ((isFiberMount || isDepChange || isNullDeps) || (isFiberMount && isNoDeps)) {
+        needCallDestory = true;
+    }
+    //判断tag如果需要执行  执行并销毁effect上的destory
+    var destory = effect.destory;
+    if (destory !== undefined && needCallDestory) {
+        destory();
+        effect.destory = undefined;
+    }
+}
+//! ----------遍历fiber  收集effect 挂载到本次更新的root节点 ------------------
+function finishedWork(beginWorkFiber) {
+    // 遍历fiber树 将所有Effect添加进root节点的update环链表中
+    let rootUpdateQueue = { lastEffect: null };
+    conbineEffectsLink(beginWorkFiber, rootUpdateQueue);
+    // 处理好的updateQueue成为到本次root节点的updateQueue
+    beginWorkFiber.updateQueue = rootUpdateQueue;
+    return beginWorkFiber;
+}
+//! 遍历fiber  拼接所有的effect  
+function conbineEffectsLink(fiber, rootUpdateQueue) {
+    // 当fiberUpdateQueue存在时 里面必然有effect
+    // 拼接两个链表
+    const fiberUpdateQueue = fiber.updateQueue;
+    if (fiberUpdateQueue) {
+        rootUpdateQueue.lastEffect = fiberUpdateQueue.lastEffect;
+        fiberUpdateQueue.lastEffect.next = rootUpdateQueue.lastEffect.next;
+    }
+    // 遍历fiber树  拼接链表
+    if (fiber.children.length !== 0) {
+        fiber.children.forEach((fiber) => {
+            conbineEffectsLink(fiber, rootUpdateQueue);
+        });
+    }
 }
 //! (从更新的rootDom处开始)根据fiberTree创建html
+function updateHtml(fiber, rootDom) {
+    //todo 深度优先递归children 从dom下一层渲染子dom节点 
+    fiber.children.forEach((fiber) => {
+        createHtml(fiber, rootDom);
+    });
+}
 function createHtml(fiber, rootDom) {
     //不同的tag标签创建不同的html标签
     let dom = document.createElement(fiber.tag);
@@ -95,116 +201,6 @@ function createHtml(fiber, rootDom) {
     });
     rootDom.appendChild(dom);
 }
-function updateHtml(fiber, rootDom) {
-    //todo 深度优先递归children 从dom下一层渲染子dom节点 
-    fiber.children.forEach((fiber) => {
-        createHtml(fiber, rootDom);
-    });
-}
-//! 对标签中的属性进行处理 给dom节点添加标签 (未完成)
-function handleProps(curFiber, dom) {
-    const props = curFiber.props;
-    for (let key in props) {
-        const value = props[key];
-        switch (key) {
-            //todo  处理className (合并所有的类名)
-            case 'className':
-                let classNameStr = '';
-                for (let i = 0; i < value.length; i++) {
-                    classNameStr += value[i] + ' ';
-                }
-                dom.setAttribute("class", classNameStr.trim());
-                break;
-            //todo  处理class (合并所有的类名)
-            case 'class':
-                let classStr = '';
-                for (let i = 0; i < value.length; i++) {
-                    classStr += value[i] + ' ';
-                }
-                dom.setAttribute("class", classStr.trim());
-                break;
-            //todo  处理点击事件
-            case 'onClick':
-                //! 从组件的资源池里找对应的事件
-                const dataPool = curFiber.sourcePool.data;
-                const callback = dataPool[value[0]];
-                dom.addEventListener("click", callback);
-                break;
-            //todo  处理其他
-            default:
-                dom.setAttribute(key, value[0]);
-                break;
-        }
-    }
-}
-//! 遍历树获取所有的Effect(执行create和生成destory函数数组)
-function handleEffect(fiber) {
-    let destoryEffectsArr = [];
-    if (fiber.updateQueue) {
-        const createEffectsArr = createCallbackQueue(fiber);
-        destoryEffectsArr = doCreateQueue(createEffectsArr);
-    }
-    if (fiber.children.length !== 0) {
-        fiber.children.forEach((fiber) => {
-            handleEffect(fiber);
-        });
-    }
-    GlobalFiber_1.global.destoryEffectsArr.push(...destoryEffectsArr);
-}
-//todo 遍历Effect链表 将需要执行的Effect推入数组--------------
-function createCallbackQueue(fiber) {
-    const createEffectsArr = [];
-    const lastEffect = fiber.updateQueue.lastEffect;
-    const firstEffect = lastEffect.next;
-    let currentEffect = firstEffect;
-    do {
-        //判断effectTag决定是否执行Effect(mount和dep变更时执行)
-        //React底层通过二进制来打tag
-        const isFiberMount = Boolean(GlobalFiber_1.global.renderTag === 'mount');
-        const isDepChange = Boolean(currentEffect.tag === 'depChanged');
-        const isNullDeps = Boolean(currentEffect.tag === 'nullDeps');
-        const isNoDeps = Boolean(currentEffect.tag === 'noDeps');
-        //根据不同情况 将Effect推入数组  达到不同的useEffect的效果
-        if (isFiberMount || isDepChange || isNullDeps) {
-            createEffectsArr.push(currentEffect);
-        }
-        else if (isFiberMount && isNoDeps) {
-            createEffectsArr.push(currentEffect);
-        }
-        currentEffect = currentEffect.next;
-    } while (currentEffect !== firstEffect);
-    return createEffectsArr;
-}
-//todo 遍历执行需要执行的Effect---生成destory---------
-function doCreateQueue(createEffectsArr) {
-    const destoryEffectsArr = [];
-    //todo 遍历Effects数组 执行create  
-    //todo 生成destoryEffect数组 将destory存放到对应的Effect上
-    for (let i = 0; i < createEffectsArr.length; i++) {
-        const destory = createEffectsArr[i].create(); // 执行create
-        if (destory) {
-            createEffectsArr[i].destory = destory; // 赋值destory
-            destoryEffectsArr.push(createEffectsArr[i]); //推入destory数组
-        }
-    }
-    return destoryEffectsArr;
-}
-//! ----------模拟unmount阶段(暂时不需要) -------------------------
-//todo  清空上一次执行完的updateQueue 重置HookIndex 执行distory函数数组
-function unmountPart() {
-    // 注意 这里并不是真实的unmount阶段  所以不会执行destoryQueue 
-    // doDestoryQueue(global.destoryEffectsArr)
-    // resetFiber(global.rootFiber)
-}
-//todo -----在unmounted时执行destorys数组
-function doDestoryQueue(destoryEffectsArr) {
-    for (let i = 0; i < destoryEffectsArr.length; i++) {
-        const destory = destoryEffectsArr[i].destory;
-        if (destory) {
-            destory();
-        }
-    }
-}
 //todo ----遍历清空fiber树上的hookIndex 和 queue
 function resetFiber(fiberTree) {
     fiberTree.hookIndex = 0;
@@ -219,13 +215,17 @@ function resetFiber(fiberTree) {
 exports.resetFiber = resetFiber;
 //!--------------综合Render方法-------------------
 function render(functionComponent, rootDom, initFiber) {
-    console.log('------------render$1-------------');
+    console.log('------------render-------------');
     //用于适配路由  需要从该fiber节点开始render
     if (!initFiber) {
         initFiber = GlobalFiber_1.global.rootFiber;
     }
-    const fiber = renderPart(functionComponent, rootDom, initFiber); //todo render阶段
-    commitPart(fiber);
+    //todo render阶段
+    const beginWorkFiber = renderPart(functionComponent, rootDom, initFiber);
+    // 从下往上遍历fiber收集所有的Effects 形成环链表 上传递优先级给root
+    const finishedWorkFiber = finishedWork(beginWorkFiber);
+    //todo commit阶段
+    commitPart(finishedWorkFiber);
 }
 exports.render = render;
 function updateRender(functionComponent, rootFiber) {
@@ -235,3 +235,94 @@ function updateRender(functionComponent, rootFiber) {
     updateCommitPart(newFiber);
 }
 exports.updateRender = updateRender;
+//! --------------废弃部分   handleProps 和 createElement放在了createFiber文件中----------------
+{
+    //! 对标签中的属性进行处理 给dom节点添加标签 (未完成)
+    function handleProps(curFiber, dom) {
+        const props = curFiber.props;
+        for (let key in props) {
+            const value = props[key];
+            switch (key) {
+                //todo  处理className (合并所有的类名)
+                case 'className':
+                    let classNameStr = '';
+                    for (let i = 0; i < value.length; i++) {
+                        classNameStr += value[i] + ' ';
+                    }
+                    dom.setAttribute("class", classNameStr.trim());
+                    break;
+                //todo  处理class (合并所有的类名)
+                case 'class':
+                    let classStr = '';
+                    for (let i = 0; i < value.length; i++) {
+                        classStr += value[i] + ' ';
+                    }
+                    dom.setAttribute("class", classStr.trim());
+                    break;
+                //todo  处理点击事件
+                case 'onClick':
+                    //! 从组件的资源池里找对应的事件
+                    const dataPool = curFiber.sourcePool.data;
+                    const callback = dataPool[value[0]];
+                    dom.addEventListener("click", callback);
+                    break;
+                //todo  处理其他
+                default:
+                    dom.setAttribute(key, value[0]);
+                    break;
+            }
+        }
+    }
+    //! 遍历树获取所有的Effect(执行create和生成destory函数数组)
+    function handleEffect(fiber) {
+        let destoryEffectsArr = [];
+        if (fiber.updateQueue) {
+            const createEffectsArr = createCallbackQueue(fiber);
+            destoryEffectsArr = doCreateQueue(createEffectsArr);
+        }
+        if (fiber.children.length !== 0) {
+            fiber.children.forEach((fiber) => {
+                handleEffect(fiber);
+            });
+        }
+        GlobalFiber_1.global.destoryEffectsArr.push(...destoryEffectsArr);
+    }
+    //todo 遍历Effect链表 将需要执行的Effect推入数组--------------
+    function createCallbackQueue(fiber) {
+        const createEffectsArr = [];
+        const lastEffect = fiber.updateQueue.lastEffect;
+        const firstEffect = lastEffect.next;
+        let currentEffect = firstEffect;
+        do {
+            //判断effectTag决定是否执行Effect(mount和dep变更时执行)
+            //React底层通过二进制来打tag
+            const isFiberMount = Boolean(GlobalFiber_1.global.renderTag === 'mount');
+            const isDepChange = Boolean(currentEffect.tag === 'depChanged');
+            const isNullDeps = Boolean(currentEffect.tag === 'nullDeps');
+            const isNoDeps = Boolean(currentEffect.tag === 'noDeps');
+            //根据不同情况 将Effect推入数组  达到不同的useEffect的效果
+            if (isFiberMount || isDepChange || isNullDeps) {
+                createEffectsArr.push(currentEffect);
+            }
+            else if (isFiberMount && isNoDeps) {
+                createEffectsArr.push(currentEffect);
+            }
+            currentEffect = currentEffect.next;
+        } while (currentEffect !== firstEffect);
+        return createEffectsArr;
+    }
+    //todo 遍历执行需要执行的Effect---生成destory---------
+    function doCreateQueue(createEffectsArr) {
+        const destoryEffectsArr = [];
+        //todo 遍历Effects数组 执行create  
+        //todo 生成destoryEffect数组 将destory存放到对应的Effect上
+        for (let i = 0; i < createEffectsArr.length; i++) {
+            const destory = createEffectsArr[i].create(); // 执行create
+            if (destory) {
+                createEffectsArr[i].destory = destory; // 赋值destory
+                destoryEffectsArr.push(createEffectsArr[i]); //推入destory数组
+            }
+        }
+        return destoryEffectsArr;
+    }
+}

@@ -339,7 +339,6 @@ function updateRender(functionComponent: Function, rootDom: any, rootFiber: Fibe
 
     //更新render时需要先将fiber的数据重置  重新挂载数据
     resetFiber(rootFiber)
-
     console.log('------------updateRender-------------');
 
     const newFiber = updateRenderPart(functionComponent, rootFiber)

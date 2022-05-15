@@ -27,7 +27,7 @@
     "bootstrap": "^3.4.1",
     "jquery": "^3.6.0",
     "lzy-loader": "file:lzy-loader",
-    "lzy-react": "^1.5.3",
+    "lzy-react": "file:lzy-react",
     "lzy-react-router": "^0.4.3",
     "lzy-rekv": "^1.4.2"
   },

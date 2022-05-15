@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.myUseState = void 0;
-const render_1_1 = require("./render$1");
+const render_1 = require("./render");
 // 全局变量和当前 Fiber
 const GlobalFiber_1 = require("./GlobalFiber");
 //! ---------------useState返回的updater方法(updateState方法)-------------------
@@ -17,7 +17,7 @@ function dispatchAction(queue, curFiber, newVal) {
     curFiber.stateQueueTimer = setTimeout(() => {
         //! 源码中使用切换fiber树的方式执行重新渲染 
         //! 从当前fiber节点  重新执行函数式组件  更新子fiber树(需要传入当前fiber进行递归)
-        (0, render_1_1.updateRender)(curFiber.stateNode, curFiber);
+        (0, render_1.updateRender)(curFiber.stateNode, curFiber);
     }, 0);
 }
 //! 更新setate更新队列
