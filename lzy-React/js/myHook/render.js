@@ -173,46 +173,6 @@ function conbineEffectsLink(fiber, rootUpdateQueue) {
         });
     }
 }
-//! (从更新的rootDom处开始)根据fiberTree创建html
-function updateHtml(fiber, rootDom) {
-    //todo 深度优先递归children 从dom下一层渲染子dom节点 
-    fiber.children.forEach((fiber) => {
-        createHtml(fiber, rootDom);
-    });
-}
-function createHtml(fiber, rootDom) {
-    //不同的tag标签创建不同的html标签
-    let dom = document.createElement(fiber.tag);
-    //todo 如果是组件节点   挂载ref 
-    if (fiber.tag[0] === fiber.tag[0].toUpperCase()) {
-        dom = document.createElement('fc-' + fiber.tag);
-        fiber.ref = dom;
-        //todo 如果是小写 判断为html标签 填充文本 处理属性
-    }
-    else {
-        handleProps(fiber, dom);
-        if (fiber.text) {
-            dom.innerHTML = fiber.text;
-        }
-    }
-    //todo 深度优先递归children 从dom开始渲染子dom节点 
-    fiber.children.forEach((fiber) => {
-        createHtml(fiber, dom);
-    });
-    rootDom.appendChild(dom);
-}
-//todo ----遍历清空fiber树上的hookIndex 和 queue
-function resetFiber(fiberTree) {
-    fiberTree.hookIndex = 0;
-    fiberTree.updateQueue = null;
-    GlobalFiber_1.global.destoryEffectsArr = [];
-    if (fiberTree.children.length !== 0) {
-        fiberTree.children.forEach((fiber) => {
-            resetFiber(fiber);
-        });
-    }
-}
-exports.resetFiber = resetFiber;
 //!--------------综合Render方法-------------------
 function render(functionComponent, rootDom, initFiber) {
     console.log('------------render-------------');
@@ -235,8 +195,48 @@ function updateRender(functionComponent, rootFiber) {
     updateCommitPart(newFiber);
 }
 exports.updateRender = updateRender;
+//todo ----遍历清空fiber树上的hookIndex 和 queue
+function resetFiber(fiberTree) {
+    fiberTree.hookIndex = 0;
+    fiberTree.updateQueue = null;
+    GlobalFiber_1.global.destoryEffectsArr = [];
+    if (fiberTree.children.length !== 0) {
+        fiberTree.children.forEach((fiber) => {
+            resetFiber(fiber);
+        });
+    }
+}
+exports.resetFiber = resetFiber;
 //! --------------废弃部分   handleProps 和 createElement放在了createFiber文件中----------------
 {
+    //! (从更新的rootDom处开始)根据fiberTree创建html
+    function updateHtml(fiber, rootDom) {
+        //todo 深度优先递归children 从dom下一层渲染子dom节点 
+        fiber.children.forEach((fiber) => {
+            createHtml(fiber, rootDom);
+        });
+    }
+    function createHtml(fiber, rootDom) {
+        //不同的tag标签创建不同的html标签
+        let dom = document.createElement(fiber.tag);
+        //todo 如果是组件节点   挂载ref 
+        if (fiber.tag[0] === fiber.tag[0].toUpperCase()) {
+            dom = document.createElement('fc-' + fiber.tag);
+            fiber.ref = dom;
+            //todo 如果是小写 判断为html标签 填充文本 处理属性
+        }
+        else {
+            handleProps(fiber, dom);
+            if (fiber.text) {
+                dom.innerHTML = fiber.text;
+            }
+        }
+        //todo 深度优先递归children 从dom开始渲染子dom节点 
+        fiber.children.forEach((fiber) => {
+            createHtml(fiber, dom);
+        });
+        rootDom.appendChild(dom);
+    }
     //! 对标签中的属性进行处理 给dom节点添加标签 (未完成)
     function handleProps(curFiber, dom) {
         const props = curFiber.props;
