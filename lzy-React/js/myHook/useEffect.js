@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.myUseEffect = void 0;
 //修改全局变量的方法
-const GlobalFiber_1 = require("./GlobalFiber");
+const GlobalFiber_1 = require("../myReactCore/GlobalFiber");
 //! -------mountEffect(useEffect第一次执行)-------------
 function mountEffect(fiberFlags, hookFlags, create, deps) {
     //todo 创建Hook 成为fiber.memorizedState上的一项Hook (单向链表)

@@ -30,8 +30,6 @@ import {
 //   });
 
 
-
-
 // ------定义传入构造器的参数类型---------------
 export interface ConstructorArgs {
   allStates: InitState,

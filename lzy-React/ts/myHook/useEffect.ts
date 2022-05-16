@@ -1,6 +1,6 @@
-import { Effect, UseEffectHook } from './Interface'
+import { Effect, UseEffectHook } from '../myReactCore/Interface'
 //修改全局变量的方法
-import { global, updateWorkInProgressHook } from './GlobalFiber'
+import { global, updateWorkInProgressHook } from '../myReactCore/GlobalFiber'
 
 
 //! -------mountEffect(useEffect第一次执行)-------------

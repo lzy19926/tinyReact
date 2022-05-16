@@ -1,6 +1,6 @@
 import { tplToVDOM } from "./tplToVnode";
-import { global } from '../myHook/GlobalFiber'
-import { FiberNode } from "../myHook/Interface";
+import { global } from '../myReactCore/GlobalFiber'
+import { FiberNode } from "../myReactCore/Interface";
 
 let initFiberNode: FiberNode = {
     memorizedState: null,// fiber上的所有hook链表(正在执行的hook会进入workInProgressHook)
@@ -36,7 +36,6 @@ function createFiberTree(source: any, resources: any, parentNode: FiberNode) {
     //todo 合并处理vnode和Fiber 挂载resource
     const { children = [], tag } = vnode
     newFiberNode = conbineVnodAndFiber(newFiberNode, vnode, resources)
-
 
 
     //TODO -----------如果tag大写 解析为组件节点(无children) ----------------
@@ -78,7 +77,6 @@ function createFiberTree(source: any, resources: any, parentNode: FiberNode) {
     return newFiberNode
 }
 
-
 //! -------------创建html并挂载到fiber节点上--------------------
 function createDomElement(fiber: FiberNode) {
 
@@ -98,8 +96,7 @@ function createDomElement(fiber: FiberNode) {
 }
 
 
-
-// //! ---------------更新fiberTree-------------------
+// //! ---------------更新fiberTree (todo!!在这里生成第二棵fiberTree 判断节点是否变化)-------------------
 function updateFiberTree(source: any, fiber: FiberNode, resources: any) {
 
     //todo 判断传入的source 转换成vnode
@@ -108,7 +105,6 @@ function updateFiberTree(source: any, fiber: FiberNode, resources: any) {
     //todo 赋值当前正在工作的fiber节点
     let currentFiber = global.currentFiberNode = fiber
 
-
     //todo 合并处理vnode和Fiber 挂载resource
     const { children = [], tag, text, props } = vnode
 
@@ -116,24 +112,14 @@ function updateFiberTree(source: any, fiber: FiberNode, resources: any) {
     currentFiber = conbineVnodAndFiber(currentFiber, vnode, resources)
 
 
-
     //TODO -----------如果tag大写 解析为组件 ----------------
     if (tag[0] == tag[0].toUpperCase()) {
         //! 从sourcePool中获取子组件
         const fc = currentFiber.sourcePool.components[tag]
-        if (!fc) { console.error(`子组件${tag}未注册`) }
         //! 从资源池中拿取需要的props，给子函数组件绑定需要的props,并挂载子函数组件到fiber上
         handleFunctionComponentProps(currentFiber, fc)
-        //! 先删除fiber上的children再渲染新的fiber
-        currentFiber.children = []
-        //! render子函数组件
-        renderFunctionComponent(currentFiber)
-
-    }
-    //TODO -----------小写情况  则是HoseComponent----------
-    // todo 在这里进行分情况更新
-    else {
-        // updateDomElement(currentFiber)
+        //! 执行函数并继续向下更新fiberTree
+        updateRenderFunctionComponent(currentFiber)
     }
 
 
@@ -144,6 +130,7 @@ function updateFiberTree(source: any, fiber: FiberNode, resources: any) {
             //! 如果发现没有此fiber 就再根据vnode创建一个fiber
             const vnode = children[i]
             const resources = currentFiber.sourcePool
+            //todo 这里发现有添加节点的情况创建了 fiberNode
             const childFiber = currentFiber.children[i] || createFiberTree(vnode, resources, currentFiber)
             currentFiber.children[i] = updateFiberTree(vnode, childFiber, resources)
         }
@@ -160,12 +147,26 @@ function updateFiberTree(source: any, fiber: FiberNode, resources: any) {
 
 
 
-
-//! -----------------render子函数组件-----------------------
+//! -----------------render/update子函数组件-----------------------
 function renderFunctionComponent(fiber: FiberNode) {
+
+    if (typeof fiber.stateNode !== 'function') return
+
     const { template, data = {}, components = {} } = fiber.stateNode()
+
     const childFiberNode = createFiberTree(template, { data, components }, fiber)
+
     fiber.children.push(childFiberNode)
+
+}
+
+function updateRenderFunctionComponent(fiber: FiberNode) {
+    //处理函数组件  执行函数获得新的数据  往下传递 继续向下递归
+    if (typeof fiber.stateNode !== 'function') return
+    const { template, data = {}, components = {} } = fiber.stateNode()
+    //继续让子fiber向下递归更新
+    const childFiberNode = fiber.children[0]
+    updateFiberTree(template, childFiberNode, { data, components })
 
 }
 
@@ -181,7 +182,6 @@ function conbineVnodAndFiber(fiber: FiberNode, vnode: any, resources: any) {
 
 //! ----------找到父dom节点---------------------
 function getParentDom(fiber: FiberNode) {
-
 
     let parentNode = fiber.parentNode
     let parentDom = parentNode.stateNode
@@ -209,7 +209,6 @@ function handleFunctionComponentProps(fiber, functionComponent) {
 
     const needProps = fiber.props
     const data = fiber.sourcePool.data
-
     //否则对其他组件进行处理
     const nextProps = {}
 
@@ -261,7 +260,6 @@ function handleFunctionComponentProps(fiber, functionComponent) {
 
     return newFc
 }
-
 
 //! 对标签中的属性进行处理 给dom节点添加标签 (未完成)
 function handleProps(curFiber: any, dom: any) {
@@ -317,13 +315,13 @@ export { createFiberTree, updateFiberTree }
 
 //! -------------废弃部分------------------------------
 {
-    //这个应该在commit阶段执行
-    function updateDomElement(fiber: FiberNode) {
+    // //这个应该在commit阶段执行
+    // function updateDomElement(fiber: FiberNode) {
 
-        let domElement = fiber.stateNode
-        handleProps(fiber, domElement)
-        if (fiber.text) { domElement.innerHTML = fiber.text }
+    //     let domElement = fiber.stateNode
+    //     handleProps(fiber, domElement)
+    //     if (fiber.text) { domElement.innerHTML = fiber.text }
 
-        return domElement
-    }
+    //     return domElement
+    // }
 }

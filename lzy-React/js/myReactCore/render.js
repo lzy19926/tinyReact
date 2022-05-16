@@ -116,21 +116,27 @@ function commitWork(finishedWorkFiber) {
             commitUpdateText(finishedWorkFiber);
     }
 }
+//todo 记录  我这里直接遍历fiber树  发现有需要变更的节点直接进行变更,
+//todo 而react中在render阶段遍历 发现变更 打上tag  生成update , 推入effect链表中  为了实现优先级调度
 // 错误记录 : 赋值dom节点新的text后   没有handleProps   
 // 因为新的click函数的获取在这里   如果不执行  每次点击执行的都是上一次的点击事件 
 // 所以不更新视图
 // todo dom节点的更新
 function commitUpdateDom(finishedWorkFiber) {
-    // const domElement = finishedWorkFiber.stateNode
-    // handleProps(finishedWorkFiber, domElement)
+    const domElement = finishedWorkFiber.stateNode;
+    if (typeof domElement === 'function')
+        return;
+    diffProps(finishedWorkFiber, domElement);
 }
 //TODO text节点的更新
 function commitUpdateText(finishedWorkFiber) {
     const domElement = finishedWorkFiber.stateNode;
+    if (typeof domElement === 'function')
+        return;
     // 这里更改的是dom.firstChild  会新建一个nodeValue
     //! 注意 这里需要处理props  不然点击事件不会更新  第二次点击num不会++  
     //! 点击时获取的num变量还是上一次的变量
-    handleProps(finishedWorkFiber, domElement);
+    diffProps(finishedWorkFiber, domElement);
     // ! 比较text是否变化 变化则更改dom
     let fiberText = finishedWorkFiber.text;
     let domText = domElement.firstChild.nodeValue;
@@ -138,7 +144,43 @@ function commitUpdateText(finishedWorkFiber) {
         domElement.firstChild.nodeValue = fiberText;
     }
 }
-//! 执行所有上一次挂载的destory  并销毁 
+//! 对标签中的属性进行diff处理 (使用前后两棵fiber树进行diff)
+function diffProps(curFiber, dom) {
+    const props = curFiber.props;
+    for (let key in props) {
+        const value = props[key];
+        switch (key) {
+            //todo  处理className (合并所有的类名)
+            case 'className':
+                let classNameStr = '';
+                for (let i = 0; i < value.length; i++) {
+                    classNameStr += value[i] + ' ';
+                }
+                dom.setAttribute("class", classNameStr.trim());
+                break;
+            //todo  处理class (合并所有的类名)
+            case 'class':
+                let classStr = '';
+                for (let i = 0; i < value.length; i++) {
+                    classStr += value[i] + ' ';
+                }
+                dom.setAttribute("class", classStr.trim());
+                break;
+            //todo  处理点击事件
+            case 'onClick':
+                //! 从组件的资源池里找对应的事件
+                const dataPool = curFiber.sourcePool.data;
+                const callback = dataPool[value[0]];
+                dom.addEventListener("click", callback);
+                break;
+            //todo  处理其他
+            default:
+                dom.setAttribute(key, value[0]);
+                break;
+        }
+    }
+}
+//! 执行所有上一次挂载的destory  并销毁
 function callDestoryAndUnmountDestoryList(finishedWorkFiber) {
     //! (此时生成了新的fiber  老fiber会被unmount) 所以destory是在组件unmount时执行的
     var updateQueue = finishedWorkFiber.updateQueue;
@@ -148,7 +190,7 @@ function callDestoryAndUnmountDestoryList(finishedWorkFiber) {
         var currentEffect = firstEffect;
         do {
             //todo 判断是否需要执行 执行destory
-            callCreateByTag(currentEffect);
+            callDestoryByTag(currentEffect);
             currentEffect = currentEffect.next;
         } while (currentEffect !== firstEffect);
     }
@@ -163,7 +205,7 @@ function callCreateAndMountDestoryList(finishedWorkFiber) {
         var currentEffect = firstEffect;
         do {
             //todo 判断是否需要执行 执行create
-            callDestoryByTag(currentEffect);
+            callCreateByTag(currentEffect);
             currentEffect = currentEffect.next;
         } while (currentEffect !== firstEffect);
     }
@@ -210,6 +252,7 @@ function callDestoryByTag(effect) {
 //! ----------遍历fiber  收集effect 挂载到本次更新的root节点 ------------------
 function finishedWork(beginWorkFiber) {
     // 遍历fiber树 将所有Effect添加进root节点的update环链表中
+    //TODO  这里相当于重置了updateQueue
     let rootUpdateQueue = { lastEffect: null };
     conbineEffectsLink(beginWorkFiber, rootUpdateQueue);
     // 处理好的updateQueue成为到本次root节点的updateQueue
@@ -250,8 +293,12 @@ exports.render = render;
 function updateRender(functionComponent, rootFiber) {
     console.log('------------updateRender-------------');
     resetFiber(rootFiber); //更新render时需要先将fiber的数据重置  重新挂载数据
-    const newFiber = updateRenderPart(functionComponent, rootFiber);
-    updateCommitPart(newFiber);
+    // 更新fiber树
+    const beginWorkFiber = updateRenderPart(functionComponent, rootFiber);
+    // 从下往上遍历fiber收集所有的Effects 形成环链表 上传递优先级给root
+    const finishedWorkFiber = finishedWork(beginWorkFiber);
+    console.log('本次更新完毕的fiber树', finishedWorkFiber);
+    updateCommitPart(finishedWorkFiber);
 }
 exports.updateRender = updateRender;
 //todo ----遍历清空fiber树上的hookIndex 和 queue
@@ -266,42 +313,6 @@ function resetFiber(fiberTree) {
     }
 }
 exports.resetFiber = resetFiber;
-//! 对标签中的属性进行处理 给dom节点添加标签 (未完成)
-function handleProps(curFiber, dom) {
-    const props = curFiber.props;
-    for (let key in props) {
-        const value = props[key];
-        switch (key) {
-            //todo  处理className (合并所有的类名)
-            case 'className':
-                let classNameStr = '';
-                for (let i = 0; i < value.length; i++) {
-                    classNameStr += value[i] + ' ';
-                }
-                dom.setAttribute("class", classNameStr.trim());
-                break;
-            //todo  处理class (合并所有的类名)
-            case 'class':
-                let classStr = '';
-                for (let i = 0; i < value.length; i++) {
-                    classStr += value[i] + ' ';
-                }
-                dom.setAttribute("class", classStr.trim());
-                break;
-            //todo  处理点击事件
-            case 'onClick':
-                //! 从组件的资源池里找对应的事件
-                const dataPool = curFiber.sourcePool.data;
-                const callback = dataPool[value[0]];
-                dom.addEventListener("click", callback);
-                break;
-            //todo  处理其他
-            default:
-                dom.setAttribute(key, value[0]);
-                break;
-        }
-    }
-}
 //! --------------废弃部分   handleProps 和 createElement放在了createFiber文件中----------------
 {
     //! (从更新的rootDom处开始)根据fiberTree创建html

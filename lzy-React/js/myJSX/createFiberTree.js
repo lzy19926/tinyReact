@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateFiberTree = exports.createFiberTree = void 0;
 const tplToVnode_1 = require("./tplToVnode");
-const GlobalFiber_1 = require("../myHook/GlobalFiber");
+const GlobalFiber_1 = require("../myReactCore/GlobalFiber");
 let initFiberNode = {
     memorizedState: null,
     stateNode: null,
@@ -81,7 +81,7 @@ function createDomElement(fiber) {
     fiber.stateNode = domElement;
     return domElement;
 }
-// //! ---------------更新fiberTree-------------------
+// //! ---------------更新fiberTree (todo!!在这里生成第二棵fiberTree 判断节点是否变化)-------------------
 function updateFiberTree(source, fiber, resources) {
     //todo 判断传入的source 转换成vnode
     let vnode = typeof source === 'string' ? (0, tplToVnode_1.tplToVDOM)(source) : source;
@@ -95,20 +95,10 @@ function updateFiberTree(source, fiber, resources) {
     if (tag[0] == tag[0].toUpperCase()) {
         //! 从sourcePool中获取子组件
         const fc = currentFiber.sourcePool.components[tag];
-        if (!fc) {
-            console.error(`子组件${tag}未注册`);
-        }
         //! 从资源池中拿取需要的props，给子函数组件绑定需要的props,并挂载子函数组件到fiber上
         handleFunctionComponentProps(currentFiber, fc);
-        //! 先删除fiber上的children再渲染新的fiber
-        currentFiber.children = [];
-        //! render子函数组件
-        renderFunctionComponent(currentFiber);
-    }
-    //TODO -----------小写情况  则是HoseComponent----------
-    // todo 在这里进行分情况更新
-    else {
-        // updateDomElement(currentFiber)
+        //! 执行函数并继续向下更新fiberTree
+        updateRenderFunctionComponent(currentFiber);
     }
     //todo 如果有children 深度优先遍历  
     if (children) {
@@ -117,6 +107,7 @@ function updateFiberTree(source, fiber, resources) {
             //! 如果发现没有此fiber 就再根据vnode创建一个fiber
             const vnode = children[i];
             const resources = currentFiber.sourcePool;
+            //todo 这里发现有添加节点的情况创建了 fiberNode
             const childFiber = currentFiber.children[i] || createFiberTree(vnode, resources, currentFiber);
             currentFiber.children[i] = updateFiberTree(vnode, childFiber, resources);
         }
@@ -129,11 +120,22 @@ function updateFiberTree(source, fiber, resources) {
     return currentFiber;
 }
 exports.updateFiberTree = updateFiberTree;
-//! -----------------render子函数组件-----------------------
+//! -----------------render/update子函数组件-----------------------
 function renderFunctionComponent(fiber) {
+    if (typeof fiber.stateNode !== 'function')
+        return;
     const { template, data = {}, components = {} } = fiber.stateNode();
     const childFiberNode = createFiberTree(template, { data, components }, fiber);
     fiber.children.push(childFiberNode);
+}
+function updateRenderFunctionComponent(fiber) {
+    //处理函数组件  执行函数获得新的数据  往下传递 继续向下递归
+    if (typeof fiber.stateNode !== 'function')
+        return;
+    const { template, data = {}, components = {} } = fiber.stateNode();
+    //继续让子fiber向下递归更新
+    const childFiberNode = fiber.children[0];
+    updateFiberTree(template, childFiberNode, { data, components });
 }
 //! ----------合并vnode和fiber  挂载resource-----------
 function conbineVnodAndFiber(fiber, vnode, resources) {
@@ -244,13 +246,11 @@ function handleProps(curFiber, dom) {
 // 不能直接给tag赋值 
 //! -------------废弃部分------------------------------
 {
-    //这个应该在commit阶段执行
-    function updateDomElement(fiber) {
-        let domElement = fiber.stateNode;
-        handleProps(fiber, domElement);
-        if (fiber.text) {
-            domElement.innerHTML = fiber.text;
-        }
-        return domElement;
-    }
+    // //这个应该在commit阶段执行
+    // function updateDomElement(fiber: FiberNode) {
+    //     let domElement = fiber.stateNode
+    //     handleProps(fiber, domElement)
+    //     if (fiber.text) { domElement.innerHTML = fiber.text }
+    //     return domElement
+    // }
 }

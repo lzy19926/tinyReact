@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.myUseState = void 0;
-const render_1 = require("./render");
+const render_1 = require("../myReactCore/render");
 // 全局变量和当前 Fiber
-const GlobalFiber_1 = require("./GlobalFiber");
+const GlobalFiber_1 = require("../myReactCore/GlobalFiber");
 //! ---------------useState返回的updater方法(updateState方法)-------------------
 function dispatchAction(queue, curFiber, newVal) {
     //todo 如果newVal未发生变化不执行更新

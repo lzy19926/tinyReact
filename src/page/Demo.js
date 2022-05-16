@@ -4,7 +4,7 @@ import Test from '../components/Test'
 
 
 //! Demo组件
-function Demo(props) {
+function Demo() {
 
 
     const [age, setAge] = myUseState(18)
@@ -24,7 +24,7 @@ function Demo(props) {
     })
 
     myUseEffect(() => {
-        console.log('监听age,age改变时执行');
+        console.log('监听age,age改变时执行', age);
         return () => { console.log('返回的destory函数') }
     }, [age])
 
@@ -43,14 +43,14 @@ function Demo(props) {
 
 
     return ({
-        components: {},
+        components: { Test },
 
-        data: { addNum, addAge, addArr },
+        data: { addNum, addAge, addArr, num },
 
         template: `
         <div>
        
-
+        <Test num={num}></Test>
         <h1>Demo</h1>
         
         <div>简单适配了bootStarp组件库</div>

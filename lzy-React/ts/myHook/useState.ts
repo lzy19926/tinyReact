@@ -1,8 +1,8 @@
 // 类型声明
-import { FiberNode, StateUpdater, UseStateHook } from './Interface'
-import { updateRender } from './render'
+import { FiberNode, StateUpdater, UseStateHook } from '../myReactCore/Interface'
+import { updateRender } from '../myReactCore/render'
 // 全局变量和当前 Fiber
-import { global, updateWorkInProgressHook } from './GlobalFiber'
+import { global, updateWorkInProgressHook } from '../myReactCore/GlobalFiber'
 
 
 

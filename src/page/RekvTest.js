@@ -8,6 +8,7 @@ function RekvTest() {
     const arr = new Array(10).fill(1)
 
     function changeState() {
+        console.log('增加');
         store.setState({ age: age + 1 })
     }
 
