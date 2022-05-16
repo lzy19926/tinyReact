@@ -1,3 +1,8 @@
+//待办项 :1  将fiber树转换为二叉树
+//        2  将diff过程放在finishWork中  并收集effect向上
+//         3  实现双缓存  双fiber树机制
+
+// 已完成  优化了HostComponent的变更   重构了fiebr树递归更新方法 
 
 //! render分为2部分  render阶段 - commit阶段  最后unmount
 import { global } from './GlobalFiber'
@@ -29,10 +34,9 @@ function updateRenderPart(functionComponent: Function, rootFiber: FiberNode) {
     // 改变tag
     global.renderTag = 'update'
 
-
     // 处理根App节点
     const { template, resource, rootFiberNode } = firstUpdateRenderApp(functionComponent, rootFiber)
-    //todo 比较新旧节点是否发生变化
+    //todo 比较新旧节点是否发生变化diff
 
 
     // 更新函数组件(因为处理了根节点 从根节点的第一个子节点开始递归)
@@ -46,7 +50,8 @@ function updateRenderPart(functionComponent: Function, rootFiber: FiberNode) {
 }
 
 
-//对render根Fiber节点进行处理(否则无法渲染第一个根节点)
+
+//todo修补用工具函数对render根Fiber节点进行处理(否则无法渲染第一个根节点)
 function firstRenderApp(functionComponent: Function, currentRootFiber: FiberNode) {
 
     global.currentFiberNode = currentRootFiber
@@ -67,8 +72,6 @@ function firstRenderApp(functionComponent: Function, currentRootFiber: FiberNode
 
     return { template, resource, currentRootFiber }
 }
-
-
 function firstUpdateRenderApp(functionComponent: Function, fiber: FiberNode) {
 
 

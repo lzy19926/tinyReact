@@ -68,6 +68,8 @@ function createFiberTree(source, resources, parentNode) {
     return newFiberNode;
 }
 exports.createFiberTree = createFiberTree;
+//todo 创建二叉fiber树
+function createBinaryFiberTree(source, resources, parentNode) { }
 //! -------------创建html并挂载到fiber节点上--------------------
 function createDomElement(fiber) {
     //找到父dom节点 将创建好的dom节点添加进去

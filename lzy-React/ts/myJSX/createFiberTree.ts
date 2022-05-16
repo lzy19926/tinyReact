@@ -77,6 +77,9 @@ function createFiberTree(source: any, resources: any, parentNode: FiberNode) {
     return newFiberNode
 }
 
+//todo 创建二叉fiber树
+function createBinaryFiberTree(source: any, resources: any, parentNode: FiberNode) { }
+
 //! -------------创建html并挂载到fiber节点上--------------------
 function createDomElement(fiber: FiberNode) {
 
@@ -144,7 +147,6 @@ function updateFiberTree(source: any, fiber: FiberNode, resources: any) {
 
     return currentFiber
 }
-
 
 
 //! -----------------render/update子函数组件-----------------------
