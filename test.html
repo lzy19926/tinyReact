@@ -11,164 +11,37 @@
 <body>
 
 
-
-
     <script>
-        //! 字符串扫描解析器
-        class Scanner {
-
-            constructor(text) {
-                this.text = text;
-                // 指针
-                this.pos = 0;
-                // 尾巴  剩余字符
-                this.tail = text;
-            }
-
-            /**
-             * 路过指定内容
-             *
-             * @memberof Scanner
-             */
-            scan(tag) {
-                if (this.tail.indexOf(tag) === 0) {
-                    // 直接跳过指定内容的长度
-                    this.pos += tag.length;
-                    // 更新tail
-                    this.tail = this.text.substring(this.pos);
-                }
-            }
-
-            /**
-             * 让指针进行扫描，直到遇见指定内容，返回路过的文字
-             *
-             * @memberof Scanner
-             * @return str 收集到的字符串
-             */
-            scanUntil(stopTag) {
-                // 记录开始扫描时的初始值
-                const startPos = this.pos;
-                // 当尾巴的开头不是stopTg的时候，说明还没有扫描到stopTag
-                while (!this.eos() && this.tail.indexOf(stopTag) !== 0) {
-                    // 改变尾巴为当前指针这个字符到最后的所有字符
-                    this.tail = this.text.substring(++this.pos);
-                }
-
-                // 返回经过的文本数据
-                return this.text.substring(startPos, this.pos).trim();
-            }
-
-            /**
-             * 判断指针是否到达文本末尾（end of string）
-             */
-
-
-            eos() {
-                return this.pos >= this.text.length;
-            }
+        async function async1() {
+            console.log('async1 start')
+            await async2()
+            console.log('async1 end')
         }
 
+        async function async2() {
+            console.log('async2')
+        }
 
+        console.log('script start')
 
+        setTimeout(function () {
+            console.log('setTimeout')
+        }, 0)
 
-        const template = `    
-        <div>
-      <RoutePage id={1} name={name}></RoutePage>
-        {(
-            arr.map((item) => {
-            return <div>123</div>
+        async1();
+
+        new Promise(function (resolve) {
+            console.log('promise1')
+            resolve()
+        }).then(function () {
+            console.log('promise2')
         })
-        )}
-        </div>`
 
+        console.log('script end')
 
-
-
-        function useJSY(template) {
-
-            //todo 收集{( )}标签中JS代码内容
-            const textEXP = /({\([\s\S]*?\)})/g
-
-            if (textEXP.test(template)) {
-                const textArr = template.match(textEXP)
-                const jsStr = textArr[0]
-                console.log(jsStr.slice(2, jsStr.length - 2));
-                template = template.replace(jsStr, '${' + jsStr.slice(2, jsStr.length - 2) + '}')
-            }
-
-
-
-
-
-
-            //todo 获取开始标签内容
-            const tagEXP = /(<[\s\S]*?>)/g
-            const tagArr = template.match(tagEXP)
-            const startTagArr = tagArr.filter((tag) => {
-                return tag.startsWith('<') && !tag.startsWith('</')
-            })
-
-            //todo 处理大写tag  {}中的内容
-            const tokens = []
-            const componentsArr = []
-            //todo 处理开始标签内容
-            startTagArr.forEach((item) => {
-                const tagContent = item.slice(1, item.length - 1)
-                tokens.push(tagContent)
-                //todo 拆离开始标签内Tag(大写组件) 如果是大写tag就推入数组
-                const tag = tagContent.split(' ')[0]
-                if (tag[0] === tag[0].toUpperCase()) {
-                    componentsArr.push(tag)
-                }
-            })
-
-
-            //todo 对标签中的{}内容进行解析  找到则推入dataStr(以字符串的形式拼接)
-            let needDataStr = ''
-            const propEXP = /({[\s\S]*?})/g
-            tokens.forEach(token => {
-                //使用set数组去重
-                const propArr = [...new Set(token.match(propEXP))];
-                //todo 将所有匹配项拼接起来 删去{ }
-                if (propArr) {
-                    propArr.forEach(prop => {
-                        const key = prop.replace('{', '').replace('}', '')
-                        const kvStr = `${key}:${key},`
-                        needDataStr += kvStr
-                    })
-                }
-            })
-
-            //todo 将组件数组转化为键值对
-            let needComponentsStr = ''
-            //set数组去重
-            const newComponentsArr = [...new Set(componentsArr)];
-
-            newComponentsArr.forEach((key) => {
-                const kvStr = `${key}:${key},`
-                needComponentsStr += kvStr
-            })
-
-
-            //todo  最终获得的needData和components 再包一层{}
-            // {name:name, handleClick:handleClick, 1:1,} , {Demo:Demo,Test:Test} 
-            const needData = `{${needDataStr}}`
-            const needComponents = `{${needComponentsStr}}`
-
-            //todo 将转换完的options对象返回
-            const options = `{
-        components:${needComponents},
-        data: ${needData},
-        template:${template},
-    }`
-
-            console.log(options);
-
-            return options
-        }
-
-        useJSY(template)
     </script>
+
+
 </body>
 
 </html>

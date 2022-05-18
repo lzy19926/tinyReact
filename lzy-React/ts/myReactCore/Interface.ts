@@ -48,14 +48,16 @@ interface FiberNode {
     sourcePool: any,
     hookIndex: number,
     parentNode: FiberNode | null,
-    nodeType: 'HostText' | 'HostComponent' | 'FunctionComponent' | 'AppNode' | undefined
+    nodeType: 'HostText' | 'HostComponent' | 'FunctionComponent' | 'AppNode' | undefined,
+    alternate: FiberNode | null
 }
 
 //!-------------全局需要的变量结构---------------
 interface Global {
-    rootFiber: FiberNode,
+    workInProgressFiber: FiberNode | null,
+    currentFiber: FiberNode | null,
     workInProgressHook: { currentHook: any },
-    currentFiberNode: FiberNode,
+    currentFiberNode: FiberNode | null,
     destoryEffectsArr: Effect[],
     renderTag: string
 }

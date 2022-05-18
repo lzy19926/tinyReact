@@ -3,8 +3,8 @@ import { myUseState, myUseEffect } from '../../lzy-React/index'
 
 
 
-function Test(props) {
-    console.log('Demo传来的props', props.num);
+function Test() {
+
 
     const [num, setNum] = myUseState(0)
 
@@ -15,7 +15,7 @@ function Test(props) {
 
     return {
         data: { addNum },
-        template: `<button onClick={addNum}>Num:${props.num}</button>`,
+        template: `<button onClick={addNum}>Num:${num}</button>`,
     }
 }
 

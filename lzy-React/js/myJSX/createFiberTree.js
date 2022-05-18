@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateFiberTree = exports.createFiberTree = void 0;
+exports.updateFiberTree = exports.createSecondFiberTree = exports.createFiberTree = void 0;
 const tplToVnode_1 = require("./tplToVnode");
 const GlobalFiber_1 = require("../myReactCore/GlobalFiber");
 let initFiberNode = {
@@ -18,7 +18,8 @@ let initFiberNode = {
     sourcePool: null,
     hookIndex: 0,
     parentNode: null,
-    nodeType: undefined
+    nodeType: undefined,
+    alternate: null
 };
 //! 创建fiberNode树(Vnode树) 深度优先遍历vnode树  包装成fiberNode
 //! 根据fiberNode和FunctionComponent创建FiberNode 生成Fiber树
@@ -47,6 +48,7 @@ function createFiberTree(source, resources, parentNode) {
         renderFunctionComponent(newFiberNode);
     }
     //TODO ----------小写的情况  是domComponent节点/text节点  创建对应的dom并添加--------
+    //todo 或者复用alternate的ref
     else {
         newFiberNode.nodeType = 'HostText';
         createDomElement(newFiberNode);
@@ -68,8 +70,6 @@ function createFiberTree(source, resources, parentNode) {
     return newFiberNode;
 }
 exports.createFiberTree = createFiberTree;
-//todo 创建二叉fiber树
-function createBinaryFiberTree(source, resources, parentNode) { }
 //! -------------创建html并挂载到fiber节点上--------------------
 function createDomElement(fiber) {
     //找到父dom节点 将创建好的dom节点添加进去
@@ -83,6 +83,56 @@ function createDomElement(fiber) {
     fiber.stateNode = domElement;
     return domElement;
 }
+//! -----------构造第二棵fiber树--------------------------
+function createSecondFiberTree(source, resources, parentNode, currentFiber) {
+    //todo 创建一个新的fiber节点(浅拷贝) 更新当前工作节点
+    let newFiberNode = JSON.parse(JSON.stringify(initFiberNode));
+    newFiberNode.parentNode = parentNode;
+    GlobalFiber_1.global.currentFiberNode = newFiberNode;
+    //todo 判断传入的source 转换成vnode
+    let vnode = typeof source === 'string' ? (0, tplToVnode_1.tplToVDOM)(source) : source;
+    //todo 合并处理vnode和Fiber 挂载resource
+    const { children = [], tag } = vnode;
+    newFiberNode = conbineVnodAndFiber(newFiberNode, vnode, resources);
+    //TODO -----------如果tag大写 解析为组件节点(无children) ----------------
+    if (tag[0] === tag[0].toUpperCase()) {
+        newFiberNode.nodeType = 'FunctionComponent';
+        //todo 从sourcePool中获取子组件
+        const fc = newFiberNode.sourcePool.components[tag];
+        if (!fc) {
+            console.error(`子组件${tag}未注册`);
+        }
+        //! 从资源池中拿取需要的props，给子函数组件绑定需要的props,并挂载子函数组件到fiber上
+        handleFunctionComponentProps(newFiberNode, fc);
+        //! render子函数组件
+        secondRenderFunctionComponent(newFiberNode, currentFiber.children[0]);
+    }
+    //TODO ----------小写的情况  是domComponent节点/text节点 复用alternate的ref--------
+    else {
+        newFiberNode.nodeType = 'HostText';
+        newFiberNode.stateNode = currentFiber.stateNode;
+    }
+    newFiberNode.fiberFlags = 'update';
+    //! -------链接两个fiberNode -------------------
+    newFiberNode.alternate = currentFiber;
+    currentFiber.alternate = newFiberNode;
+    //todo 如果有children 深度优先遍历  包装成fiberNode 挂到当前节点
+    if (children.length > 0) {
+        newFiberNode.nodeType = 'HostComponent';
+        for (let i = 0; i < children.length; i++) {
+            const newCurrentFiber = currentFiber.children[i];
+            const childFiberNode = createSecondFiberTree(children[i], newFiberNode.sourcePool, newFiberNode, newCurrentFiber);
+            newFiberNode.children.push(childFiberNode);
+        }
+    }
+    //todo  如果是Route组件 将container的fiber传递给子组件 (暂时放到全局)
+    //! 用于适配路由
+    if (newFiberNode.tag === 'RouteContainer') {
+        window.$$routeContainerFiber = newFiberNode;
+    }
+    return newFiberNode;
+}
+exports.createSecondFiberTree = createSecondFiberTree;
 // //! ---------------更新fiberTree (todo!!在这里生成第二棵fiberTree 判断节点是否变化)-------------------
 function updateFiberTree(source, fiber, resources) {
     //todo 判断传入的source 转换成vnode
@@ -122,12 +172,19 @@ function updateFiberTree(source, fiber, resources) {
     return currentFiber;
 }
 exports.updateFiberTree = updateFiberTree;
-//! -----------------render/update子函数组件-----------------------
+//! -----------------render/secondRender/update子函数组件-----------------------
 function renderFunctionComponent(fiber) {
     if (typeof fiber.stateNode !== 'function')
         return;
     const { template, data = {}, components = {} } = fiber.stateNode();
     const childFiberNode = createFiberTree(template, { data, components }, fiber);
+    fiber.children.push(childFiberNode);
+}
+function secondRenderFunctionComponent(fiber, currentFiber) {
+    if (typeof fiber.stateNode !== 'function')
+        return;
+    const { template, data = {}, components = {} } = fiber.stateNode();
+    const childFiberNode = createSecondFiberTree(template, { data, components }, fiber, currentFiber);
     fiber.children.push(childFiberNode);
 }
 function updateRenderFunctionComponent(fiber) {
