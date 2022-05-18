@@ -26,7 +26,8 @@ function dispatchAction(queue: any, curFiber: FiberNode, newVal?: any) {
         //! 源码中使用切换fiber树的方式执行重新渲染 
         //! 从当前fiber节点  重新执行函数式组件  更新子fiber树(需要传入当前fiber进行递归) 
         if (typeof curFiber.stateNode === 'function') {
-            updateRender(curFiber.stateNode, curFiber, curFiber.alternate)
+            const wkInFiber = curFiber.alternate
+            updateRender(curFiber.stateNode, wkInFiber, curFiber)
         }
     }, 0)
 
@@ -129,6 +130,7 @@ function myUseState(initialState: any) {
         // 更新情况 找到对应的hook
         hook = updateWorkInProgressHook(fiber)
     }
+
 
     //todo 更新hook上保存的state
     const baseState = updateUseStateHook(hook)

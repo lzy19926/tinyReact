@@ -39,6 +39,25 @@ let fiber$2: FiberNode = {
     alternate: null
 }
 
+let initFiberNode: FiberNode = {
+    memorizedState: null,// fiber上的所有hook链表(正在执行的hook会进入workInProgressHook)
+    stateNode: null,    // 对应的函数组件
+    updateQueue: null, // Effects的更新链表
+    stateQueueTimer: null, // 用于state的合并更新(setTimeout)
+    fiberFlags: 'mount',// fiber的生命周期 判断是否初始化
+    hasRef: false,//ref相关tag
+    ref: null,
+    children: [],
+    props: null,
+    tag: null,
+    text: null,
+    sourcePool: null, ///! 组件返回的资源  props和事件
+    hookIndex: 0, // 用于记录hook的数量 以便查找
+    parentNode: null,
+    nodeType: undefined,
+    alternate: null
+}
+
 
 //! -----需要使用的全局变量---------------
 const global: Global = {
@@ -66,4 +85,4 @@ function updateWorkInProgressHook(fiber: FiberNode) {
 }
 
 
-export { global, updateWorkInProgressHook }
+export { global, updateWorkInProgressHook, initFiberNode }
