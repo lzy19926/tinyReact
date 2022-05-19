@@ -1,0 +1,23 @@
+import { myUseState, myUseEffect } from '../../lzy-React/index'
+
+function RenderTest() {
+
+    const [num, setNum] = myUseState(0)
+
+    function addNum() {
+        setNum(num + 1)
+    }
+
+    return (
+        <LZY-TEMPLATE>
+            <span>
+                <h1>
+                    <button onClick={addNum}>点击测试: {(num)} </button>
+                </h1>
+            </span>
+        </LZY-TEMPLATE>
+    )
+}
+
+
+export default RenderTest

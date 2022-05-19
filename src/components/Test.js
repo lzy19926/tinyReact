@@ -8,9 +8,7 @@ function Test() {
     const [num, setNum] = myUseState(0)
 
     function addNum() {
-        setNum(num + 1)
-        const ref = document.getElementById('btn')
-        
+        setNum(num + 1)        
     }
 
     return {

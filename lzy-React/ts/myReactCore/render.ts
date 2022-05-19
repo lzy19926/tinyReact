@@ -8,7 +8,8 @@
 
 //! render分为2部分  render阶段 - commit阶段  最后unmount
 import { global, NewFiberNode } from './GlobalFiber'
-import { createFiberTree, updateFiberTree$2 } from '../myJSX/createFiberTree'
+import { createFiberTree } from '../myJSX/createFiberTree'
+import { updateFiberTree } from '../myJSX/updateFiberTree'
 import { Effect, FiberNode } from './Interface'
 
 
@@ -42,7 +43,7 @@ function updateRenderPart(functionComponent: Function, workInProgressFiber: Fibe
     const secondCurrent = currentFiber.children[0]
 
     // 此时不需要创建fiberNode  所以不需要添加childFiber  直接在根fiber树上更新
-    const childFiber = updateFiberTree$2(template, resource, secondWorkInProgress, secondCurrent)
+    const childFiber = updateFiberTree(template, resource, secondWorkInProgress, secondCurrent)
 
     if (workInProgressRootFiber.children.length === 0) {
         workInProgressRootFiber.children = [childFiber]

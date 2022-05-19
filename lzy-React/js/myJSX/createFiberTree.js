@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateFiberTree$2 = exports.createFiberTree = void 0;
+exports.handleFunctionFiberNode = exports.preHandleFiberNode = exports.conbineVnodAndFiber = exports.getParentDom = exports.handleFunctionComponentProps = exports.handleProps = exports.useRoute = exports.createFiberTree = void 0;
 const tplToVnode_1 = require("./tplToVnode");
 const GlobalFiber_1 = require("../myReactCore/GlobalFiber");
 //! 创建fiberNode树(Vnode树) 深度优先遍历vnode树  包装成fiberNode
@@ -9,24 +9,14 @@ const GlobalFiber_1 = require("../myReactCore/GlobalFiber");
 function createFiberTree(source, resources, parentNode) {
     //todo 创建一个新的fiber节点(浅拷贝) 更新当前工作节点
     let newFiberNode = new GlobalFiber_1.NewFiberNode('mount', '$1');
-    //todo 挂载父节点切换当前工作fiber
-    GlobalFiber_1.global.workInprogressFiberNode = newFiberNode;
+    //todo 预处理Fiber  生成vnode 挂载resource
+    const { children, tag } = preHandleFiberNode(source, resources, newFiberNode);
+    //todo 挂载父节点
     newFiberNode.parentNode = parentNode;
-    //todo 判断传入的source 转换成vnode
-    let vnode = typeof source === 'string' ? (0, tplToVnode_1.tplToVDOM)(source) : source;
-    //todo 合并处理vnode和Fiber 挂载resource
-    const { children = [], tag } = vnode;
-    newFiberNode = conbineVnodAndFiber(newFiberNode, vnode, resources);
     //TODO -----------如果tag大写 解析为组件节点(无children) ----------------
     if (tag[0] === tag[0].toUpperCase()) {
-        newFiberNode.nodeType = 'FunctionComponent';
-        //todo 从sourcePool中获取子组件
-        const fc = newFiberNode.sourcePool.components[tag];
-        if (!fc) {
-            console.error(`子组件${tag}未注册`);
-        }
-        //! 从资源池中拿取需要的props，给子函数组件绑定需要的props,并挂载子函数组件到fiber上
-        handleFunctionComponentProps(newFiberNode, fc);
+        //! 处理为组件节点
+        handleFunctionFiberNode(newFiberNode, tag);
         //! render子函数组件
         renderFunctionComponent(newFiberNode);
     }
@@ -36,23 +26,35 @@ function createFiberTree(source, resources, parentNode) {
         newFiberNode.nodeType = 'HostText';
         createDomElement(newFiberNode);
     }
-    newFiberNode.fiberFlags = 'update';
-    //todo 如果有children 深度优先遍历  包装成fiberNode 挂到当前节点
+    //todo 如果有childVnode 深度优先递归  创建子fiber 挂到当前节点
     if (children.length > 0) {
         newFiberNode.nodeType = 'HostComponent';
-        for (let i = 0; i < children.length; i++) {
-            const childFiberNode = createFiberTree(children[i], newFiberNode.sourcePool, newFiberNode);
-            newFiberNode.children.push(childFiberNode);
-        }
+        createFiberTreeLoop(children, newFiberNode);
     }
-    //todo  如果是Route组件 将container的fiber传递给子组件 (暂时放到全局)
-    //! 用于适配路由
-    if (newFiberNode.tag === 'RouteContainer') {
-        window.$$routeContainerFiber = newFiberNode;
-    }
+    //模拟finishowrk
+    newFiberNode.fiberFlags = 'update';
+    // console.log('finishWork', newFiberNode.tag);
+    //适配路由
+    useRoute(newFiberNode);
     return newFiberNode;
 }
 exports.createFiberTree = createFiberTree;
+//! 根据子vnode 递归创建子fiberNode 并进行拼接-------------
+function createFiberTreeLoop(childVnodes, parentNode) {
+    for (let i = 0; i < childVnodes.length; i++) {
+        const childFiberNode = createFiberTree(childVnodes[i], parentNode.sourcePool, parentNode);
+        parentNode.children.push(childFiberNode);
+    }
+}
+//! -----------------render子函数组件-----------------------
+function renderFunctionComponent(fiber) {
+    if (typeof fiber.stateNode !== 'function')
+        return;
+    const { template, data = {}, components = {} } = fiber.stateNode();
+    const childFiberNode = createFiberTree(template, { data, components }, fiber);
+    //todo 生成子树并链接
+    fiber.children = [childFiberNode];
+}
 //! -------------创建html并挂载到fiber节点上--------------------
 function createDomElement(fiber) {
     //找到父dom节点 将创建好的dom节点添加进去
@@ -66,136 +68,30 @@ function createDomElement(fiber) {
     fiber.stateNode = domElement;
     return domElement;
 }
-// //! ---------------更新fiberTree (todo!!在这里生成第二棵fiberTree 判断节点是否变化)-------------------
-// function updateFiberTree(source: any, resources: any, fiber: FiberNode,) {
-//     //todo 判断传入的source 转换成vnode
-//     let vnode = typeof source === 'string' ? tplToVDOM(source) : source
-//     //todo 赋值当前正在工作的fiber节点
-//     let currentFiber = global.currentFiberNode = fiber
-//     //todo 合并处理vnode和Fiber 挂载resource
-//     const { children = [], tag, text, props } = vnode
-//     //todo 合并vnode和fiber属性
-//     currentFiber = conbineVnodAndFiber(currentFiber, vnode, resources)
-//     //TODO -----------如果tag大写 解析为组件 ----------------
-//     if (tag[0] == tag[0].toUpperCase()) {
-//         //! 从sourcePool中获取子组件
-//         const fc = currentFiber.sourcePool.components[tag]
-//         //! 从资源池中拿取需要的props，给子函数组件绑定需要的props,并挂载子函数组件到fiber上
-//         handleFunctionComponentProps(currentFiber, fc)
-//         //! 执行函数并继续向下更新fiberTree
-//         updateRenderFunctionComponent(currentFiber)
-//     }
-//     //todo 如果有children 深度优先遍历  
-//     if (children) {
-//         for (let i = 0; i < children.length; i++) {
-//             //! 当map添加item时  可能造成vnode和childrenFiber数量不等
-//             //! 如果发现没有此fiber 就再根据vnode创建一个fiber
-//             const vnode = children[i]
-//             const resources = currentFiber.sourcePool
-//             //todo 这里发现有添加节点的情况创建了 fiberNode
-//             const childFiber = currentFiber.children[i] || createFiberTree(vnode, resources, currentFiber)
-//             currentFiber.children[i] = updateFiberTree(vnode, childFiber, resources)
-//         }
-//     }
-//     //todo  如果是Route组件 将container的fiber传递给子组件 (暂时放到全局)
-//     //! 用于适配路由
-//     if (fiber.tag === 'RouteContainer') {
-//         window.$$routeContainerFiber = fiber
-//     }
-//     return currentFiber
-// }
-function updateFiberTree$2(source, resources, workInProgressFiber, currentFiber) {
-    // 添加节点逻辑
-    if (!workInProgressFiber && !currentFiber) {
-        console.log('需要添加节点');
-    }
-    // 如果没有  生成一个alternate并挂载  
-    if (!workInProgressFiber) {
-        workInProgressFiber = createAlternate(currentFiber);
-    }
-    //todo 赋值当前正在工作的fiber节点
+//! 预处理FiberNode  将模板和资源先挂载到节点上-----------------
+function preHandleFiberNode(source, resources, workInProgressFiber) {
+    //todo 切换当前工作fiber
     GlobalFiber_1.global.workInprogressFiberNode = workInProgressFiber;
     //todo 判断传入的source 转换成vnode
     let vnode = typeof source === 'string' ? (0, tplToVnode_1.tplToVDOM)(source) : source;
     //todo 合并处理vnode和Fiber 挂载resource
-    const { children = [], tag, text, props } = vnode;
-    //todo 合并vnode和fiber属性    
-    conbineVnodAndFiber(workInProgressFiber, vnode, resources);
-    //TODO -----------如果tag大写 解析为组件 ----------------
-    if (tag[0] === tag[0].toUpperCase()) {
-        workInProgressFiber.nodeType = 'FunctionComponent';
-        //! 从sourcePool中获取子组件
-        const fc = workInProgressFiber.sourcePool.components[tag];
-        //! 从资源池中拿取需要的props，给子函数组件绑定需要的props,并挂载子函数组件到fiber上
-        handleFunctionComponentProps(workInProgressFiber, fc);
-        // ! 函数节点执行函数并继续向下更新fiberTree
-        updateRenderFunctionComponent(workInProgressFiber, currentFiber);
-    }
-    //TODO ----------小写的情况  是domComponent节点/text节点 挂载dom节点--------
-    else {
-        workInProgressFiber.nodeType = 'HostText';
-        workInProgressFiber.stateNode = currentFiber.stateNode;
-    }
-    reconcileFiberNode(workInProgressFiber, currentFiber);
-    //todo 如果有children 深度优先遍历  
-    if (children.length > 0) {
-        workInProgressFiber.nodeType = 'HostComponent';
-        for (let i = 0; i < children.length; i++) {
-            //! 当map添加item时  可能造成vnode和childrenFiber数量不等
-            //! 如果发现没有此fiber 就再根据vnode创建一个fiber
-            const vnode = children[i];
-            const resources = workInProgressFiber.sourcePool;
-            //todo 这里发现有添加节点的情况创建了 fiberNode          
-            const childWkFiber = workInProgressFiber.children[i];
-            const childCurFiebr = currentFiber.children[i];
-            workInProgressFiber.children[i] = updateFiberTree$2(vnode, resources, childWkFiber, childCurFiebr);
-        }
-    }
-    return workInProgressFiber;
+    const { children = [], tag } = vnode;
+    workInProgressFiber = conbineVnodAndFiber(workInProgressFiber, vnode, resources);
+    return { children, tag };
 }
-exports.updateFiberTree$2 = updateFiberTree$2;
-function createAlternate(currentFiber) {
-    //todo 新建一个fiberNode
-    const workInProgressFiber = new GlobalFiber_1.NewFiberNode('update', '$2');
-    //! 将一些属性复制给workInProgress
-    workInProgressFiber.stateQueueTimer = currentFiber.stateQueueTimer;
-    workInProgressFiber.updateQueue = currentFiber.updateQueue;
-    workInProgressFiber.hookIndex = currentFiber.hookIndex;
-    workInProgressFiber.memorizedState = currentFiber.memorizedState;
-    //! 链接两个fiber 
-    workInProgressFiber.alternate = currentFiber;
-    currentFiber.alternate = workInProgressFiber;
-    return workInProgressFiber;
-}
-function reconcileFiberNode(workInProgressFiber, currentFiber) {
-    // console.log(workInProgressFiber.props, currentFiber.props);
-    // console.log(workInProgressFiber.tag, currentFiber.tag);
-    // console.log(workInProgressFiber.text, currentFiber.text);
-}
-//! -----------------render/secondRender/update子函数组件-----------------------
-function renderFunctionComponent(fiber) {
-    if (typeof fiber.stateNode !== 'function')
-        return;
-    const { template, data = {}, components = {} } = fiber.stateNode();
-    const childFiberNode = createFiberTree(template, { data, components }, fiber);
-    fiber.children.push(childFiberNode);
-}
-function updateRenderFunctionComponent(workInProgressFiber, currentFiber) {
-    //处理函数组件  执行函数获得新的数据  往下传递 继续向下递归
-    if (typeof workInProgressFiber.stateNode !== 'function')
-        return;
-    const { template, data = {}, components = {} } = workInProgressFiber.stateNode();
-    //todo继续让子fiber向下递归更新
-    let childWkFiber = workInProgressFiber.children[0];
-    let childCurFiebr = currentFiber.children[0];
-    //如果没有子节点  那么需要在这里链接父子树
-    if (!childWkFiber) {
-        workInProgressFiber.children = [updateFiberTree$2(template, { data, components }, childWkFiber, childCurFiebr)];
+exports.preHandleFiberNode = preHandleFiberNode;
+//! 处理函数组件节点
+function handleFunctionFiberNode(fiber, ComponentName) {
+    fiber.nodeType = 'FunctionComponent';
+    //todo 从sourcePool中获取子组件
+    const fc = fiber.sourcePool.components[ComponentName];
+    if (!fc) {
+        console.error(`子组件${ComponentName}未注册`);
     }
-    else {
-        updateFiberTree$2(template, { data, components }, childWkFiber, childCurFiebr);
-    }
+    //! 从资源池中拿取需要的props，给子函数组件绑定需要的props,并挂载子函数组件到fiber上
+    handleFunctionComponentProps(fiber, fc);
 }
+exports.handleFunctionFiberNode = handleFunctionFiberNode;
 //! ----------合并vnode和fiber  挂载resource-----------
 function conbineVnodAndFiber(fiber, vnode, resources) {
     const { props, tag, text } = vnode;
@@ -205,6 +101,7 @@ function conbineVnodAndFiber(fiber, vnode, resources) {
     fiber.sourcePool = resources;
     return fiber;
 }
+exports.conbineVnodAndFiber = conbineVnodAndFiber;
 //! ----------找到父dom节点---------------------
 function getParentDom(fiber) {
     let parentNode = fiber.parentNode;
@@ -221,6 +118,7 @@ function getParentDom(fiber) {
     }
     return parentDom;
 }
+exports.getParentDom = getParentDom;
 //! ------------从资源池中拿取子组件需要的Props 处理后传递给子组件----------
 //! 将props设置为单向数据流   并返回处理好的子组件函数传递出去
 function handleFunctionComponentProps(fiber, functionComponent) {
@@ -264,6 +162,7 @@ function handleFunctionComponentProps(fiber, functionComponent) {
     fiber.stateNode = newFc;
     return newFc;
 }
+exports.handleFunctionComponentProps = handleFunctionComponentProps;
 //! 对标签中的属性进行处理 给dom节点添加标签 (未完成)
 function handleProps(curFiber, dom) {
     const props = curFiber.props;
@@ -301,6 +200,15 @@ function handleProps(curFiber, dom) {
         }
     }
 }
+exports.handleProps = handleProps;
+//! -------路由适配方法  待修改---------------------
+function useRoute(fiber) {
+    //todo  如果是Route组件 将container的fiber传递给子组件 (暂时放到全局)
+    if (fiber.tag === 'RouteContainer') {
+        window.$$routeContainerFiber = fiber;
+    }
+}
+exports.useRoute = useRoute;
 // 错误记录
 // 函数name被webpack打包后会变为bound+函数名
 // 不能直接给tag赋值 

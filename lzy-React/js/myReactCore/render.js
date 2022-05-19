@@ -10,6 +10,7 @@ exports.resetFiber = exports.updateRender = exports.render = void 0;
 //! render分为2部分  render阶段 - commit阶段  最后unmount
 const GlobalFiber_1 = require("./GlobalFiber");
 const createFiberTree_1 = require("../myJSX/createFiberTree");
+const updateFiberTree_1 = require("../myJSX/updateFiberTree");
 //! ----------------模拟render部分------------------------
 //! 更改并生成fiber树  (结束后fiber由mount变为update)
 function renderPart(functionComponent, rootDom, workInProgress) {
@@ -30,7 +31,7 @@ function updateRenderPart(functionComponent, workInProgressFiber, currentFiber) 
     const secondWorkInProgress = workInProgressRootFiber.children[0];
     const secondCurrent = currentFiber.children[0];
     // 此时不需要创建fiberNode  所以不需要添加childFiber  直接在根fiber树上更新
-    const childFiber = (0, createFiberTree_1.updateFiberTree$2)(template, resource, secondWorkInProgress, secondCurrent);
+    const childFiber = (0, updateFiberTree_1.updateFiberTree)(template, resource, secondWorkInProgress, secondCurrent);
     if (workInProgressRootFiber.children.length === 0) {
         workInProgressRootFiber.children = [childFiber];
     }
