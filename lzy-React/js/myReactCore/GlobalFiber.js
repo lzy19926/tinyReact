@@ -1,68 +1,33 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.initFiberNode = exports.updateWorkInProgressHook = exports.global = void 0;
-//todo ------------------全局使用的结构和变量 方法-----------------------------
-let fiber$1 = {
-    memorizedState: null,
-    stateNode: () => { },
-    updateQueue: null,
-    stateQueueTimer: null,
-    fiberFlags: 'mount',
-    hasRef: false,
-    ref: null,
-    children: [],
-    props: null,
-    tag: null,
-    text: null,
-    sourcePool: null,
-    hookIndex: 0,
-    parentNode: null,
-    nodeType: undefined,
-    alternate: null
-};
-let fiber$2 = {
-    memorizedState: null,
-    stateNode: () => { },
-    updateQueue: null,
-    stateQueueTimer: null,
-    fiberFlags: 'update',
-    hasRef: false,
-    ref: null,
-    children: [],
-    props: null,
-    tag: null,
-    text: null,
-    sourcePool: null,
-    hookIndex: 0,
-    parentNode: null,
-    nodeType: undefined,
-    alternate: null
-};
-let initFiberNode = {
-    memorizedState: null,
-    stateNode: null,
-    updateQueue: null,
-    stateQueueTimer: null,
-    fiberFlags: 'mount',
-    hasRef: false,
-    ref: null,
-    children: [],
-    props: null,
-    tag: null,
-    text: null,
-    sourcePool: null,
-    hookIndex: 0,
-    parentNode: null,
-    nodeType: undefined,
-    alternate: null
-};
-exports.initFiberNode = initFiberNode;
+exports.NewFiberNode = exports.updateWorkInProgressHook = exports.global = void 0;
+//! ----------Fiber节点结构---------------
+class NewFiberNode {
+    constructor(fiberFlags, $fiber) {
+        this.memorizedState = null, // fiber上的所有hook链表
+            this.stateNode = null, // 对应的函数组件 或者Dom节点
+            this.updateQueue = null, // Effects的更新链表
+            this.stateQueueTimer = null, // 用于state的合并更新(setTimeout)
+            this.fiberFlags = fiberFlags, // fiber的生命周期 判断是否初始化
+            this.hasRef = false, //ref相关tag
+            this.ref = null,
+            this.children = [],
+            this.props = null,
+            this.tag = null, // 节点的tag 比如div/Demo
+            this.text = null,
+            this.sourcePool = null, ///! 组件返回的资源  props和事件
+            this.hookIndex = 0, // 用于记录hook的数量 以便查找
+            this.parentNode = null,
+            this.nodeType = undefined,
+            this.alternate = null, // 对面fiber树对应的节点
+            this.$fiber = $fiber; // 用于识别fiber是哪颗树
+    }
+}
+exports.NewFiberNode = NewFiberNode;
 //! -----需要使用的全局变量---------------
 const global = {
-    workInProgressFiber: fiber$1,
-    currentFiber: fiber$2,
+    workInprogressFiberNode: null,
     workInProgressHook: { currentHook: null },
-    currentFiberNode: null,
     destoryEffectsArr: [],
     renderTag: 'mount' // 用于判断是否是首次更新
 };

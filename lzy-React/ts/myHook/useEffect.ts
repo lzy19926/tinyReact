@@ -30,7 +30,7 @@ function mountEffect(fiberFlags: string, hookFlags: string, create: Function, de
 
 //! --------创建一个Hook 形成环链表 添加到hook队列--------------
 function mountWorkInProgressHook() {
-    const fiber = global.currentFiberNode//! 测试
+    const fiber = global.workInprogressFiberNode//! 测试
 
     //todo 新建一个hook
     const newHook: UseEffectHook = {
@@ -59,7 +59,7 @@ function mountWorkInProgressHook() {
 
 //! -------updateEffect(useEffect后续更新)-------------
 function updateEffect(fiberFlags: string, hookFlags: string, create: Function, deps: any[] | null) {
-    const fiber = global.currentFiberNode//! 测试
+    const fiber = global.workInprogressFiberNode//! 测试
 
     const currentHook = updateWorkInProgressHook(fiber)
 
@@ -121,7 +121,7 @@ function shallowCompareDeps(nextDeps: any[], prveDeps: any[]) {
 
 //! --------pushEffect创建/增加Effects更新链表---------------
 function pushEffect(tag: string, create: Function, destory: any, deps: any[] | null) {
-    const fiber = global.currentFiberNode//! 测试
+    const fiber = global.workInprogressFiberNode//! 测试
 
     // 创建Effect 
     const effect: Effect = {
@@ -162,7 +162,7 @@ function pushEffect(tag: string, create: Function, destory: any, deps: any[] | n
 //!------------useEffect主体--------------
 function myUseEffect(create: Function, deps?: any[]) {
     const nextDeps = deps === undefined ? null : deps
-    const fiber = global.currentFiberNode//! 测试
+    const fiber = global.workInprogressFiberNode//! 测试
 
     // 第一次useEffect执行mountEffect
     if (fiber.fiberFlags === 'mount') {

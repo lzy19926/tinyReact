@@ -38,7 +38,7 @@ interface FiberNode {
     stateNode: Function | HTMLElement | null,
     updateQueue: any,
     stateQueueTimer: any,
-    fiberFlags: string,
+    fiberFlags: 'mount' | 'update' | undefined,
     hasRef: boolean,
     ref: any,
     children: any,
@@ -49,15 +49,14 @@ interface FiberNode {
     hookIndex: number,
     parentNode: FiberNode | null,
     nodeType: 'HostText' | 'HostComponent' | 'FunctionComponent' | 'AppNode' | undefined,
-    alternate: FiberNode | null
+    alternate: FiberNode | null,
+    $fiber: '$1' | '$2' | undefined
 }
 
 //!-------------全局需要的变量结构---------------
 interface Global {
-    workInProgressFiber: FiberNode | null,
-    currentFiber: FiberNode | null,
+    workInprogressFiberNode: FiberNode | null,
     workInProgressHook: { currentHook: any },
-    currentFiberNode: FiberNode | null,
     destoryEffectsArr: Effect[],
     renderTag: string
 }

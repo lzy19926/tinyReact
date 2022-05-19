@@ -6,7 +6,7 @@ const render_1 = require("../myReactCore/render");
 const GlobalFiber_1 = require("../myReactCore/GlobalFiber");
 //! ---------------useState返回的updater方法(updateState方法)-------------------
 function dispatchAction(queue, curFiber, newVal) {
-    //todo 如果newVal未发生变化不执行更新
+    //todo 如果newVal未发生变化不执行更新(可以用于手动强制更新)
     // const oldVal = curFiber.memorizedState.memorizedState
     // if (newVal === oldVal) return
     //todo 更新state队列(在render阶段执行)
@@ -43,7 +43,7 @@ function updateQueue(queue, newVal) {
 }
 //! 创建一个useStateHook并添加到链表中------------------------
 function createHook(initialState) {
-    const fiber = GlobalFiber_1.global.currentFiberNode; //! 测试
+    const fiber = GlobalFiber_1.global.workInprogressFiberNode; //! 测试
     // 创建useState类型的hook
     const hook = {
         hookFlags: 'mount',
@@ -91,7 +91,7 @@ function updateUseStateHook(hook) {
 //! ----------执行useState会执行state的计算过程----------------
 function myUseState(initialState) {
     //todo  需要找到当前的fiber节点()
-    let fiber = GlobalFiber_1.global.currentFiberNode;
+    let fiber = GlobalFiber_1.global.workInprogressFiberNode;
     //取出当前hook 如果是mount阶段就创建一个hook(初始值为initState)
     let hook;
     if (fiber.fiberFlags === 'mount') {

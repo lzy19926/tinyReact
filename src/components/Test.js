@@ -5,17 +5,17 @@ import { myUseState, myUseEffect } from '../../lzy-React/index'
 
 function Test() {
 
-
     const [num, setNum] = myUseState(0)
 
     function addNum() {
-        //多个setState合并执行 一次render
         setNum(num + 1)
+        const ref = document.getElementById('btn')
+        
     }
 
     return {
-        data: { addNum },
-        template: `<button onClick={addNum}>Num:${num}</button>`,
+        data: { addNum, num },
+        template: `<button onClick={addNum} id='btn'>Num:${num}</button>`,
     }
 }
 

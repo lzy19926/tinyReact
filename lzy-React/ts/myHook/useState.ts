@@ -10,13 +10,13 @@ import { global, updateWorkInProgressHook } from '../myReactCore/GlobalFiber'
 //! ---------------useState返回的updater方法(updateState方法)-------------------
 function dispatchAction(queue: any, curFiber: FiberNode, newVal?: any) {
 
-    //todo 如果newVal未发生变化不执行更新
+
+    //todo 如果newVal未发生变化不执行更新(可以用于手动强制更新)
     // const oldVal = curFiber.memorizedState.memorizedState
     // if (newVal === oldVal) return
 
     //todo 更新state队列(在render阶段执行)
     updateQueue(queue, newVal)
-
 
     //todo 这里使用防抖 所有queue更新完后再执行render  将timer设置在fiber上以适配Rekv
     //将多个同步setState的render合并为一个
@@ -31,10 +31,6 @@ function dispatchAction(queue: any, curFiber: FiberNode, newVal?: any) {
         }
     }, 0)
 
-
-
-
-
 }
 
 
@@ -42,7 +38,6 @@ function dispatchAction(queue: any, curFiber: FiberNode, newVal?: any) {
 
 //! 更新setate更新队列
 function updateQueue(queue: any, newVal?: any | Function) {
-
 
     //创建updater环链表 将action挂载上去
     const updater: StateUpdater = {
@@ -64,7 +59,7 @@ function updateQueue(queue: any, newVal?: any | Function) {
 
 //! 创建一个useStateHook并添加到链表中------------------------
 function createHook(initialState: any) {
-    const fiber = global.currentFiberNode//! 测试
+    const fiber = global.workInprogressFiberNode//! 测试
 
     // 创建useState类型的hook
     const hook: UseStateHook = {
@@ -119,8 +114,9 @@ function updateUseStateHook(hook: UseStateHook) {
 //! ----------执行useState会执行state的计算过程----------------
 function myUseState(initialState: any) {
 
+
     //todo  需要找到当前的fiber节点()
-    let fiber = global.currentFiberNode
+    let fiber = global.workInprogressFiberNode
 
     //取出当前hook 如果是mount阶段就创建一个hook(初始值为initState)
     let hook;
@@ -136,9 +132,6 @@ function myUseState(initialState: any) {
     const baseState = updateUseStateHook(hook)
     //todo 执行完useState 钩子状态变为update
     hook.hookFlags = 'update'
-
-
-
     //todo 返回最新的状态 和updateAction 
     //todo bind本次useState的fiber节点 用于从当前组件开始更新
     return [baseState, dispatchAction.bind(null, hook.updateStateQueue, fiber)]

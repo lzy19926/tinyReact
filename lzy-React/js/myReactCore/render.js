@@ -2,6 +2,7 @@
 //待办项 :1  将fiber树转换为二叉树
 //        2  将diff过程放在finishWork中  并收集effect向上
 //         3  实现双缓存  双fiber树机制
+//           4 hook.memorizedState并不会保存所有的状态
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.resetFiber = exports.updateRender = exports.render = void 0;
 //待办项
@@ -19,16 +20,6 @@ function renderPart(functionComponent, rootDom, workInProgress) {
     currentRootFiber.children.push(fiberTree);
     return currentRootFiber;
 }
-//! 生成第二课fiber树  将其互相链接 注意这里双树交换了位置
-function secondRenderPart(functionComponent, currentFiber, workInProgressFiber) {
-    const { template, resource, workInProgressRootFiber } = firstRenderSecondApp(functionComponent, currentFiber, workInProgressFiber);
-    //todo根据组件构建fiberTree(首次)
-    const currentFiberFirst = currentFiber.children[0]; //从第一个子节点开始
-    // const secondFiberTree = createSecondFiberTree(template, resource, workInProgressRootFiber, currentFiberFirst)
-    // workInProgressRootFiber.children.push(secondFiberTree)
-    // console.log(workInProgressRootFiber); // 生成的子Fiber树  (新)
-    return workInProgressRootFiber;
-}
 //todo 获取上一次的fiberTree 执行所有打上tag的functionComponent进行state更新 再commit   
 function updateRenderPart(functionComponent, workInProgressFiber, currentFiber) {
     // 改变tag
@@ -43,15 +34,13 @@ function updateRenderPart(functionComponent, workInProgressFiber, currentFiber) 
     if (workInProgressRootFiber.children.length === 0) {
         workInProgressRootFiber.children = [childFiber];
     }
-    console.log(workInProgressRootFiber);
     return workInProgressRootFiber;
 }
 //todo修补用工具函数对render根Fiber节点进行处理(否则无法渲染第一个根节点)
 function firstRenderApp(functionComponent, currentRootFiber, rootDom) {
-    GlobalFiber_1.global.currentFiberNode = currentRootFiber;
+    GlobalFiber_1.global.workInprogressFiberNode = currentRootFiber;
     currentRootFiber.stateNode = functionComponent;
     currentRootFiber.nodeType = 'AppNode';
-    currentRootFiber.ref = rootDom;
     //! 用于解决webpack 函数名出现bound问题 并赋值给此fiber的tag
     const functionNameArr = functionComponent.name.split(' ');
     currentRootFiber.tag = functionNameArr[0] === 'bound'
@@ -65,14 +54,9 @@ function firstRenderApp(functionComponent, currentRootFiber, rootDom) {
 }
 function firstUpdateRenderApp(functionComponent, workInProgressRootFiber, currentRootFiber) {
     if (!workInProgressRootFiber) {
-        workInProgressRootFiber = JSON.parse(JSON.stringify(GlobalFiber_1.initFiberNode));
-        // 注意这里需要合并effect链表和timer
-        // workInProgressRootFiber.stateQueueTimer = currentRootFiber.stateQueueTimer
-        // workInProgressRootFiber.updateQueue = currentRootFiber.updateQueue
-        // workInProgressRootFiber.hookIndex = currentRootFiber.hookIndex
-        // workInProgressRootFiber.memorizedState = currentRootFiber.memorizedState
+        workInProgressRootFiber = firstCreateAlternate(currentRootFiber);
     }
-    GlobalFiber_1.global.currentFiberNode = currentRootFiber;
+    GlobalFiber_1.global.workInprogressFiberNode = workInProgressRootFiber;
     workInProgressRootFiber.stateNode = functionComponent;
     //! 用于解决webpack 函数名出现bound问题
     const functionNameArr = functionComponent.name.split(' ');
@@ -82,11 +66,20 @@ function firstUpdateRenderApp(functionComponent, workInProgressRootFiber, curren
     workInProgressRootFiber.tag = functionName;
     const { template, data, components } = functionComponent();
     const resource = { data, components };
-    workInProgressRootFiber.fiberFlags = 'update';
+    return { template, resource, workInProgressRootFiber };
+}
+function firstCreateAlternate(currentRootFiber) {
+    //todo 新建一个fiberNode
+    const workInProgressRootFiber = new GlobalFiber_1.NewFiberNode('update', '$2');
+    //! 复制一些通用属性
+    workInProgressRootFiber.stateQueueTimer = currentRootFiber.stateQueueTimer;
+    workInProgressRootFiber.updateQueue = currentRootFiber.updateQueue;
+    workInProgressRootFiber.hookIndex = currentRootFiber.hookIndex;
+    workInProgressRootFiber.memorizedState = currentRootFiber.memorizedState;
     //! 合并两个节点
     workInProgressRootFiber.alternate = currentRootFiber;
     currentRootFiber.alternate = workInProgressRootFiber;
-    return { template, resource, workInProgressRootFiber };
+    return workInProgressRootFiber;
 }
 //! -----------------模拟Commit阶段-----------------------------
 //! 分为三部分  beforeMutation  mutation  layout阶段
@@ -200,7 +193,7 @@ function diffProps(curFiber, dom) {
                 //! 从组件的资源池里找对应的事件
                 const dataPool = curFiber.sourcePool.data;
                 const callback = dataPool[value[0]];
-                dom.addEventListener("click", callback);
+                dom.onclick = callback; // 这里不能使用addEventListener  因为需要删除上一个点击事件
                 break;
             //todo  处理其他
             default:
@@ -307,15 +300,13 @@ function conbineEffectsLink(fiber, rootUpdateQueue) {
 function render(functionComponent, rootDom) {
     console.log('------------render-------------');
     //todo 初始化workInProgress树
-    const workInProgressFiber = GlobalFiber_1.global.workInProgressFiber;
-    const currentFiber = GlobalFiber_1.global.currentFiber;
+    const workInProgressFiber = new GlobalFiber_1.NewFiberNode('mount', '$1');
+    GlobalFiber_1.global.workInprogressFiberNode = workInProgressFiber; //挂载到全局
     //todo render阶段
     const beginWorkFiber = renderPart(functionComponent, rootDom, workInProgressFiber);
-    // const secondFiberTree = secondRenderPart(functionComponent, beginWorkFiber, currentFiber)
     // 从下往上遍历fiber收集所有的Effects 形成环链表 上传递优先级给root
     //! 这里finishedWork应该在renderPart中   待修改
     const finishedWorkFiber = finishedWork(beginWorkFiber);
-    console.log(GlobalFiber_1.global);
     //todo commit阶段
     commitPart(finishedWorkFiber);
 }
@@ -323,10 +314,15 @@ exports.render = render;
 function updateRender(functionComponent, workInProgressFiber, currentFiber) {
     console.log('------------updateRender-------------');
     resetFiber(currentFiber); //更新render时需要先将fiber的数据重置  重新挂载数据
+    if (workInProgressFiber) {
+        resetFiber(workInProgressFiber); //更新render时需要先将fiber的数据重置  重新挂载数据
+    }
     // 更新fiber树
     const beginWorkFiber = updateRenderPart(functionComponent, workInProgressFiber, currentFiber);
     // 从下往上遍历fiber收集所有的Effects 形成环链表 上传递优先级给root
     const finishedWorkFiber = finishedWork(beginWorkFiber);
+    console.log('本次commit的fiber', finishedWorkFiber.$fiber);
+    console.log('本次commit的fiber', finishedWorkFiber);
     updateCommitPart(finishedWorkFiber);
 }
 exports.updateRender = updateRender;
