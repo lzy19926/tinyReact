@@ -1,10 +1,11 @@
-// import { myUseState, myUseEffect } from 'lzy-react'
+
 import { myUseState, myUseEffect } from '../../lzy-React/index'
 import Test from '../components/Test'
 
 
 //! Demo组件
 function Demo() {
+
 
 
     const [age, setAge] = myUseState(18)
@@ -45,12 +46,11 @@ function Demo() {
     return ({
         components: { Test },
 
-        data: { addNum, addAge, addArr, num },
+        data: { addNum, addAge, addArr },
 
         template: `
         <div>
-       
-        <Test num={num}></Test>
+        <Test></Test>
         <h1>Demo</h1>
         
         <div>简单适配了bootStarp组件库</div>

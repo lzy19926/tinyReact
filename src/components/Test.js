@@ -8,12 +8,17 @@ function Test() {
     const [num, setNum] = myUseState(0)
 
     function addNum() {
-        setNum(num + 1)        
+        setNum(num + 1)
     }
 
     return {
-        data: { addNum, num },
-        template: `<button onClick={addNum} id='btn'>Num:${num}</button>`,
+        data: { addNum },
+        template: `
+        <div>
+        <button onClick={addNum} id='btn'>Num:${num}</button>
+        <div>测试:${num}</div>
+        </div>
+        `,
     }
 }
 

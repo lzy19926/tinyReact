@@ -19,27 +19,25 @@ function createFiberTree(source: any, resources: any, parentNode: FiberNode) {
 
     //TODO -----------如果tag大写 解析为组件节点(无children) ----------------
     if (tag[0] === tag[0].toUpperCase()) {
-        //! 处理为组件节点
+        //! 处理为组件节点   并继续向下递归render子函数组件
         handleFunctionFiberNode(newFiberNode, tag)
-        //! render子函数组件
+
         renderFunctionComponent(newFiberNode)
     }
 
     //TODO ----------小写的情况  是domComponent节点/text节点  创建对应的dom并添加--------
-    //todo 或者复用alternate的ref
     else {
         newFiberNode.nodeType = 'HostText'
         createDomElement(newFiberNode)
+
     }
 
-    //todo 如果有childVnode 深度优先递归  创建子fiber 挂到当前节点
-    if (children.length > 0) {
-        newFiberNode.nodeType = 'HostComponent'
-        createFiberTreeLoop(children, newFiberNode)
-    }
+    //todo 继续向下深度优先递归  创建子fiber 挂到当前节点
+    createFiberTreeLoop(children, newFiberNode)
+
+    newFiberNode.fiberFlags = 'update'
 
     //模拟finishowrk
-    newFiberNode.fiberFlags = 'update'
     // console.log('finishWork', newFiberNode.tag);
 
     //适配路由
@@ -50,11 +48,13 @@ function createFiberTree(source: any, resources: any, parentNode: FiberNode) {
 
 //! 根据子vnode 递归创建子fiberNode 并进行拼接-------------
 function createFiberTreeLoop(childVnodes: any, parentNode: FiberNode) {
-    for (let i = 0; i < childVnodes.length; i++) {
-        const childFiberNode = createFiberTree(childVnodes[i], parentNode.sourcePool, parentNode)
-        parentNode.children.push(childFiberNode)
+    if (childVnodes.length > 0) {
+        parentNode.nodeType = 'HostComponent'
+        for (let i = 0; i < childVnodes.length; i++) {
+            const childFiberNode = createFiberTree(childVnodes[i], parentNode.sourcePool, parentNode)
+            parentNode.children.push(childFiberNode)
+        }
     }
-
 }
 
 //! -----------------render子函数组件-----------------------
@@ -62,7 +62,7 @@ function renderFunctionComponent(fiber: FiberNode) {
 
     if (typeof fiber.stateNode !== 'function') return
 
-    const { template, data = {}, components = {} } = fiber.stateNode()
+    const { template, data, components } = fiber.stateNode()
 
     const childFiberNode = createFiberTree(template, { data, components }, fiber)
     //todo 生成子树并链接
@@ -89,6 +89,7 @@ function createDomElement(fiber: FiberNode) {
 
 
 
+
 //! 预处理FiberNode  将模板和资源先挂载到节点上-----------------
 function preHandleFiberNode(source: any, resources: any, workInProgressFiber: FiberNode) {
     //todo 切换当前工作fiber
@@ -99,7 +100,7 @@ function preHandleFiberNode(source: any, resources: any, workInProgressFiber: Fi
 
     //todo 合并处理vnode和Fiber 挂载resource
     const { children = [], tag } = vnode
-    workInProgressFiber = conbineVnodAndFiber(workInProgressFiber, vnode, resources)
+    conbineVnodAndFiber(workInProgressFiber, vnode, resources)
 
     return { children, tag }
 }
@@ -116,6 +117,7 @@ function handleFunctionFiberNode(fiber: FiberNode, ComponentName: string) {
 
 
 
+
 //! ----------合并vnode和fiber  挂载resource-----------
 function conbineVnodAndFiber(fiber: FiberNode, vnode: any, resources: any) {
     const { props, tag, text } = vnode
@@ -123,7 +125,7 @@ function conbineVnodAndFiber(fiber: FiberNode, vnode: any, resources: any) {
     fiber.tag = tag
     fiber.text = text
     fiber.sourcePool = resources
-    return fiber
+
 }
 
 //! ----------找到父dom节点---------------------
@@ -147,7 +149,6 @@ function getParentDom(fiber: FiberNode) {
 
     return parentDom
 }
-
 
 //! ------------从资源池中拿取子组件需要的Props 处理后传递给子组件----------
 //! 将props设置为单向数据流   并返回处理好的子组件函数传递出去
@@ -238,8 +239,7 @@ function handleProps(curFiber: any, dom: any) {
                 //! 从组件的资源池里找对应的事件
                 const dataPool = curFiber.sourcePool.data
                 const callback = dataPool[value[0]]
-                dom.onClick = callback
-                // dom.addEventListener("click", callback);
+                dom.onclick = callback
                 break;
 
             //todo  处理其他
@@ -263,9 +263,11 @@ function useRoute(fiber: FiberNode) {
 
 export {
     createFiberTree,
+    renderFunctionComponent,
     useRoute,
     handleProps,
     handleFunctionComponentProps,
+    createDomElement,
     getParentDom,
     conbineVnodAndFiber,
     preHandleFiberNode,

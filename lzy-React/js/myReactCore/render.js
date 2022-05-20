@@ -6,7 +6,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.resetFiber = exports.updateRender = exports.render = void 0;
 //待办项
-// 1. 继续updateFiberTree$2  和 firstUpdateRenderApp的工作   
+// 1. 继续新增节点Placement的工作   
 //! render分为2部分  render阶段 - commit阶段  最后unmount
 const GlobalFiber_1 = require("./GlobalFiber");
 const createFiberTree_1 = require("../myJSX/createFiberTree");
@@ -31,7 +31,7 @@ function updateRenderPart(functionComponent, workInProgressFiber, currentFiber) 
     const secondWorkInProgress = workInProgressRootFiber.children[0];
     const secondCurrent = currentFiber.children[0];
     // 此时不需要创建fiberNode  所以不需要添加childFiber  直接在根fiber树上更新
-    const childFiber = (0, updateFiberTree_1.updateFiberTree)(template, resource, secondWorkInProgress, secondCurrent);
+    const childFiber = (0, updateFiberTree_1.updateFiberTree)(template, resource, workInProgressRootFiber, secondWorkInProgress, secondCurrent);
     if (workInProgressRootFiber.children.length === 0) {
         workInProgressRootFiber.children = [childFiber];
     }
@@ -87,37 +87,43 @@ function firstCreateAlternate(currentRootFiber) {
 //! before 前置处理  mutation 渲染dom节点   layout  处理useEffect useLayoutEffect
 function commitPart(finishedWorkFiber) {
     //todo  mutation阶段 
-    commitFiberNodeMutation(finishedWorkFiber);
+    commitFiberNodeMutation(GlobalFiber_1.global.EffectList);
     //todo  layout阶段  调用Effects链表 执行create函数()
     //todo 处理ref
 }
 function updateCommitPart(finishedWorkFiber) {
-    //todo  mutation阶段
-    commitFiberNodeMutation(finishedWorkFiber);
+    //todo  mutation阶段 遍历EffectList单链表 预留优先级调用 更新fiber
+    commitFiberNodeMutation(GlobalFiber_1.global.EffectList);
     //todo  layout阶段  调用Effects链表 执行create函数()
     //todo 处理ref
 }
-//! mutation阶段  遍历fiber树  每个节点执行更新(分为添加  删除  更新 三大部分 )
-// 递归遍历fiber树(todo: 需要更改为二叉树)
-function commitFiberNodeMutation(finishedWorkFiber) {
-    let finishedWorkFlag = 'update';
-    //! 经过相应处理 最后执行commitWork方法
-    switch (finishedWorkFlag) {
-        case 'placement': //todo  添加
-            // commitPlacement()
-            break;
-        case 'delete': //todo  删除
-            // commitDelete()
-            break;
-        case 'update': //todo  更新
-            commitWork(finishedWorkFiber);
-            break;
+//! mutation阶段  遍历EffectList  对每个节点执行更新(分为添加  删除  更新 三大部分 )
+function commitFiberNodeMutation(EffectList, lane) {
+    console.log('本次更新的EffectList', EffectList);
+    let currentEffect = EffectList.firstEffect;
+    while (currentEffect !== null) {
+        let effectTag = currentEffect.tag;
+        let targetFiber = currentEffect.targetFiber;
+        //! 经过相应处理 最后执行commitWork方法
+        switch (effectTag) {
+            case 'Placement': //todo  添加
+                commitPlacement(targetFiber);
+                break;
+            case 'Delete': //todo  删除
+                // commitDeletion()
+                break;
+            case 'Update': //todo  更新
+                commitWork(targetFiber);
+                break;
+            default:
+                break;
+        }
+        currentEffect = currentEffect.next;
     }
-    if (finishedWorkFiber.children) {
-        finishedWorkFiber.children.forEach((finishedWorkFiber) => {
-            commitFiberNodeMutation(finishedWorkFiber);
-        });
-    }
+}
+//todo 待完成 插入dom节点
+function commitPlacement(finishedWorkFiber) {
+    (0, createFiberTree_1.createDomElement)(finishedWorkFiber);
 }
 // todo 不同类型的fiberNode执行不同的更新
 function commitWork(finishedWorkFiber) {
@@ -322,18 +328,17 @@ function updateRender(functionComponent, workInProgressFiber, currentFiber) {
     const beginWorkFiber = updateRenderPart(functionComponent, workInProgressFiber, currentFiber);
     // 从下往上遍历fiber收集所有的Effects 形成环链表 上传递优先级给root
     const finishedWorkFiber = finishedWork(beginWorkFiber);
-    console.log('本次commit的fiber', finishedWorkFiber.$fiber);
-    console.log('本次commit的fiber', finishedWorkFiber);
     updateCommitPart(finishedWorkFiber);
 }
 exports.updateRender = updateRender;
-//todo ----遍历清空fiber树上的hookIndex 和 queue
-function resetFiber(fiberTree) {
-    fiberTree.hookIndex = 0;
-    fiberTree.updateQueue = null;
+//todo ----遍历清空fiber树上的hookIndex 和 queue 和 EffectTag
+function resetFiber(fiber) {
+    fiber.hookIndex = 0;
+    fiber.updateQueue = null;
+    GlobalFiber_1.global.EffectList = { firstEffect: null, lastEffect: null, length: 0 };
     GlobalFiber_1.global.destoryEffectsArr = [];
-    if (fiberTree.children.length !== 0) {
-        fiberTree.children.forEach((fiber) => {
+    if (fiber.children.length !== 0) {
+        fiber.children.forEach((fiber) => {
             resetFiber(fiber);
         });
     }

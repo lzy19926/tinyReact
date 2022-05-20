@@ -44,8 +44,9 @@ class NewFiberNode implements FiberNode {
 const global: Global = {
     workInprogressFiberNode: null, //! 当前工作的fiber节点
     workInProgressHook: { currentHook: null },//React中使用链表来保存hooks 挂在全局
+    EffectList: { firstEffect: null, lastEffect: null, length: 0 },
     destoryEffectsArr: [],
-    renderTag: 'mount' // 用于判断是否是首次更新
+    renderTag: 'mount', // 用于判断是否是首次更新
 }
 
 //! ----------拿取需要本次update需要更新的hook----------------------

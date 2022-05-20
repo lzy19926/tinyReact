@@ -28,8 +28,9 @@ exports.NewFiberNode = NewFiberNode;
 const global = {
     workInprogressFiberNode: null,
     workInProgressHook: { currentHook: null },
+    EffectList: { firstEffect: null, lastEffect: null, length: 0 },
     destoryEffectsArr: [],
-    renderTag: 'mount' // 用于判断是否是首次更新
+    renderTag: 'mount', // 用于判断是否是首次更新
 };
 exports.global = global;
 //! ----------拿取需要本次update需要更新的hook----------------------

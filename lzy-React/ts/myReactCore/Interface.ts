@@ -12,9 +12,9 @@ interface UseEffectHook {
 interface Effect {
     tag: string,
     create: Function,
-    next: Effect | null,
     destory: Function | null,
     deps: any[] | null,
+    next: Effect | null,
 }
 
 //!-------------单个useStateHook结构-----------------
@@ -57,6 +57,7 @@ interface FiberNode {
 interface Global {
     workInprogressFiberNode: FiberNode | null,
     workInProgressHook: { currentHook: any },
+    EffectList: { firstEffect: any, lastEffect: any, length: number },
     destoryEffectsArr: Effect[],
     renderTag: string
 }

@@ -1,0 +1,165 @@
+//! (此时生成了新的fiber  老fiber会被unmount) 所以destory是在组件unmount时执行的
+
+//! --------- 两种setState方法  传入{...states} 或者(state)=> ({...states})---------
+
+//! -----------------render子函数组件-----------------------
+
+//! -----------------update子函数组件-----------------------
+
+//! -----------------模拟Commit阶段-----------------------------
+
+//! ----------------模拟render部分------------------------
+
+//! ---------------useState返回的updater方法(updateState方法)-------------------
+
+//! -------------创建html并挂载到fiber节点上--------------------
+
+//! ------------从资源池中拿取子组件需要的Props 处理后传递给子组件----------
+
+//! ----------Fiber节点结构---------------
+
+//! ----------合并vnode和fiber  挂载resource-----------
+
+//! ----------执行useState会执行state的计算过程----------------
+
+//! ----------找到父dom节点---------------------
+
+//! ----------拿取需要本次update需要更新的hook----------------------
+
+//! ----------比较wk和cur两个fiber  生成Effect 打上tag-------------
+
+//! ----------遍历fiber  收集effect 挂载到本次更新的root节点 ------------------
+
+//! ---------创建Fiber替代并链接----------
+
+//! --------pushEffect创建/增加Effects更新链表---------------
+
+//! --------创建一个Hook 形成环链表 添加到hook队列--------------
+
+//! -------mountEffect(useEffect第一次执行)-------------
+
+//! -------updateEffect(useEffect后续更新)-------------
+
+//! -------路由适配方法  待修改---------------------
+
+//! ------浅比较前后deps是否发生变化-------------------
+
+//! before 前置处理  mutation 渲染dom节点   layout  处理useEffect useLayoutEffect
+
+//! fiber.fiberFlags = fiberFlags
+
+//! mutation阶段  遍历fiber树  每个节点执行更新(分为添加  删除  更新 三大部分 )
+
+//! render分为2部分  render阶段 - commit阶段  最后unmount
+
+//! render子函数组件
+
+//! 从当前fiber节点  重新执行函数式组件  更新子fiber树(需要传入当前fiber进行递归) 
+
+//! 从组件的资源池里找对应的事件
+
+//! 从资源池中拿取需要的props，给子函数组件绑定需要的props,并挂载子函数组件到fiber上
+
+//! 使用myUseEffect实现路由重定向
+
+//! 分为三部分  beforeMutation  mutation  layout阶段
+
+//! 创建fiberNode树(Vnode树) 深度优先遍历vnode树  包装成fiberNode
+
+//! 创建一个useStateHook并添加到链表中------------------------
+
+//! 判断tag  执行create函数
+
+//! 判断tag  执行destory函数(需要修改)
+
+//! 包括横杠类名
+
+//! 合并两个节点
+
+//! 处理为组件节点
+
+//! 处理函数组件节点
+
+//! 处理向下传递的resource
+
+//! 复制一些通用属性
+
+//! 如果发现没有此fiber 就再根据vnode创建一个fiber
+
+//! 如果没有传deps 表示任意时候都执行
+
+//! 字符串扫描解析器
+
+//! 对传入的props进行数据类型解析
+
+//! 对标签中的属性进行diff处理 (使用前后两棵fiber树进行diff)
+
+//! 对标签中的属性进行处理 给dom节点添加标签 (未完成)
+
+//! 将html模板字符串转换成tokens数组
+
+//! 将props设置为单向数据流   并返回处理好的子组件函数传递出去
+
+//! 将tokens数组形成dom树形结构
+
+//! 将tokens树转化为虚拟dom树
+
+//! 将一些属性复制给workInProgress
+
+//! 当map添加item时  可能造成vnode和childrenFiber数量不等
+
+//! 总和方法 转换html模板为虚拟dom
+
+//! 执行所有上一次挂载的destory  并销毁
+
+//! 执行所有的create 挂载destory
+
+//! 拆分html中的事件  (键值对)
+
+//! 拆分html中的属性222  (键值对)
+
+//! 暂时废弃
+
+//! 更改并生成fiber树  (结束后fiber由mount变为update)
+
+//! 更新setate更新队列
+
+//! 更新该Hook的memorizedState-----------------------------
+
+//! 根据deps传入不同的情况  实现useEffect的不同使用
+
+//! 根据fiberNode和FunctionComponent创建FiberNode 生成Fiber树
+
+//! 根据传入的dep 判断是否执行effect
+
+//! 根据子vnode 递归创建子fiberNode 并进行拼接-------------
+
+//! 根据子vnode 递归更新子fiberNode 并进行拼接-------------
+
+//! 注意 这里需要处理props  不然点击事件不会更新  第二次点击num不会++  
+
+//! 测试
+
+//! 源码中使用切换fiber树的方式执行重新渲染 
+
+//! 点击时获取的num变量还是上一次的变量
+
+//! 用于解决webpack 函数名出现bound问题
+
+//! 用于解决webpack 函数名出现bound问题 并赋值给此fiber的tag
+
+//! 遍历fiber  拼接所有的effect  
+
+//! 链接两个fiber 
+
+//! 隐式挂一个id属性
+
+//! 预处理FiberNode  将模板和资源先挂载到节点上-----------------
+
+//!--------------综合Render方法-------------------
+
+//!------------useEffect主体--------------
+
+//!_state对象
+
+//!执行updateEffect 改变fiberFlages

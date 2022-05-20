@@ -4,11 +4,11 @@
 //           4 hook.memorizedState并不会保存所有的状态
 
 //待办项
-// 1. 继续updateFiberTree$2  和 firstUpdateRenderApp的工作   
+// 1. 继续新增节点Placement的工作   
 
 //! render分为2部分  render阶段 - commit阶段  最后unmount
 import { global, NewFiberNode } from './GlobalFiber'
-import { createFiberTree } from '../myJSX/createFiberTree'
+import { createFiberTree, createDomElement } from '../myJSX/createFiberTree'
 import { updateFiberTree } from '../myJSX/updateFiberTree'
 import { Effect, FiberNode } from './Interface'
 
@@ -43,7 +43,7 @@ function updateRenderPart(functionComponent: Function, workInProgressFiber: Fibe
     const secondCurrent = currentFiber.children[0]
 
     // 此时不需要创建fiberNode  所以不需要添加childFiber  直接在根fiber树上更新
-    const childFiber = updateFiberTree(template, resource, secondWorkInProgress, secondCurrent)
+    const childFiber = updateFiberTree(template, resource, workInProgressRootFiber, secondWorkInProgress, secondCurrent)
 
     if (workInProgressRootFiber.children.length === 0) {
         workInProgressRootFiber.children = [childFiber]
@@ -52,7 +52,6 @@ function updateRenderPart(functionComponent: Function, workInProgressFiber: Fibe
 
     return workInProgressRootFiber
 }
-
 
 
 //todo修补用工具函数对render根Fiber节点进行处理(否则无法渲染第一个根节点)
@@ -110,6 +109,7 @@ function firstCreateAlternate(currentRootFiber: FiberNode) {
     workInProgressRootFiber.updateQueue = currentRootFiber.updateQueue
     workInProgressRootFiber.hookIndex = currentRootFiber.hookIndex
     workInProgressRootFiber.memorizedState = currentRootFiber.memorizedState
+
     //! 合并两个节点
     workInProgressRootFiber.alternate = currentRootFiber
     currentRootFiber.alternate = workInProgressRootFiber
@@ -126,7 +126,7 @@ function firstCreateAlternate(currentRootFiber: FiberNode) {
 function commitPart(finishedWorkFiber: FiberNode) {
 
     //todo  mutation阶段 
-    commitFiberNodeMutation(finishedWorkFiber)
+    commitFiberNodeMutation(global.EffectList)
 
     //todo  layout阶段  调用Effects链表 执行create函数()
 
@@ -136,8 +136,8 @@ function commitPart(finishedWorkFiber: FiberNode) {
 
 function updateCommitPart(finishedWorkFiber: FiberNode) {
 
-    //todo  mutation阶段
-    commitFiberNodeMutation(finishedWorkFiber)
+    //todo  mutation阶段 遍历EffectList单链表 预留优先级调用 更新fiber
+    commitFiberNodeMutation(global.EffectList)
 
     //todo  layout阶段  调用Effects链表 执行create函数()
 
@@ -147,34 +147,47 @@ function updateCommitPart(finishedWorkFiber: FiberNode) {
 
 
 
-//! mutation阶段  遍历fiber树  每个节点执行更新(分为添加  删除  更新 三大部分 )
-// 递归遍历fiber树(todo: 需要更改为二叉树)
-function commitFiberNodeMutation(finishedWorkFiber: FiberNode) {
-    let finishedWorkFlag = 'update'
+//! mutation阶段  遍历EffectList  对每个节点执行更新(分为添加  删除  更新 三大部分 )
+function commitFiberNodeMutation(EffectList: any, lane?: any) {
+    console.log('本次更新的EffectList', EffectList);
 
-    //! 经过相应处理 最后执行commitWork方法
-    switch (finishedWorkFlag) {
-        case 'placement'://todo  添加
-            // commitPlacement()
-            break;
-        case 'delete'://todo  删除
-            // commitDelete()
-            break;
-        case 'update'://todo  更新
-            commitWork(finishedWorkFiber)
-            break;
+    let currentEffect = EffectList.firstEffect
+
+    while (currentEffect !== null) {
+
+        let effectTag = currentEffect.tag
+        let targetFiber = currentEffect.targetFiber
+
+        //! 经过相应处理 最后执行commitWork方法
+        switch (effectTag) {
+            case 'Placement'://todo  添加
+                commitPlacement(targetFiber)
+                break;
+            case 'Delete'://todo  删除
+                // commitDeletion()
+                break;
+            case 'Update'://todo  更新
+                commitWork(targetFiber)
+                break;
+            default:
+                break;
+        }
+
+        currentEffect = currentEffect.next
+
     }
 
 
-    if (finishedWorkFiber.children) {
-        finishedWorkFiber.children.forEach((finishedWorkFiber) => {
-            commitFiberNodeMutation(finishedWorkFiber)
-        })
-    }
+
+
+
 
 }
 
-
+//todo 待完成 插入dom节点
+function commitPlacement(finishedWorkFiber: FiberNode) {
+    createDomElement(finishedWorkFiber)
+}
 // todo 不同类型的fiberNode执行不同的更新
 function commitWork(finishedWorkFiber: FiberNode) {
 
@@ -373,6 +386,7 @@ function finishedWork(beginWorkFiber: FiberNode) {
     //TODO  这里相当于重置了updateQueue
     let rootUpdateQueue = { lastEffect: null }
 
+
     conbineEffectsLink(beginWorkFiber, rootUpdateQueue)
 
     // 处理好的updateQueue成为到本次root节点的updateQueue
@@ -385,6 +399,7 @@ function finishedWork(beginWorkFiber: FiberNode) {
 function conbineEffectsLink(fiber: FiberNode, rootUpdateQueue: any) {
 
     // 拼接两个链表
+
     const fiberUpdateQueue = fiber.updateQueue
 
     if (fiberUpdateQueue && fiberUpdateQueue.lastEffect) {
@@ -420,6 +435,8 @@ function render(functionComponent: Function, rootDom: any): any {
     const finishedWorkFiber = finishedWork(beginWorkFiber)
 
     //todo commit阶段
+
+
     commitPart(finishedWorkFiber)
 
 }
@@ -440,18 +457,17 @@ function updateRender(functionComponent: Function, workInProgressFiber: FiberNod
     // 从下往上遍历fiber收集所有的Effects 形成环链表 上传递优先级给root
     const finishedWorkFiber = finishedWork(beginWorkFiber)
 
-    console.log('本次commit的fiber', finishedWorkFiber.$fiber);
-    console.log('本次commit的fiber', finishedWorkFiber);
     updateCommitPart(finishedWorkFiber)
 }
 
-//todo ----遍历清空fiber树上的hookIndex 和 queue
-function resetFiber(fiberTree: FiberNode) {
-    fiberTree.hookIndex = 0
-    fiberTree.updateQueue = null
+//todo ----遍历清空fiber树上的hookIndex 和 queue 和 EffectTag
+function resetFiber(fiber: FiberNode) {
+    fiber.hookIndex = 0
+    fiber.updateQueue = null
+    global.EffectList = { firstEffect: null, lastEffect: null, length: 0 }
     global.destoryEffectsArr = []
-    if (fiberTree.children.length !== 0) {
-        fiberTree.children.forEach((fiber) => {
+    if (fiber.children.length !== 0) {
+        fiber.children.forEach((fiber) => {
             resetFiber(fiber)
         })
     }

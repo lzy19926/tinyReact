@@ -10,6 +10,8 @@ import RoutePage from './page/routePage'
 import JsyTest from './lzy page/JsyTest.lzy'
 // 结构渲染测试页面
 import RenderTest from './page/renderTest.lzy'
+// 添加节点测试
+import PlacementTest from './page/PlacementTest'
 //引入CSS
 import './App.css'
 
@@ -20,9 +22,7 @@ function App() {
 
   return (
     <LZY-TEMPLATE>
-
-      <Test></Test>
-
+      <Demo></Demo>
     </LZY-TEMPLATE>
   )
 }

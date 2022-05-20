@@ -1,5 +1,5 @@
 import { myUseState, myUseEffect } from '../../lzy-React/index'
-
+import Test from '../components/Test'
 function RenderTest() {
 
     const [num, setNum] = myUseState(0)
@@ -13,6 +13,7 @@ function RenderTest() {
             <span>
                 <h1>
                     <button onClick={addNum}>点击测试: {(num)} </button>
+                    <Test></Test>
                 </h1>
             </span>
         </LZY-TEMPLATE>

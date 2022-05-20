@@ -1,70 +1,30 @@
-import { tplToVDOM } from "./tplToVnode";
-import { global, NewFiberNode } from '../myReactCore/GlobalFiber'
+
+import { NewFiberNode, global } from '../myReactCore/GlobalFiber'
 import { FiberNode } from "../myReactCore/Interface";
+import { reconcileText, reconcileEvent, reconcilePlacement } from '../myReactCore/Reconciler'
 import {
     createFiberTree,
     useRoute,
-    handleProps,
-    handleFunctionComponentProps,
-    getParentDom,
-    conbineVnodAndFiber,
     preHandleFiberNode,
-    handleFunctionFiberNode
+    handleFunctionFiberNode,
+    renderFunctionComponent
 } from './createFiberTree'
 
-// //! ---------------更新fiberTree (todo!!在这里生成第二棵fiberTree 判断节点是否变化)-------------------
-// function updateFiberTree(source: any, resources: any, fiber: FiberNode,) {
-
-//     //todo 判断传入的source 转换成vnode
-//     let vnode = typeof source === 'string' ? tplToVDOM(source) : source
-
-//     //todo 赋值当前正在工作的fiber节点
-//     let currentFiber = global.currentFiberNode = fiber
-
-//     //todo 合并处理vnode和Fiber 挂载resource
-//     const { children = [], tag, text, props } = vnode
-
-//     //todo 合并vnode和fiber属性
-//     currentFiber = conbineVnodAndFiber(currentFiber, vnode, resources)
+//! ---------------更新fiberTree (在这里生成第二棵fiberTree 判断节点是否变化)-------------------
+function updateFiberTree(
+    source: any,
+    resources: any,
+    parentNode: FiberNode,
+    workInProgressFiber: FiberNode,
+    currentFiber: FiberNode) {
 
 
-//     //TODO -----------如果tag大写 解析为组件 ----------------
-//     if (tag[0] == tag[0].toUpperCase()) {
-//         //! 从sourcePool中获取子组件
-//         const fc = currentFiber.sourcePool.components[tag]
-//         //! 从资源池中拿取需要的props，给子函数组件绑定需要的props,并挂载子函数组件到fiber上
-//         handleFunctionComponentProps(currentFiber, fc)
-//         //! 执行函数并继续向下更新fiberTree
-//         updateRenderFunctionComponent(currentFiber)
-//     }
-
-
-//     //todo 如果有children 深度优先遍历  
-//     if (children) {
-//         for (let i = 0; i < children.length; i++) {
-//             //! 当map添加item时  可能造成vnode和childrenFiber数量不等
-//             //! 如果发现没有此fiber 就再根据vnode创建一个fiber
-//             const vnode = children[i]
-//             const resources = currentFiber.sourcePool
-//             //todo 这里发现有添加节点的情况创建了 fiberNode
-//             const childFiber = currentFiber.children[i] || createFiberTree(vnode, resources, currentFiber)
-//             currentFiber.children[i] = updateFiberTree(vnode, childFiber, resources)
-//         }
-//     }
-
-//     //todo  如果是Route组件 将container的fiber传递给子组件 (暂时放到全局)
-//     //! 用于适配路由
-//     if (fiber.tag === 'RouteContainer') {
-//         window.$$routeContainerFiber = fiber
-//     }
-
-//     return currentFiber
-
-function updateFiberTree(source: any, resources: any, workInProgressFiber: FiberNode, currentFiber: FiberNode) {
 
     // 添加节点逻辑
-    if (!workInProgressFiber && !currentFiber) {
-        console.log('需要添加节点');
+    if (!currentFiber) {
+
+        const placementFiber = placementFiberTree(source, resources, parentNode)
+        return placementFiber
     }
 
     // 如果没有  生成一个alternate并挂载  
@@ -72,9 +32,12 @@ function updateFiberTree(source: any, resources: any, workInProgressFiber: Fiber
         workInProgressFiber = createAlternate(currentFiber)
     }
 
-
     //todo 预处理Fiber  生成vnode 挂载resource
     const { children, tag } = preHandleFiberNode(source, resources, workInProgressFiber)
+
+    //todo 挂载parentNode
+    workInProgressFiber.parentNode = parentNode
+
 
     //TODO -----------如果tag大写 解析为组件 ----------------
     if (tag[0] === tag[0].toUpperCase()) {
@@ -88,6 +51,8 @@ function updateFiberTree(source: any, resources: any, workInProgressFiber: Fiber
         workInProgressFiber.nodeType = 'HostText'
         workInProgressFiber.stateNode = currentFiber.stateNode
     }
+
+
 
     //TODO ---------diff两个节点 打上tag 生成Effect交给commit阶段更新------------
     reconcileFiberNode(workInProgressFiber, currentFiber)
@@ -117,16 +82,103 @@ function updateFiberTreeLoop(childVnodes: any, workInProgressFiber: FiberNode, c
         const vnode = childVnodes[i]
         const resources = workInProgressFiber.sourcePool
         //todo 这里发现有添加节点的情况创建了 fiberNode          
-        const childWkFiber = workInProgressFiber.children[i]
-        const childCurFiebr = currentFiber.children[i] || createFiberTree(vnode, resources, currentFiber)
+        let childWkFiber = workInProgressFiber.children[i]
+        let childCurFiebr = currentFiber.children[i]
 
         //todo 有则创建子节点 进行拼接 无则直接遍历更新
         if (childWkFiber) {
-            updateFiberTree(vnode, resources, childWkFiber, childCurFiebr)
+            updateFiberTree(vnode, resources, workInProgressFiber, childWkFiber, childCurFiebr)
         } else {
-            workInProgressFiber.children[i] = updateFiberTree(vnode, resources, childWkFiber, childCurFiebr)
+            workInProgressFiber.children[i] = updateFiberTree(vnode, resources, workInProgressFiber, childWkFiber, childCurFiebr)
+        }
+
+
+
+
+
+    }
+}
+
+//! -----------------update子函数组件-----------------------
+function updateRenderFunctionComponent(workInProgressFiber: FiberNode, currentFiber: FiberNode) {
+    //处理函数组件  执行函数获得新的数据  往下传递 继续向下递归
+    if (typeof workInProgressFiber.stateNode !== 'function') return
+    const { template, data = {}, components = {} } = workInProgressFiber.stateNode()
+
+    //todo继续让子fiber向下递归更新
+    let childWkFiber = workInProgressFiber.children[0]
+    let childCurFiebr = currentFiber.children[0]
+    const resources = { data, components }
+    //todo 如果没有子节点  那么需要在这里链接父子树  或者直接向下遍历更新
+    if (!childWkFiber) {
+        workInProgressFiber.children = [updateFiberTree(template, resources, workInProgressFiber, childWkFiber, childCurFiebr)]
+    } else {
+        updateFiberTree(template, resources, workInProgressFiber, childWkFiber, childCurFiebr)
+    }
+}
+
+//! 创建Placement的fiberNode  类似createFiberTree
+function placementFiberTree(source: any, resources: any, parentNode: FiberNode) {
+
+    //todo 创建一个新的fiber节点(浅拷贝) 更新当前工作节点
+    let newFiberNode = new NewFiberNode('mount', parentNode.$fiber)
+
+    //todo 预处理Fiber  生成vnode 挂载resource
+    const { children, tag } = preHandleFiberNode(source, resources, newFiberNode)
+
+    //todo 挂载父节点
+    newFiberNode.parentNode = parentNode
+
+    //TODO -----------如果tag大写 解析为组件节点(无children) ----------------
+    if (tag[0] === tag[0].toUpperCase()) {
+        //! 处理为组件节点   并继续向下递归render子函数组件
+        handleFunctionFiberNode(newFiberNode, tag)
+
+        placementFunctionComponent(newFiberNode)
+    }
+
+    //TODO ----------小写的情况  是dom节点 创建Effect 交给commit阶段执行添加--------
+    else {
+        newFiberNode.nodeType = 'HostText'
+        reconcilePlacement(newFiberNode)
+    }
+
+    //todo 继续向下深度优先递归  创建子fiber 挂到当前节点
+    placementFiberTreeLoop(children, newFiberNode)
+
+    newFiberNode.fiberFlags = 'update'
+
+    //模拟finishowrk
+    // console.log('finishWork', newFiberNode.tag);
+
+    //适配路由
+    useRoute(newFiberNode)
+
+    return newFiberNode
+}
+
+//! 根据子vnode 递归创建创建Placement的fiberNode 并进行拼接-------------
+function placementFiberTreeLoop(childVnodes: any, parentNode: FiberNode) {
+    if (childVnodes.length > 0) {
+        parentNode.nodeType = 'HostComponent'
+        for (let i = 0; i < childVnodes.length; i++) {
+            const childFiberNode = placementFiberTree(childVnodes[i], parentNode.sourcePool, parentNode)
+            parentNode.children.push(childFiberNode)
         }
     }
+}
+
+//! 添加函数组件节点
+function placementFunctionComponent(fiber: FiberNode) {
+
+    if (typeof fiber.stateNode !== 'function') return
+
+    const { template, data = {}, components = {} } = fiber.stateNode()
+
+    const childFiberNode = placementFiberTree(template, { data, components }, fiber)
+    //todo 生成子树并链接
+    fiber.children = [childFiberNode]
+
 }
 
 
@@ -140,7 +192,6 @@ function createAlternate(currentFiber: FiberNode) {
     workInProgressFiber.updateQueue = currentFiber.updateQueue
     workInProgressFiber.hookIndex = currentFiber.hookIndex
     workInProgressFiber.memorizedState = currentFiber.memorizedState
-
     //! 链接两个fiber 
     workInProgressFiber.alternate = currentFiber
     currentFiber.alternate = workInProgressFiber
@@ -148,29 +199,28 @@ function createAlternate(currentFiber: FiberNode) {
     return workInProgressFiber
 }
 
+
 //! ----------比较wk和cur两个fiber  生成Effect 打上tag-------------
 function reconcileFiberNode(workInProgressFiber: FiberNode, currentFiber: FiberNode) {
-    // console.log(workInProgressFiber.props, currentFiber.props);
-    // console.log(workInProgressFiber.tag, currentFiber.tag);
-    // console.log(workInProgressFiber.text, currentFiber.text);
-}
+    const wk = workInProgressFiber
+    const cur = currentFiber
 
-//! -----------------update子函数组件-----------------------
-function updateRenderFunctionComponent(workInProgressFiber: FiberNode, currentFiber: FiberNode) {
-    //处理函数组件  执行函数获得新的数据  往下传递 继续向下递归
-    if (typeof workInProgressFiber.stateNode !== 'function') return
-    const { template, data = {}, components = {} } = workInProgressFiber.stateNode()
 
-    //todo继续让子fiber向下递归更新
-    let childWkFiber = workInProgressFiber.children[0]
-    let childCurFiebr = currentFiber.children[0]
-
-    //todo 如果没有子节点  那么需要在这里链接父子树  或者直接向下遍历更新
-    if (!childWkFiber) {
-        workInProgressFiber.children = [updateFiberTree(template, { data, components }, childWkFiber, childCurFiebr)]
-    } else {
-        updateFiberTree(template, { data, components }, childWkFiber, childCurFiebr)
+    // TODO 进行text的判断 生成Effect
+    if (wk.text !== cur.text) {
+        console.log(workInProgressFiber.text, currentFiber.text);
+        reconcileText(workInProgressFiber, currentFiber) //! 生成Effect
     }
+
+    //TODO 有事件更新事件
+    reconcileEvent(workInProgressFiber, currentFiber)
+
+
+
 }
+
+
+
+
 
 export { updateFiberTree }

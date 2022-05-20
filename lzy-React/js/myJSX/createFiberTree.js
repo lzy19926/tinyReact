@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleFunctionFiberNode = exports.preHandleFiberNode = exports.conbineVnodAndFiber = exports.getParentDom = exports.handleFunctionComponentProps = exports.handleProps = exports.useRoute = exports.createFiberTree = void 0;
+exports.handleFunctionFiberNode = exports.preHandleFiberNode = exports.conbineVnodAndFiber = exports.getParentDom = exports.createDomElement = exports.handleFunctionComponentProps = exports.handleProps = exports.useRoute = exports.renderFunctionComponent = exports.createFiberTree = void 0;
 const tplToVnode_1 = require("./tplToVnode");
 const GlobalFiber_1 = require("../myReactCore/GlobalFiber");
 //! 创建fiberNode树(Vnode树) 深度优先遍历vnode树  包装成fiberNode
@@ -15,24 +15,19 @@ function createFiberTree(source, resources, parentNode) {
     newFiberNode.parentNode = parentNode;
     //TODO -----------如果tag大写 解析为组件节点(无children) ----------------
     if (tag[0] === tag[0].toUpperCase()) {
-        //! 处理为组件节点
+        //! 处理为组件节点   并继续向下递归render子函数组件
         handleFunctionFiberNode(newFiberNode, tag);
-        //! render子函数组件
         renderFunctionComponent(newFiberNode);
     }
     //TODO ----------小写的情况  是domComponent节点/text节点  创建对应的dom并添加--------
-    //todo 或者复用alternate的ref
     else {
         newFiberNode.nodeType = 'HostText';
         createDomElement(newFiberNode);
     }
-    //todo 如果有childVnode 深度优先递归  创建子fiber 挂到当前节点
-    if (children.length > 0) {
-        newFiberNode.nodeType = 'HostComponent';
-        createFiberTreeLoop(children, newFiberNode);
-    }
-    //模拟finishowrk
+    //todo 继续向下深度优先递归  创建子fiber 挂到当前节点
+    createFiberTreeLoop(children, newFiberNode);
     newFiberNode.fiberFlags = 'update';
+    //模拟finishowrk
     // console.log('finishWork', newFiberNode.tag);
     //适配路由
     useRoute(newFiberNode);
@@ -41,20 +36,24 @@ function createFiberTree(source, resources, parentNode) {
 exports.createFiberTree = createFiberTree;
 //! 根据子vnode 递归创建子fiberNode 并进行拼接-------------
 function createFiberTreeLoop(childVnodes, parentNode) {
-    for (let i = 0; i < childVnodes.length; i++) {
-        const childFiberNode = createFiberTree(childVnodes[i], parentNode.sourcePool, parentNode);
-        parentNode.children.push(childFiberNode);
+    if (childVnodes.length > 0) {
+        parentNode.nodeType = 'HostComponent';
+        for (let i = 0; i < childVnodes.length; i++) {
+            const childFiberNode = createFiberTree(childVnodes[i], parentNode.sourcePool, parentNode);
+            parentNode.children.push(childFiberNode);
+        }
     }
 }
 //! -----------------render子函数组件-----------------------
 function renderFunctionComponent(fiber) {
     if (typeof fiber.stateNode !== 'function')
         return;
-    const { template, data = {}, components = {} } = fiber.stateNode();
+    const { template, data, components } = fiber.stateNode();
     const childFiberNode = createFiberTree(template, { data, components }, fiber);
     //todo 生成子树并链接
     fiber.children = [childFiberNode];
 }
+exports.renderFunctionComponent = renderFunctionComponent;
 //! -------------创建html并挂载到fiber节点上--------------------
 function createDomElement(fiber) {
     //找到父dom节点 将创建好的dom节点添加进去
@@ -68,6 +67,7 @@ function createDomElement(fiber) {
     fiber.stateNode = domElement;
     return domElement;
 }
+exports.createDomElement = createDomElement;
 //! 预处理FiberNode  将模板和资源先挂载到节点上-----------------
 function preHandleFiberNode(source, resources, workInProgressFiber) {
     //todo 切换当前工作fiber
@@ -76,7 +76,7 @@ function preHandleFiberNode(source, resources, workInProgressFiber) {
     let vnode = typeof source === 'string' ? (0, tplToVnode_1.tplToVDOM)(source) : source;
     //todo 合并处理vnode和Fiber 挂载resource
     const { children = [], tag } = vnode;
-    workInProgressFiber = conbineVnodAndFiber(workInProgressFiber, vnode, resources);
+    conbineVnodAndFiber(workInProgressFiber, vnode, resources);
     return { children, tag };
 }
 exports.preHandleFiberNode = preHandleFiberNode;
@@ -99,7 +99,6 @@ function conbineVnodAndFiber(fiber, vnode, resources) {
     fiber.tag = tag;
     fiber.text = text;
     fiber.sourcePool = resources;
-    return fiber;
 }
 exports.conbineVnodAndFiber = conbineVnodAndFiber;
 //! ----------找到父dom节点---------------------
@@ -190,8 +189,7 @@ function handleProps(curFiber, dom) {
                 //! 从组件的资源池里找对应的事件
                 const dataPool = curFiber.sourcePool.data;
                 const callback = dataPool[value[0]];
-                dom.onClick = callback;
-                // dom.addEventListener("click", callback);
+                dom.onclick = callback;
                 break;
             //todo  处理其他
             default:
