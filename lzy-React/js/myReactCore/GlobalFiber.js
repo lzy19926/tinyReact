@@ -9,6 +9,7 @@ class NewFiberNode {
             this.updateQueue = null, // Effects的更新链表
             this.stateQueueTimer = null, // 用于state的合并更新(setTimeout)
             this.fiberFlags = fiberFlags, // fiber的生命周期 判断是否初始化
+            this.effectTag = undefined, //  用于标记需要执行的Effect 执行对应操作
             this.hasRef = false, //ref相关tag
             this.ref = null,
             this.children = [],
@@ -20,7 +21,8 @@ class NewFiberNode {
             this.parentNode = null,
             this.nodeType = undefined,
             this.alternate = null, // 对面fiber树对应的节点
-            this.$fiber = $fiber; // 用于识别fiber是哪颗树
+            this.$fiber = $fiber, // 用于识别fiber是哪颗树
+            this.key = null; // 用于进行列表的diff
     }
 }
 exports.NewFiberNode = NewFiberNode;

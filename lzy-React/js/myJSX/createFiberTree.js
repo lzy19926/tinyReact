@@ -92,13 +92,18 @@ function handleFunctionFiberNode(fiber, ComponentName) {
     handleFunctionComponentProps(fiber, fc);
 }
 exports.handleFunctionFiberNode = handleFunctionFiberNode;
-//! ----------合并vnode和fiber  挂载resource-----------
+//! ----------合并vnode和fiber 处理key 挂载resource-----------
 function conbineVnodAndFiber(fiber, vnode, resources) {
     const { props, tag, text } = vnode;
     fiber.props = props;
     fiber.tag = tag;
     fiber.text = text;
     fiber.sourcePool = resources;
+    //单独对key进行处理
+    if (props.key) {
+        const key = props.key[0] - 0;
+        fiber.key = key;
+    }
 }
 exports.conbineVnodAndFiber = conbineVnodAndFiber;
 //! ----------找到父dom节点---------------------

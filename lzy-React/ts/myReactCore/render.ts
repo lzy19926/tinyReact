@@ -1,17 +1,17 @@
 //待办项 :1  将fiber树转换为二叉树
-//        2  将diff过程放在finishWork中  并收集effect向上
-//         3  实现双缓存  双fiber树机制
-//           4 hook.memorizedState并不会保存所有的状态
 
 //待办项
-// 1. 继续新增节点Placement的工作   
+// 1. 删除节点的diff工作 reconciler
+// 2. 因为收集了Effect  hook的Effect和更新的Effect应该是在一起的   需要进行合并  否则无法使用useEffect 
+// 3. 重写reconcilePlacement方法  重构diff过程到finishedwork中
+
 
 //! render分为2部分  render阶段 - commit阶段  最后unmount
 import { global, NewFiberNode } from './GlobalFiber'
 import { createFiberTree, createDomElement } from '../myJSX/createFiberTree'
 import { updateFiberTree } from '../myJSX/updateFiberTree'
-import { Effect, FiberNode } from './Interface'
-
+import { FiberNode } from './Interface'
+import { reconcileFiberNode } from './Reconciler'
 
 //! ----------------模拟render部分------------------------
 //! 更改并生成fiber树  (结束后fiber由mount变为update)
@@ -109,7 +109,7 @@ function firstCreateAlternate(currentRootFiber: FiberNode) {
     workInProgressRootFiber.updateQueue = currentRootFiber.updateQueue
     workInProgressRootFiber.hookIndex = currentRootFiber.hookIndex
     workInProgressRootFiber.memorizedState = currentRootFiber.memorizedState
-
+    workInProgressRootFiber.nodeType = currentRootFiber.nodeType
     //! 合并两个节点
     workInProgressRootFiber.alternate = currentRootFiber
     currentRootFiber.alternate = workInProgressRootFiber
@@ -164,12 +164,15 @@ function commitFiberNodeMutation(EffectList: any, lane?: any) {
                 commitPlacement(targetFiber)
                 break;
             case 'Delete'://todo  删除
-                // commitDeletion()
+                commitDeletion(targetFiber)
                 break;
             case 'Update'://todo  更新
-                commitWork(targetFiber)
+                commitUpdate(targetFiber)
                 break;
+            case 'UseEffect'://todo 调用了useEffect钩子
+                commitUpdate(targetFiber)
             default:
+                // commitUpdate(targetFiber) //todo 处理更新链表(effect链表和其他的effect应该是在一起的)
                 break;
         }
 
@@ -177,19 +180,14 @@ function commitFiberNodeMutation(EffectList: any, lane?: any) {
 
     }
 
-
-
-
-
-
 }
 
 //todo 待完成 插入dom节点
 function commitPlacement(finishedWorkFiber: FiberNode) {
     createDomElement(finishedWorkFiber)
 }
-// todo 不同类型的fiberNode执行不同的更新
-function commitWork(finishedWorkFiber: FiberNode) {
+// todo 不同类型的fiberNode执行不同的更新 (在这里处理useEffect链表)
+function commitUpdate(finishedWorkFiber: FiberNode) {
 
     const fiberType = finishedWorkFiber.nodeType
 
@@ -212,6 +210,26 @@ function commitWork(finishedWorkFiber: FiberNode) {
     }
 
 }
+// todo 删除多余的currentFiber和dom节点
+function commitDeletion(currentFiber: FiberNode) {
+
+    // 删除dom节点
+    const dom = currentFiber.stateNode
+    if (typeof dom !== 'function') {
+        dom.remove()
+    }
+    //从父节点处遍历删除该节点
+    const parentNode = currentFiber.parentNode
+    parentNode.children.forEach((childNode, index) => {
+        if (childNode === currentFiber) {
+            parentNode.children.splice(index, 1)
+        }
+    })
+
+
+
+}
+
 
 //todo 记录  我这里直接遍历fiber树  发现有需要变更的节点直接进行变更,
 //todo 而react中在render阶段遍历 发现变更 打上tag  生成update , 推入effect链表中  为了实现优先级调度
@@ -380,41 +398,87 @@ function callDestoryByTag(effect: any) {
 
 }
 
-//! ----------遍历fiber  收集effect 挂载到本次更新的root节点 ------------------
-function finishedWork(beginWorkFiber: FiberNode) {
+//! ----------遍历fiber  收集effect 挂载到本次root节点 识别删除节点------------------
+function finishedWork(workInProgressFiber: FiberNode, currentFiber: FiberNode) {
     // 遍历fiber树 将所有Effect添加进root节点的update环链表中
     //TODO  这里相当于重置了updateQueue
+    const root = workInProgressFiber
     let rootUpdateQueue = { lastEffect: null }
 
-
-    conbineEffectsLink(beginWorkFiber, rootUpdateQueue)
+    // 首屏不需要diff  更新需要进行diff计算
+    global.renderTag === 'mount'
+        ? finishedWorkLoop(workInProgressFiber, rootUpdateQueue)
+        : updateFinishedWorkLoop(workInProgressFiber, currentFiber, rootUpdateQueue)
 
     // 处理好的updateQueue成为到本次root节点的updateQueue
-    beginWorkFiber.updateQueue = rootUpdateQueue
+    root.updateQueue = rootUpdateQueue
 
-    return beginWorkFiber
+
+    return root
 }
 
-//! 遍历fiber  拼接所有的effect  
-function conbineEffectsLink(fiber: FiberNode, rootUpdateQueue: any) {
+//! 遍历fiber  拼接所有的effect   
+function finishedWorkLoop(workInProgressFiber: FiberNode, rootUpdateQueue: any) {
 
     // 拼接两个链表
+    collectEffect(workInProgressFiber, rootUpdateQueue)
 
+    // 继续遍历fiber树  拼接链表
+    const wkChildren = workInProgressFiber.children
+    for (let i = 0; i < wkChildren.length; i++) {
+        finishedWorkLoop(wkChildren[i], rootUpdateQueue)
+    }
+
+}
+//! 更新时的finishedWork
+function updateFinishedWorkLoop(
+    workInProgressFiber: FiberNode,
+    currentFiber: FiberNode,
+    rootUpdateQueue: any) {
+
+    // 拼接两个链表
+    collectEffect(workInProgressFiber, rootUpdateQueue)
+
+    //TODO ---------diff两个节点 打上tag 生成Effect交给commit阶段更新------------
+    reconcileFiberNode(workInProgressFiber, currentFiber)
+
+    // 遍历fiber树 (最长遍历) (需要注意fiber为null的情况)
+    let length: number;
+    let wkChildren = [];
+    let curChildren = [];
+
+    if (workInProgressFiber && currentFiber) {
+        wkChildren = workInProgressFiber.children
+        curChildren = currentFiber.children
+        length = wkChildren.length > curChildren.length
+            ? wkChildren.length : curChildren.length
+
+    } else if (!workInProgressFiber) {
+        curChildren = currentFiber.children
+        length = currentFiber.children.length
+
+    } else if (!currentFiber) {
+        wkChildren = workInProgressFiber.children
+        length = workInProgressFiber.children.length
+    }
+
+
+    // 继续遍历fiber树  拼接链表
+    for (let i = 0; i < length; i++) {
+        updateFinishedWorkLoop(wkChildren[i], curChildren[i], rootUpdateQueue)
+    }
+
+}
+
+//! 收集所有的Effect(hook)
+function collectEffect(fiber: FiberNode, rootUpdateQueue: any) {
+    if (!fiber) return
     const fiberUpdateQueue = fiber.updateQueue
 
     if (fiberUpdateQueue && fiberUpdateQueue.lastEffect) {
         rootUpdateQueue.lastEffect = fiberUpdateQueue.lastEffect
         fiberUpdateQueue.lastEffect.next = rootUpdateQueue.lastEffect.next
     }
-
-
-    // 遍历fiber树  拼接链表
-    if (fiber.children.length !== 0) {
-        fiber.children.forEach((fiber) => {
-            conbineEffectsLink(fiber, rootUpdateQueue)
-        })
-    }
-
 }
 
 
@@ -432,7 +496,7 @@ function render(functionComponent: Function, rootDom: any): any {
 
     // 从下往上遍历fiber收集所有的Effects 形成环链表 上传递优先级给root
     //! 这里finishedWork应该在renderPart中   待修改
-    const finishedWorkFiber = finishedWork(beginWorkFiber)
+    const finishedWorkFiber = finishedWork(beginWorkFiber, null)
 
     //todo commit阶段
 
@@ -455,7 +519,7 @@ function updateRender(functionComponent: Function, workInProgressFiber: FiberNod
     const beginWorkFiber = updateRenderPart(functionComponent, workInProgressFiber, currentFiber)
 
     // 从下往上遍历fiber收集所有的Effects 形成环链表 上传递优先级给root
-    const finishedWorkFiber = finishedWork(beginWorkFiber)
+    const finishedWorkFiber = finishedWork(beginWorkFiber, currentFiber)
 
     updateCommitPart(finishedWorkFiber)
 }
@@ -481,108 +545,108 @@ export { render, updateRender, resetFiber, }
 
 
 //! --------------废弃部分   handleProps 和 createElement放在了createFiber文件中----------------
-{
+// {
 
 
-    //! (从更新的rootDom处开始)根据fiberTree创建html
-    function updateHtml(fiber: any, rootDom: HTMLBodyElement) {
-        //todo 深度优先递归children 从dom下一层渲染子dom节点 
-        fiber.children.forEach((fiber: any) => {
-            createHtml(fiber, rootDom)
-        });
-    }
-    function createHtml(fiber: any, rootDom: HTMLBodyElement) {
+//     //! (从更新的rootDom处开始)根据fiberTree创建html
+//     function updateHtml(fiber: any, rootDom: HTMLBodyElement) {
+//         //todo 深度优先递归children 从dom下一层渲染子dom节点
+//         fiber.children.forEach((fiber: any) => {
+//             createHtml(fiber, rootDom)
+//         });
+//     }
+//     function createHtml(fiber: any, rootDom: HTMLBodyElement) {
 
-        //不同的tag标签创建不同的html标签
-        let dom = document.createElement(fiber.tag)
+//         //不同的tag标签创建不同的html标签
+//         let dom = document.createElement(fiber.tag)
 
-        //todo 如果是组件节点   挂载ref 
-        if (fiber.tag[0] === fiber.tag[0].toUpperCase()) {
-            dom = document.createElement('fc-' + fiber.tag)
-            fiber.ref = dom
-            //todo 如果是小写 判断为html标签 填充文本 处理属性
-        }
-        else {
-            handleProps(fiber, dom)
-            if (fiber.text) { dom.innerHTML = fiber.text }
-        }
+//         //todo 如果是组件节点   挂载ref
+//         if (fiber.tag[0] === fiber.tag[0].toUpperCase()) {
+//             dom = document.createElement('fc-' + fiber.tag)
+//             fiber.ref = dom
+//             //todo 如果是小写 判断为html标签 填充文本 处理属性
+//         }
+//         else {
+//             handleProps(fiber, dom)
+//             if (fiber.text) { dom.innerHTML = fiber.text }
+//         }
 
-        //todo 深度优先递归children 从dom开始渲染子dom节点 
-        fiber.children.forEach((fiber: any) => {
-            createHtml(fiber, dom)
-        });
+//         //todo 深度优先递归children 从dom开始渲染子dom节点
+//         fiber.children.forEach((fiber: any) => {
+//             createHtml(fiber, dom)
+//         });
 
-        rootDom.appendChild(dom)
-    }
-
-
-
-    //! 遍历树获取所有的Effect(执行create和生成destory函数数组)
-    function handleEffect(fiber: FiberNode) {
-
-        let destoryEffectsArr: Effect[] = []
-
-        if (fiber.updateQueue) {
-            const createEffectsArr = createCallbackQueue(fiber)
-            destoryEffectsArr = doCreateQueue(createEffectsArr)
-        }
-
-        if (fiber.children.length !== 0) {
-            fiber.children.forEach((fiber) => {
-                handleEffect(fiber)
-            })
-        }
-
-        global.destoryEffectsArr.push(...destoryEffectsArr)
-    }
-    //todo 遍历Effect链表 将需要执行的Effect推入数组--------------
-    function createCallbackQueue(fiber: FiberNode) {
-
-        const createEffectsArr: Effect[] = []
-        const lastEffect = fiber.updateQueue.lastEffect
-        const firstEffect = lastEffect.next
-        let currentEffect = firstEffect
-
-
-        do {
-
-            //判断effectTag决定是否执行Effect(mount和dep变更时执行)
-            //React底层通过二进制来打tag
-            const isFiberMount = Boolean(global.renderTag === 'mount')
-            const isDepChange = Boolean(currentEffect.tag === 'depChanged')
-            const isNullDeps = Boolean(currentEffect.tag === 'nullDeps')
-            const isNoDeps = Boolean(currentEffect.tag === 'noDeps')
-
-            //根据不同情况 将Effect推入数组  达到不同的useEffect的效果
-            if (isFiberMount || isDepChange || isNullDeps) {
-                createEffectsArr.push(currentEffect)
-            } else if (isFiberMount && isNoDeps) {
-                createEffectsArr.push(currentEffect)
-            }
-
-            currentEffect = currentEffect.next
-        } while (currentEffect !== firstEffect)
+//         rootDom.appendChild(dom)
+//     }
 
 
 
-        return createEffectsArr
-    }
-    //todo 遍历执行需要执行的Effect---生成destory---------
-    function doCreateQueue(createEffectsArr: Effect[]) {
-        const destoryEffectsArr: Effect[] = []
-        //todo 遍历Effects数组 执行create  
-        //todo 生成destoryEffect数组 将destory存放到对应的Effect上
-        for (let i = 0; i < createEffectsArr.length; i++) {
-            const destory = createEffectsArr[i].create() // 执行create
-            if (destory) {
-                createEffectsArr[i].destory = destory // 赋值destory
-                destoryEffectsArr.push(createEffectsArr[i])   //推入destory数组
-            }
-        }
+//     //! 遍历树获取所有的Effect(执行create和生成destory函数数组)
+//     function handleEffect(fiber: FiberNode) {
 
-        return destoryEffectsArr
-    }
-}
+//         let destoryEffectsArr: Effect[] = []
+
+//         if (fiber.updateQueue) {
+//             const createEffectsArr = createCallbackQueue(fiber)
+//             destoryEffectsArr = doCreateQueue(createEffectsArr)
+//         }
+
+//         if (fiber.children.length !== 0) {
+//             fiber.children.forEach((fiber) => {
+//                 handleEffect(fiber)
+//             })
+//         }
+
+//         global.destoryEffectsArr.push(...destoryEffectsArr)
+//     }
+//     //todo 遍历Effect链表 将需要执行的Effect推入数组--------------
+//     function createCallbackQueue(fiber: FiberNode) {
+
+//         const createEffectsArr: Effect[] = []
+//         const lastEffect = fiber.updateQueue.lastEffect
+//         const firstEffect = lastEffect.next
+//         let currentEffect = firstEffect
+
+
+//         do {
+
+//             //判断effectTag决定是否执行Effect(mount和dep变更时执行)
+//             //React底层通过二进制来打tag
+//             const isFiberMount = Boolean(global.renderTag === 'mount')
+//             const isDepChange = Boolean(currentEffect.tag === 'depChanged')
+//             const isNullDeps = Boolean(currentEffect.tag === 'nullDeps')
+//             const isNoDeps = Boolean(currentEffect.tag === 'noDeps')
+
+//             //根据不同情况 将Effect推入数组  达到不同的useEffect的效果
+//             if (isFiberMount || isDepChange || isNullDeps) {
+//                 createEffectsArr.push(currentEffect)
+//             } else if (isFiberMount && isNoDeps) {
+//                 createEffectsArr.push(currentEffect)
+//             }
+
+//             currentEffect = currentEffect.next
+//         } while (currentEffect !== firstEffect)
+
+
+
+//         return createEffectsArr
+//     }
+//     //todo 遍历执行需要执行的Effect---生成destory---------
+//     function doCreateQueue(createEffectsArr: Effect[]) {
+//         const destoryEffectsArr: Effect[] = []
+//         //todo 遍历Effects数组 执行create
+//         //todo 生成destoryEffect数组 将destory存放到对应的Effect上
+//         for (let i = 0; i < createEffectsArr.length; i++) {
+//             const destory = createEffectsArr[i].create() // 执行create
+//             if (destory) {
+//                 createEffectsArr[i].destory = destory // 赋值destory
+//                 destoryEffectsArr.push(createEffectsArr[i])   //推入destory数组
+//             }
+//         }
+
+//         return destoryEffectsArr
+//     }
+// }
 
 
 

@@ -1,29 +1,30 @@
 import { myUseState, myUseEffect } from '../../lzy-React/index'
-import Test from '../components/Test'
 
 //! Demo组件
 function PlacementTest() {
 
     const [arr, setArr] = myUseState([])
 
+
+    function minArr() {
+        arr.shift()
+        setArr(arr)
+    }
+
     function addArr() {
-        console.log('添加');
         setArr([...arr, 'item'])
     }
 
 
     return ({
-        components: { Test },
-        data: { addArr },
-        template: `
-        <div>
-        <button onClick={addArr}>增加Arr</button>
-
-        ${arr.map((item) => {
-            return `<Test></Test>`
+        data: { minArr, addArr },
+        template: `<div>
+    <button onClick={addArr}>添加Arr</button> 
+    <button onClick={minArr}>减少Arr</button>    
+    ${arr.map((item, index) => {
+            return `<div key={${index}}> item </div>`
         })}
-        </div>
-            `
+    </div>`
     })
 }
 

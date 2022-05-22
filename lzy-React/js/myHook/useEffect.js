@@ -142,5 +142,6 @@ function myUseEffect(create, deps) {
         const hookFlags = 'update';
         updateEffect('update', hookFlags, create, nextDeps);
     }
+    //创建一个新的Effect项 推入全局EffectList中 
 }
 exports.myUseEffect = myUseEffect;

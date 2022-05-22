@@ -1,7 +1,7 @@
 import { Effect, UseEffectHook } from '../myReactCore/Interface'
 //修改全局变量的方法
 import { global, updateWorkInProgressHook } from '../myReactCore/GlobalFiber'
-
+import { pushEffectList } from '../myReactCore/Reconciler'
 
 //! -------mountEffect(useEffect第一次执行)-------------
 function mountEffect(fiberFlags: string, hookFlags: string, create: Function, deps: any[] | null) {
@@ -52,6 +52,7 @@ function mountWorkInProgressHook() {
     fiber.memorizedState = newHook
     //接入hook到workProgress
     global.workInProgressHook.currentHook = newHook
+
 
     return newHook
 }
@@ -173,6 +174,9 @@ function myUseEffect(create: Function, deps?: any[]) {
         const hookFlags = 'update'
         updateEffect('update', hookFlags, create, nextDeps)
     }
+
+    //创建一个新的Effect项 推入全局EffectList中 
+
 
 }
 

@@ -39,6 +39,7 @@ interface FiberNode {
     updateQueue: any,
     stateQueueTimer: any,
     fiberFlags: 'mount' | 'update' | undefined,
+    effectTag: 'Update' | 'Delete' | 'Placement' | undefined,
     hasRef: boolean,
     ref: any,
     children: any,
@@ -51,6 +52,7 @@ interface FiberNode {
     nodeType: 'HostText' | 'HostComponent' | 'FunctionComponent' | 'AppNode' | undefined,
     alternate: FiberNode | null,
     $fiber: '$1' | '$2' | undefined
+    key: number | null
 }
 
 //!-------------全局需要的变量结构---------------
