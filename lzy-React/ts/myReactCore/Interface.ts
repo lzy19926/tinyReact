@@ -39,7 +39,7 @@ interface FiberNode {
     updateQueue: any,
     stateQueueTimer: any,
     fiberFlags: 'mount' | 'update' | undefined,
-    effectTag: 'Update' | 'Delete' | 'Placement' | undefined,
+    // effectTag: 'Update' | 'Delete' | 'Placement' | undefined,
     hasRef: boolean,
     ref: any,
     children: any,

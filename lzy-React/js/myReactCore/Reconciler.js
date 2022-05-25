@@ -49,7 +49,7 @@ function reconcileDeletion(workInProgressFiber, currentFiber) {
         return false;
     }
     //todo 如果有key  且不一样 删除current 否则下一次会进行大量更新(需要重写)
-    else if (workInProgressFiber.key && currentFiber.key) {
+    else if (workInProgressFiber.key || currentFiber.key) {
         if (workInProgressFiber.key !== currentFiber.key) {
             pushEffectList('Delete', currentFiber);
             return false;
@@ -89,6 +89,8 @@ function reconcileFiberNode(workInProgressFiber, currentFiber) {
     else if (!workInProgressFiber && currentFiber) {
         reconcileDeletion(workInProgressFiber, currentFiber);
         needDiff = false;
+    }
+    else if (workInProgressFiber.key !== currentFiber.key) {
     }
     if (needDiff) {
         // TODO 进行text的判断 生成Effect

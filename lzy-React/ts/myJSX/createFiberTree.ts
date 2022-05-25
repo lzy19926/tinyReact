@@ -72,7 +72,6 @@ function renderFunctionComponent(fiber: FiberNode) {
 
 //! -------------创建html并挂载到fiber节点上--------------------
 function createDomElement(fiber: FiberNode) {
-
     //找到父dom节点 将创建好的dom节点添加进去
     const parentDom = getParentDom(fiber)
 
@@ -83,7 +82,6 @@ function createDomElement(fiber: FiberNode) {
 
     parentDom.appendChild(domElement)
     fiber.stateNode = domElement
-
     return domElement
 }
 

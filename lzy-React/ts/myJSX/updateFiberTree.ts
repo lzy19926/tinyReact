@@ -1,7 +1,7 @@
 
 import { NewFiberNode, global } from '../myReactCore/GlobalFiber'
 import { FiberNode } from "../myReactCore/Interface";
-import { reconcilePlacement } from '../myReactCore/Reconciler'
+import { } from '../myReactCore/Reconciler'
 import {
     createFiberTree,
     useRoute,
@@ -19,6 +19,7 @@ function updateFiberTree(
     currentFiber: FiberNode) {
 
 
+    
 
     // 添加节点逻辑
     if (!currentFiber) {
@@ -49,9 +50,6 @@ function updateFiberTree(
         workInProgressFiber.nodeType = 'HostText'
         workInProgressFiber.stateNode = currentFiber.stateNode
     }
-
-
-
 
 
 
@@ -146,6 +144,8 @@ function placementFiberTree(source: any, resources: any, parentNode: FiberNode) 
 
     //适配路由
     useRoute(newFiberNode)
+    //todo 在这里创建一个effect!
+    console.log('本次添加的节点', source);
 
     return newFiberNode
 }

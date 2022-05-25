@@ -3,9 +3,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.resetFiber = exports.updateRender = exports.render = void 0;
 //待办项
-// 1. 删除节点的diff工作 reconciler
-// 2. 因为收集了Effect  hook的Effect和更新的Effect应该是在一起的   需要进行合并  否则无法使用useEffect 
-// 3. 重写reconcilePlacement方法  重构diff过程到finishedwork中
+// 模拟优先级调度逻辑   拆分effect链表执行
 //! render分为2部分  render阶段 - commit阶段  最后unmount
 const GlobalFiber_1 = require("./GlobalFiber");
 const createFiberTree_1 = require("../myJSX/createFiberTree");
@@ -102,6 +100,7 @@ function updateCommitPart(finishedWorkFiber) {
 function commitFiberNodeMutation(EffectList, lane) {
     console.log('本次更新的EffectList', EffectList);
     let currentEffect = EffectList.firstEffect;
+    // TODO 在这里将effect循环用requestAnimationFrame抱起来执行中断
     while (currentEffect !== null) {
         let effectTag = currentEffect.tag;
         let targetFiber = currentEffect.targetFiber;
@@ -189,6 +188,7 @@ function commitUpdateText(finishedWorkFiber) {
     let fiberText = finishedWorkFiber.text;
     let domText = domElement.firstChild.nodeValue;
     if (domText !== fiberText) {
+        console.log('更新text');
         domElement.firstChild.nodeValue = fiberText;
     }
 }

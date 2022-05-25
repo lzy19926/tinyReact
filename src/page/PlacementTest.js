@@ -22,8 +22,10 @@ function PlacementTest() {
     <button onClick={addArr}>添加Arr</button> 
     <button onClick={minArr}>减少Arr</button>    
     ${arr.map((item, index) => {
-            return `<div key={${index}}> item </div>`
+            return `<div>添加项</div>`
         })}
+        <div>测试节点</div>
+        <div>测试节点</div>
     </div>`
     })
 }
