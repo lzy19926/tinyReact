@@ -106,7 +106,6 @@ function placementFiberTree(source, resources, parentNode) {
     //适配路由
     (0, createFiberTree_1.useRoute)(newFiberNode);
     //todo 在这里创建一个effect!
-    console.log('本次添加的节点', source);
     return newFiberNode;
 }
 //! 根据子vnode 递归创建创建Placement的fiberNode 并进行拼接-------------

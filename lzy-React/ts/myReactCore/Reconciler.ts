@@ -45,11 +45,16 @@ function reconcileTag(workInProgressFiber: FiberNode, currentFiber: FiberNode) {
 
 
 
-//! 添加
+//! 添加(待优化)
 function reconcilePlacement(workInProgressFiber: FiberNode, currentFiber: FiberNode) {
+    const wkKey = workInProgressFiber?.key
+    const curKey = currentFiber?.key
+
+    // 或者有cur  无work算为插入节点
     if (!currentFiber && workInProgressFiber) {
         pushEffectList('Placement', workInProgressFiber)
     }
+
 }
 
 //! 删除
@@ -100,9 +105,10 @@ function pushEffectList(tag: string, targetFiber: FiberNode, callback?: Function
 function reconcileFiberNode(workInProgressFiber: FiberNode, currentFiber: FiberNode) {
 
     //TODO 开始先进行删除和添加的diff计算  (需要在最先进行 因为之后的就不需要进行了)
+    reconcilePlacement(workInProgressFiber, currentFiber)
     let needDiff = true
     if (workInProgressFiber && !currentFiber) {
-        reconcilePlacement(workInProgressFiber, currentFiber)
+        // reconcilePlacement(workInProgressFiber, currentFiber)
         needDiff = false
     } else if (!workInProgressFiber && currentFiber) {
         reconcileDeletion(workInProgressFiber, currentFiber)

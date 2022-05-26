@@ -183,8 +183,7 @@ function commitFiberNodeMutation(EffectList: any, lane?: any) {
 }
 
 //todo 待完成 插入dom节点
-function commitPlacement(finishedWorkFiber: FiberNode) {
-
+function commitPlacement(finishedWorkFiber: FiberNode) {    
     createDomElement(finishedWorkFiber)
 }
 // todo 不同类型的fiberNode执行不同的更新 (在这里处理useEffect链表)

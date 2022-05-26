@@ -35,8 +35,11 @@ function reconcileText(workInProgressFiber, currentFiber) {
 //! 计算tag
 function reconcileTag(workInProgressFiber, currentFiber) {
 }
-//! 添加
+//! 添加(待优化)
 function reconcilePlacement(workInProgressFiber, currentFiber) {
+    const wkKey = workInProgressFiber === null || workInProgressFiber === void 0 ? void 0 : workInProgressFiber.key;
+    const curKey = currentFiber === null || currentFiber === void 0 ? void 0 : currentFiber.key;
+    // 或者有cur  无work算为插入节点
     if (!currentFiber && workInProgressFiber) {
         pushEffectList('Placement', workInProgressFiber);
     }
@@ -81,9 +84,10 @@ function pushEffectList(tag, targetFiber, callback) {
 //! ----------比较wk和cur两个fiber  生成不同的Effect (打上tag)-------------
 function reconcileFiberNode(workInProgressFiber, currentFiber) {
     //TODO 开始先进行删除和添加的diff计算  (需要在最先进行 因为之后的就不需要进行了)
+    reconcilePlacement(workInProgressFiber, currentFiber);
     let needDiff = true;
     if (workInProgressFiber && !currentFiber) {
-        reconcilePlacement(workInProgressFiber, currentFiber);
+        // reconcilePlacement(workInProgressFiber, currentFiber)
         needDiff = false;
     }
     else if (!workInProgressFiber && currentFiber) {

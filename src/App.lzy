@@ -1,5 +1,6 @@
 //功能测试页面
 import Demo from './page/Demo'
+
 //开发测试
 import Test from './components/Test'
 //Rekv适配测试页面
@@ -7,7 +8,8 @@ import RekvTest from './page/RekvTest'
 //路由测试页面
 import RoutePage from './page/routePage'
 //JSX测试页面
-import JsyTest from './lzy page/JsyTest.lzy'
+import JsyTest from './lzyPage/JsyTest.lzy'
+import Demo2 from './lzyPage/Demo2.lzy'
 // 结构渲染测试页面
 import RenderTest from './page/renderTest.lzy'
 // 添加节点测试
@@ -25,8 +27,8 @@ function App() {
   return (
     <LZY-TEMPLATE>
 
-      <EffectTest></EffectTest>
-
+      <Demo2></Demo2>
+      <Demo2></Demo2>
     </LZY-TEMPLATE>
   )
 }

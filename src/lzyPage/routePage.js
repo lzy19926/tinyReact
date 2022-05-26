@@ -1,4 +1,4 @@
-import { RouteContainer, Link } from '../../lzy-React/js/myRouter/index'
+import { RouteContainer, Link } from 'lzy-react/js/myRouter'
 import RekvTest from './RekvTest'
 import Demo from './Demo'
 import Test from '../components/Test'

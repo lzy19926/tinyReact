@@ -7,8 +7,7 @@ function PlacementTest() {
 
 
     function minArr() {
-        arr.shift()
-        setArr(arr)
+        setArr(arr.splice(1))
     }
 
     function addArr() {
