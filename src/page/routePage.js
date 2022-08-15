@@ -1,7 +1,7 @@
 import { RouteContainer, Link } from '../../lzy-React/js/myRouter/index'
 import RekvTest from './RekvTest'
 import Demo from './Demo'
-import Test from '../components/Test'
+import Test from '../components/Test.lzy'
 
 
 function RoutePage() {

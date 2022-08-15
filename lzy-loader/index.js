@@ -1,7 +1,8 @@
 const useJSY = require('./utils/useJSY')
 
 function lzyLoader(source) {
-
+    // console.log('获得的资源', source);
+    // console.log('获得的资源', source.visitor.JSXElement);
 
 
     //todo 匹配获取<LZY-TEMPLATE></LZY-TEMPLATE>中的内容

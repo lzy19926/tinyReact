@@ -1,4 +1,4 @@
-import { myUseState, myUseEffect } from '../../lzy-React/index'
+import { myUseState, myUseEffect } from '../../lzy-React/js/lzy-react-develpoment'
 
 
 

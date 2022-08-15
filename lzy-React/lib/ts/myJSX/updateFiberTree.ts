@@ -1,13 +1,10 @@
 
-import { NewFiberNode, global } from '../myReactCore/GlobalFiber'
+import { NewFiberNode } from '../myReactCore/GlobalFiber'
 import { FiberNode } from "../myReactCore/Interface";
-import {} from '../myReactCore/Reconciler'
 import {
-    createFiberTree,
     useRoute,
     preHandleFiberNode,
     handleFunctionFiberNode,
-    renderFunctionComponent
 } from './createFiberTree'
 
 //! ---------------更新fiberTree (在这里生成第二棵fiberTree)-------------------

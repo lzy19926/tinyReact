@@ -1,6 +1,7 @@
-//待办项 :1  将fiber树转换为二叉树
+
 
 //待办项
+// 将fiber树转换为二叉树
 // 模拟优先级调度逻辑   拆分effect链表执行
 
 
@@ -9,7 +10,7 @@ import { global, NewFiberNode } from './GlobalFiber'
 import { createFiberTree, createDomElement } from '../myJSX/createFiberTree'
 import { updateFiberTree } from '../myJSX/updateFiberTree'
 import { FiberNode } from './Interface'
-import { reconcileFiberNode } from './Reconciler'
+import { reconcileFiberNode, reconcileUseEffect } from './Reconciler'
 
 //! ----------------模拟render部分------------------------
 //! 更改并生成fiber树  (结束后fiber由mount变为update)
@@ -123,8 +124,9 @@ function firstCreateAlternate(currentRootFiber: FiberNode) {
 //! before 前置处理  mutation 渲染dom节点   layout  处理useEffect useLayoutEffect
 function commitPart(finishedWorkFiber: FiberNode) {
 
-    //todo  mutation阶段 
-    commitFiberNodeMutation(global.EffectList)
+    beforeMutation(finishedWorkFiber)  // beforeMutation阶段
+
+    commitFiberNodeMutation(global.EffectList) //  mutation阶段 
 
     //todo  layout阶段  调用Effects链表 执行create函数()
 
@@ -134,8 +136,9 @@ function commitPart(finishedWorkFiber: FiberNode) {
 
 function updateCommitPart(finishedWorkFiber: FiberNode) {
 
-    //todo  mutation阶段 遍历EffectList单链表 预留优先级调用 更新fiber
-    commitFiberNodeMutation(global.EffectList)
+    beforeMutation(finishedWorkFiber)   // beforeMutation阶段
+
+    commitFiberNodeMutation(global.EffectList)  // mutation阶段 
 
     //todo  layout阶段  调用Effects链表 执行create函数()
 
@@ -143,18 +146,20 @@ function updateCommitPart(finishedWorkFiber: FiberNode) {
     //todo 处理ref
 }
 
-
+//! beforeMutation阶段 (将收集好的useEffect生成一个Effect 推入链表)
+function beforeMutation(finishedWorkFiber: FiberNode) {
+    reconcileUseEffect(finishedWorkFiber, null)
+}
 
 //! mutation阶段  遍历EffectList  对每个节点执行更新(分为添加  删除  更新 三大部分 )
+//todo 遍历EffectList单链表 预留优先级调用 更新fiber
 function commitFiberNodeMutation(EffectList: any, lane?: any) {
     console.log('本次更新的EffectList', EffectList);
 
     let currentEffect = EffectList.firstEffect
 
     // TODO 在这里将effect循环用requestAnimationFrame抱起来执行中断
-
     while (currentEffect !== null) {
-
         let effectTag = currentEffect.tag
         let targetFiber = currentEffect.targetFiber
         //! 经过相应处理 最后执行commitWork方法
@@ -183,19 +188,23 @@ function commitFiberNodeMutation(EffectList: any, lane?: any) {
 }
 
 //todo 待完成 插入dom节点
-function commitPlacement(finishedWorkFiber: FiberNode) {    
+function commitPlacement(finishedWorkFiber: FiberNode) {
     createDomElement(finishedWorkFiber)
 }
+
 // todo 不同类型的fiberNode执行不同的更新 (在这里处理useEffect链表)
 function commitUpdate(finishedWorkFiber: FiberNode) {
-
     const fiberType = finishedWorkFiber.nodeType
-
     switch (fiberType) {
         //todo 函数组件 处理effects链表  
         case 'FunctionComponent':
             //遍历effect更新链表  执行每个上一次的destory和本次create,并挂载destory
             //在之前finishedWork阶段已经将所有effects收集 挂载到finishedWorkFiber上
+            callDestoryAndUnmountDestoryList(finishedWorkFiber)
+            callCreateAndMountDestoryList(finishedWorkFiber)
+            break;
+        //todo App根组件 处理effects链表  
+        case 'AppNode':
             callDestoryAndUnmountDestoryList(finishedWorkFiber)
             callCreateAndMountDestoryList(finishedWorkFiber)
             break;
@@ -206,10 +215,10 @@ function commitUpdate(finishedWorkFiber: FiberNode) {
         //todo text节点 单独更新
         case 'HostText':
             commitUpdateText(finishedWorkFiber)
-
     }
 
 }
+
 // todo 删除多余的currentFiber和dom节点
 function commitDeletion(currentFiber: FiberNode) {
 
@@ -416,7 +425,6 @@ function finishedWork(workInProgressFiber: FiberNode, currentFiber: FiberNode) {
     // 处理好的updateQueue成为到本次root节点的updateQueue
     root.updateQueue = rootUpdateQueue
 
-
     return root
 }
 
@@ -502,8 +510,6 @@ function render(functionComponent: Function, rootDom: any): any {
     const finishedWorkFiber = finishedWork(beginWorkFiber, null)
 
     //todo commit阶段
-
-
     commitPart(finishedWorkFiber)
 
 }

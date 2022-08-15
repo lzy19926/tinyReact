@@ -9,11 +9,7 @@ class Scanner {
         this.tail = text;
     }
 
-    /**
-     * 路过指定内容
-     *
-     * @memberof Scanner
-     */
+    /*路过指定内容*/
     scan(tag) {
         if (this.tail.indexOf(tag) === 0) {
             // 直接跳过指定内容的长度
@@ -23,12 +19,9 @@ class Scanner {
         }
     }
 
-    /**
-     * 让指针进行扫描，直到遇见指定内容，返回路过的文字
-     *
-     * @memberof Scanner
-     * @return str 收集到的字符串
-     */
+    
+    /* 让指针进行扫描，直到遇见指定内容，返回路过的文字
+     @return str 收集到的字符串 */
     scanUntil(stopTag) {
         // 记录开始扫描时的初始值
         const startPos = this.pos;
@@ -42,11 +35,9 @@ class Scanner {
         return this.text.substring(startPos, this.pos).trim();
     }
 
-    /**
-     * 判断指针是否到达文本末尾（end of string）
-     */
 
 
+    /*判断指针是否到达文本末尾（end of string）*/
     eos() {
         return this.pos >= this.text.length;
     }

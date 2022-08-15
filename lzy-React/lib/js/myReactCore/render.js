@@ -1,9 +1,9 @@
 "use strict";
-//待办项 :1  将fiber树转换为二叉树
+//待办项
+// 将fiber树转换为二叉树
+// 模拟优先级调度逻辑   拆分effect链表执行
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.resetFiber = exports.updateRender = exports.render = void 0;
-//待办项
-// 模拟优先级调度逻辑   拆分effect链表执行
 //! render分为2部分  render阶段 - commit阶段  最后unmount
 const GlobalFiber_1 = require("./GlobalFiber");
 const createFiberTree_1 = require("../myJSX/createFiberTree");
@@ -85,18 +85,23 @@ function firstCreateAlternate(currentRootFiber) {
 //! 分为三部分  beforeMutation  mutation  layout阶段
 //! before 前置处理  mutation 渲染dom节点   layout  处理useEffect useLayoutEffect
 function commitPart(finishedWorkFiber) {
-    //todo  mutation阶段 
-    commitFiberNodeMutation(GlobalFiber_1.global.EffectList);
+    beforeMutation(finishedWorkFiber); // beforeMutation阶段
+    commitFiberNodeMutation(GlobalFiber_1.global.EffectList); //  mutation阶段 
     //todo  layout阶段  调用Effects链表 执行create函数()
     //todo 处理ref
 }
 function updateCommitPart(finishedWorkFiber) {
-    //todo  mutation阶段 遍历EffectList单链表 预留优先级调用 更新fiber
-    commitFiberNodeMutation(GlobalFiber_1.global.EffectList);
+    beforeMutation(finishedWorkFiber); // beforeMutation阶段
+    commitFiberNodeMutation(GlobalFiber_1.global.EffectList); // mutation阶段 
     //todo  layout阶段  调用Effects链表 执行create函数()
     //todo 处理ref
 }
+//! beforeMutation阶段 (将收集好的useEffect生成一个Effect 推入链表)
+function beforeMutation(finishedWorkFiber) {
+    (0, Reconciler_1.reconcileUseEffect)(finishedWorkFiber, null);
+}
 //! mutation阶段  遍历EffectList  对每个节点执行更新(分为添加  删除  更新 三大部分 )
+//todo 遍历EffectList单链表 预留优先级调用 更新fiber
 function commitFiberNodeMutation(EffectList, lane) {
     console.log('本次更新的EffectList', EffectList);
     let currentEffect = EffectList.firstEffect;
@@ -136,6 +141,11 @@ function commitUpdate(finishedWorkFiber) {
         case 'FunctionComponent':
             //遍历effect更新链表  执行每个上一次的destory和本次create,并挂载destory
             //在之前finishedWork阶段已经将所有effects收集 挂载到finishedWorkFiber上
+            callDestoryAndUnmountDestoryList(finishedWorkFiber);
+            callCreateAndMountDestoryList(finishedWorkFiber);
+            break;
+        //todo App根组件 处理effects链表  
+        case 'AppNode':
             callDestoryAndUnmountDestoryList(finishedWorkFiber);
             callCreateAndMountDestoryList(finishedWorkFiber);
             break;

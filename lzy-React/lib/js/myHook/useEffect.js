@@ -120,7 +120,7 @@ function pushEffect(tag, create, destory, deps) {
             const firstEffect = lastEffect.next;
             lastEffect.next = effect;
             effect.next = firstEffect;
-            updateQueue.lastEffect = effect; //此时环链表上的最后一项就是effect
+            updateQueue.lastEffect = effect;
             //更新fiber上的updateQueue环链表
             fiber.updateQueue = updateQueue;
         }

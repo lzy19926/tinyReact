@@ -1,11 +1,10 @@
 
 import { myUseState, myUseEffect } from '../../lzy-React/index'
-import Test from '../components/Test'
+
 
 
 //! Demo组件
 function Demo() {
-
 
 
     const [age, setAge] = myUseState(18)
@@ -73,8 +72,6 @@ function Demo() {
     })
 }
 
-
-'1434 0.9版本'
 
 
 export default Demo

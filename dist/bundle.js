@@ -1,306 +1,1379 @@
-/*
- * ATTENTION: The "eval" devtool has been used (maybe by default in mode: "development").
- * This devtool is neither made for production nor for readable output files.
- * It uses "eval()" calls to create a separate source file in the browser devtools.
- * If you are trying to read the output file, select a different devtool (https://webpack.js.org/configuration/devtool/)
- * or disable the default devtool with "devtool: false".
- * If you are looking for production-ready output files, see mode: "production" (https://webpack.js.org/configuration/mode/).
- */
 /******/ (() => { // webpackBootstrap
+
+
+
+
 /******/ 	"use strict";
-/******/ 	var __webpack_modules__ = ({
-
-/***/ "./lzy-React/index.js":
-/*!****************************!*\
-  !*** ./lzy-React/index.js ***!
-  \****************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-        eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"Rekv\": () => (/* reexport safe */ _js_myRekV_index__WEBPACK_IMPORTED_MODULE_4__[\"default\"]),\n/* harmony export */   \"global\": () => (/* reexport safe */ _js_myReactCore_GlobalFiber__WEBPACK_IMPORTED_MODULE_3__.global),\n/* harmony export */   \"myUseEffect\": () => (/* reexport safe */ _js_myHook_useEffect__WEBPACK_IMPORTED_MODULE_0__.myUseEffect),\n/* harmony export */   \"myUseState\": () => (/* reexport safe */ _js_myHook_useState__WEBPACK_IMPORTED_MODULE_1__.myUseState),\n/* harmony export */   \"render\": () => (/* reexport safe */ _js_myReactCore_render__WEBPACK_IMPORTED_MODULE_2__.render),\n/* harmony export */   \"updateRender\": () => (/* reexport safe */ _js_myReactCore_render__WEBPACK_IMPORTED_MODULE_2__.updateRender)\n/* harmony export */ });\n/* harmony import */ var _js_myHook_useEffect__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./js/myHook/useEffect */ \"./lzy-React/js/myHook/useEffect.js\");\n/* harmony import */ var _js_myHook_useState__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./js/myHook/useState */ \"./lzy-React/js/myHook/useState.js\");\n/* harmony import */ var _js_myReactCore_render__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./js/myReactCore/render */ \"./lzy-React/js/myReactCore/render.js\");\n/* harmony import */ var _js_myReactCore_GlobalFiber__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./js/myReactCore/GlobalFiber */ \"./lzy-React/js/myReactCore/GlobalFiber.js\");\n/* harmony import */ var _js_myRekV_index__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./js/myRekV/index */ \"./lzy-React/js/myRekV/index.js\");\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\n\n//# sourceURL=webpack://myreact/./lzy-React/index.js?");
-
-        /***/
-      }),
-
-/***/ "./lzy-React/js/myHook/useEffect.js":
-/*!******************************************!*\
-  !*** ./lzy-React/js/myHook/useEffect.js ***!
-  \******************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-        eval("\r\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\r\nexports.myUseEffect = void 0;\r\n//修改全局变量的方法\r\nconst GlobalFiber_1 = __webpack_require__(/*! ../myReactCore/GlobalFiber */ \"./lzy-React/js/myReactCore/GlobalFiber.js\");\r\n//! -------mountEffect(useEffect第一次执行)-------------\r\nfunction mountEffect(fiberFlags, hookFlags, create, deps) {\r\n    //todo 创建Hook 成为fiber.memorizedState上的一项Hook (单向链表)\r\n    const hook = mountWorkInProgressHook();\r\n    //判断是否传入deps 不同时机执行useEffect\r\n    const nextDeps = deps === undefined ? null : deps;\r\n    //! 根据deps传入不同的情况  实现useEffect的不同使用\r\n    //此时memorizedState保存的就是最后更新的Effect数据(第一次destory为undefined)\r\n    if (nextDeps === null) {\r\n        hook.memorizedState = pushEffect('nullDeps', create, undefined, nextDeps);\r\n    }\r\n    else if (nextDeps.length === 0) {\r\n        hook.memorizedState = pushEffect('noDeps', create, undefined, nextDeps);\r\n    }\r\n    else {\r\n        hook.memorizedState = pushEffect('depNoChange', create, undefined, nextDeps);\r\n    }\r\n    //todo mount后 hookFlag变为update\r\n    hook.hookFlags = 'update';\r\n}\r\n//! --------创建一个Hook 形成环链表 添加到hook队列--------------\r\nfunction mountWorkInProgressHook() {\r\n    const fiber = GlobalFiber_1.global.workInprogressFiberNode; //! 测试\r\n    //todo 新建一个hook\r\n    const newHook = {\r\n        index: 0,\r\n        memorizedState: null,\r\n        hookFlags: 'mount',\r\n        next: null\r\n    };\r\n    // 添加Hook进单向链表\r\n    if (fiber.memorizedState !== null) {\r\n        const lastHook = fiber.memorizedState;\r\n        newHook.index = lastHook.index + 1;\r\n        newHook.next = lastHook;\r\n        fiber.memorizedState = newHook;\r\n    }\r\n    //接入hook到fiber上\r\n    fiber.memorizedState = newHook;\r\n    //接入hook到workProgress\r\n    GlobalFiber_1.global.workInProgressHook.currentHook = newHook;\r\n    return newHook;\r\n}\r\n//! -------updateEffect(useEffect后续更新)-------------\r\nfunction updateEffect(fiberFlags, hookFlags, create, deps) {\r\n    const fiber = GlobalFiber_1.global.workInprogressFiberNode; //! 测试\r\n    const currentHook = (0, GlobalFiber_1.updateWorkInProgressHook)(fiber);\r\n    //判断是否传入deps 不同时机执行useEffect\r\n    const nextDeps = deps === undefined ? null : deps;\r\n    //!执行updateEffect 改变fiberFlages\r\n    //! fiber.fiberFlags = fiberFlags\r\n    //todo  如果有currentHook 获得上一次执行create返回的的销毁函数\r\n    if (currentHook !== null) {\r\n        const prevEffect = currentHook.memorizedState; //最后一次Effect\r\n        //todo update时从上一次的Effect中取出销毁函数(在commit阶段执行create函数并赋值了destory)\r\n        const destory = prevEffect.destory;\r\n        //! 根据传入的dep 判断是否执行effect\r\n        //注意 无论如何都会推入Effect  \r\n        if (nextDeps !== null) {\r\n            //todo 浅比较上次和本次的deps是否相等  传入不同的tag  用于减少更新\r\n            const prveDeps = prevEffect.deps;\r\n            if (shallowCompareDeps(nextDeps, prveDeps)) {\r\n                pushEffect('depNoChange', create, destory, nextDeps);\r\n                return;\r\n            }\r\n            //todo 如果deps发生改变  传入的tag为'depChanged' commit时这个Effects才会被执行\r\n            //todo  (执行的最后一个effect要被赋值给memorizedState)\r\n            else {\r\n                currentHook.memorizedState =\r\n                    pushEffect('depChanged', create, destory, nextDeps);\r\n            }\r\n        }\r\n        //! 如果没有传deps 表示任意时候都执行\r\n        if (nextDeps === null) {\r\n            pushEffect('nullDeps', create, undefined, nextDeps);\r\n        }\r\n    }\r\n}\r\n//! ------浅比较前后deps是否发生变化-------------------\r\nfunction shallowCompareDeps(nextDeps, prveDeps) {\r\n    //todo console.log('前后dep对比', prveDeps, nextDeps);\r\n    // 选取最大的lenght\r\n    const length = nextDeps.length > prveDeps.length ? nextDeps.length : prveDeps.length;\r\n    let res = true;\r\n    for (let i = 0; i < length; i++) {\r\n        if (nextDeps[i] !== prveDeps[i])\r\n            return res = false;\r\n    }\r\n    return res;\r\n}\r\n//! --------pushEffect创建/增加Effects更新链表---------------\r\nfunction pushEffect(tag, create, destory, deps) {\r\n    const fiber = GlobalFiber_1.global.workInprogressFiberNode; //! 测试\r\n    // 创建Effect \r\n    const effect = {\r\n        tag,\r\n        create,\r\n        destory,\r\n        deps,\r\n        next: null\r\n    };\r\n    //todo 如果Hook上没有更新链表  创建更新链表  如果有则插入一个effect到更新环链表尾部\r\n    const updateQueue = { lastEffect: null };\r\n    if (fiber.updateQueue === null) {\r\n        updateQueue.lastEffect = effect.next = effect; // 自身形成环状链表\r\n        //更新fiber上的updateQueue环链表\r\n        fiber.updateQueue = updateQueue;\r\n    }\r\n    else {\r\n        const lastEffect = fiber.updateQueue.lastEffect;\r\n        if (lastEffect === null) { //todo 有链表结构但是链表为空\r\n            updateQueue.lastEffect = effect.next = effect; // 自身形成环状链表\r\n        }\r\n        else { // todo 插入effect到环链表尾端\r\n            const firstEffect = lastEffect.next;\r\n            lastEffect.next = effect;\r\n            effect.next = firstEffect;\r\n            updateQueue.lastEffect = effect; //此时环链表上的最后一项就是effect\r\n            //更新fiber上的updateQueue环链表\r\n            fiber.updateQueue = updateQueue;\r\n        }\r\n    }\r\n    //todo 返回这个Effect 会被赋值给hook.memorizedState(最后一次更新的状态)\r\n    return effect;\r\n}\r\n//!------------useEffect主体--------------\r\nfunction myUseEffect(create, deps) {\r\n    const nextDeps = deps === undefined ? null : deps;\r\n    const fiber = GlobalFiber_1.global.workInprogressFiberNode; //! 测试\r\n    // 第一次useEffect执行mountEffect\r\n    if (fiber.fiberFlags === 'mount') {\r\n        const hookFlags = 'mount';\r\n        mountEffect('mount', hookFlags, create, nextDeps);\r\n        // 后续useEffect执行updateEffect\r\n    }\r\n    else if (fiber.fiberFlags === 'update') {\r\n        const hookFlags = 'update';\r\n        updateEffect('update', hookFlags, create, nextDeps);\r\n    }\r\n}\r\nexports.myUseEffect = myUseEffect;\r\n\n\n//# sourceURL=webpack://myreact/./lzy-React/js/myHook/useEffect.js?");
-
-        /***/
-      }),
-
-/***/ "./lzy-React/js/myHook/useState.js":
-/*!*****************************************!*\
-  !*** ./lzy-React/js/myHook/useState.js ***!
-  \*****************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-        eval("\r\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\r\nexports.myUseState = void 0;\r\nconst render_1 = __webpack_require__(/*! ../myReactCore/render */ \"./lzy-React/js/myReactCore/render.js\");\r\n// 全局变量和当前 Fiber\r\nconst GlobalFiber_1 = __webpack_require__(/*! ../myReactCore/GlobalFiber */ \"./lzy-React/js/myReactCore/GlobalFiber.js\");\r\n//! ---------------useState返回的updater方法(updateState方法)-------------------\r\nfunction dispatchAction(queue, curFiber, newVal) {\r\n    //todo 如果newVal未发生变化不执行更新(可以用于手动强制更新)\r\n    // const oldVal = curFiber.memorizedState.memorizedState\r\n    // if (newVal === oldVal) return\r\n    //todo 更新state队列(在render阶段执行)\r\n    updateQueue(queue, newVal);\r\n    //todo 这里使用防抖 所有queue更新完后再执行render  将timer设置在fiber上以适配Rekv\r\n    //将多个同步setState的render合并为一个\r\n    clearTimeout(curFiber.stateQueueTimer);\r\n    curFiber.stateQueueTimer = setTimeout(() => {\r\n        //! 源码中使用切换fiber树的方式执行重新渲染 \r\n        //! 从当前fiber节点  重新执行函数式组件  更新子fiber树(需要传入当前fiber进行递归) \r\n        if (typeof curFiber.stateNode === 'function') {\r\n            const wkInFiber = curFiber.alternate;\r\n            (0, render_1.updateRender)(curFiber.stateNode, wkInFiber, curFiber);\r\n        }\r\n    }, 0);\r\n}\r\n//! 更新setate更新队列\r\nfunction updateQueue(queue, newVal) {\r\n    //创建updater环链表 将action挂载上去\r\n    const updater = {\r\n        action: newVal,\r\n        next: null\r\n    };\r\n    //pending上没有updater 自己形成环状链表  ; 有updater链表  插入一个updater\r\n    if (queue.pending === null) {\r\n        updater.next = updater;\r\n    }\r\n    else {\r\n        updater.next = queue.pending.next;\r\n        queue.pending.next = updater;\r\n    }\r\n    // 让此updater成为lastUpdater\r\n    queue.pending = updater;\r\n}\r\n//! 创建一个useStateHook并添加到链表中------------------------\r\nfunction createHook(initialState) {\r\n    const fiber = GlobalFiber_1.global.workInprogressFiberNode; //! 测试\r\n    // 创建useState类型的hook\r\n    const hook = {\r\n        hookFlags: 'mount',\r\n        index: fiber.memorizedState ? fiber.memorizedState.index + 1 : 0,\r\n        memorizedState: initialState,\r\n        updateStateQueue: { pending: null },\r\n        next: null\r\n    };\r\n    // 将hook添加到fiber上,且将hook链接到全局hooks链表上  成为last项\r\n    if (!fiber.memorizedState) {\r\n        GlobalFiber_1.global.workInProgressHook.currentHook = hook;\r\n    }\r\n    else {\r\n        const lastEffect = fiber.memorizedState;\r\n        hook.next = lastEffect;\r\n    }\r\n    GlobalFiber_1.global.workInProgressHook.currentHook = hook;\r\n    fiber.memorizedState = hook;\r\n    return hook;\r\n}\r\n//! 更新该Hook的memorizedState-----------------------------\r\nfunction updateUseStateHook(hook) {\r\n    // 取出更新链表上的最后一个state\r\n    let baseState = hook.memorizedState;\r\n    //pending保存了链表最后一项   next就指向第一个update\r\n    if (hook.updateStateQueue.pending) {\r\n        let firstUpdate = hook.updateStateQueue.pending.next;\r\n        // queue链表 执行update(执行update上的action(update传入的参数 num=>num+1))  \r\n        do {\r\n            const action = firstUpdate.action;\r\n            //todo 更新baseState 分为传入函数和传入newValue两种情况\r\n            baseState = typeof action === 'function'\r\n                ? action(baseState)\r\n                : action;\r\n            firstUpdate = firstUpdate.next; // 链表后移\r\n            // 终止遍历链表\r\n        } while (firstUpdate !== hook.updateStateQueue.pending.next);\r\n        // 清空state更新链表\r\n        hook.updateStateQueue.pending = null;\r\n    }\r\n    // 遍历结束 将更新后的baseState存放到hook.memorizedState上\r\n    hook.memorizedState = baseState;\r\n    return baseState;\r\n}\r\n//! ----------执行useState会执行state的计算过程----------------\r\nfunction myUseState(initialState) {\r\n    //todo  需要找到当前的fiber节点()\r\n    let fiber = GlobalFiber_1.global.workInprogressFiberNode;\r\n    //取出当前hook 如果是mount阶段就创建一个hook(初始值为initState)\r\n    let hook;\r\n    if (fiber.fiberFlags === 'mount') {\r\n        hook = createHook(initialState); //创建hook 添加到hook链表\r\n    }\r\n    else {\r\n        // 更新情况 找到对应的hook\r\n        hook = (0, GlobalFiber_1.updateWorkInProgressHook)(fiber);\r\n    }\r\n    //todo 更新hook上保存的state\r\n    const baseState = updateUseStateHook(hook);\r\n    //todo 执行完useState 钩子状态变为update\r\n    hook.hookFlags = 'update';\r\n    //todo 返回最新的状态 和updateAction \r\n    //todo bind本次useState的fiber节点 用于从当前组件开始更新\r\n    return [baseState, dispatchAction.bind(null, hook.updateStateQueue, fiber)];\r\n}\r\nexports.myUseState = myUseState;\r\n\n\n//# sourceURL=webpack://myreact/./lzy-React/js/myHook/useState.js?");
-
-        /***/
-      }),
-
-/***/ "./lzy-React/js/myJSX/createFiberTree.js":
-/*!***********************************************!*\
-  !*** ./lzy-React/js/myJSX/createFiberTree.js ***!
-  \***********************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-        eval("\r\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\r\nexports.handleFunctionFiberNode = exports.preHandleFiberNode = exports.conbineVnodAndFiber = exports.getParentDom = exports.handleFunctionComponentProps = exports.handleProps = exports.useRoute = exports.createFiberTree = void 0;\r\nconst tplToVnode_1 = __webpack_require__(/*! ./tplToVnode */ \"./lzy-React/js/myJSX/tplToVnode.js\");\r\nconst GlobalFiber_1 = __webpack_require__(/*! ../myReactCore/GlobalFiber */ \"./lzy-React/js/myReactCore/GlobalFiber.js\");\r\n//! 创建fiberNode树(Vnode树) 深度优先遍历vnode树  包装成fiberNode\r\n//! 根据fiberNode和FunctionComponent创建FiberNode 生成Fiber树\r\n//todo 传入parentNode 给子fiber挂载parentNode属性  用于向上查找dom节点和fiber\r\nfunction createFiberTree(source, resources, parentNode) {\r\n    //todo 创建一个新的fiber节点(浅拷贝) 更新当前工作节点\r\n    let newFiberNode = new GlobalFiber_1.NewFiberNode('mount', '$1');\r\n    //todo 预处理Fiber  生成vnode 挂载resource\r\n    const { children, tag } = preHandleFiberNode(source, resources, newFiberNode);\r\n    //todo 挂载父节点\r\n    newFiberNode.parentNode = parentNode;\r\n    //TODO -----------如果tag大写 解析为组件节点(无children) ----------------\r\n    if (tag[0] === tag[0].toUpperCase()) {\r\n        //! 处理为组件节点\r\n        handleFunctionFiberNode(newFiberNode, tag);\r\n        //! render子函数组件\r\n        renderFunctionComponent(newFiberNode);\r\n    }\r\n    //TODO ----------小写的情况  是domComponent节点/text节点  创建对应的dom并添加--------\r\n    //todo 或者复用alternate的ref\r\n    else {\r\n        newFiberNode.nodeType = 'HostText';\r\n        createDomElement(newFiberNode);\r\n    }\r\n    //todo 如果有childVnode 深度优先递归  创建子fiber 挂到当前节点\r\n    if (children.length > 0) {\r\n        newFiberNode.nodeType = 'HostComponent';\r\n        createFiberTreeLoop(children, newFiberNode);\r\n    }\r\n    //模拟finishowrk\r\n    newFiberNode.fiberFlags = 'update';\r\n    // console.log('finishWork', newFiberNode.tag);\r\n    //适配路由\r\n    useRoute(newFiberNode);\r\n    return newFiberNode;\r\n}\r\nexports.createFiberTree = createFiberTree;\r\n//! 根据子vnode 递归创建子fiberNode 并进行拼接-------------\r\nfunction createFiberTreeLoop(childVnodes, parentNode) {\r\n    for (let i = 0; i < childVnodes.length; i++) {\r\n        const childFiberNode = createFiberTree(childVnodes[i], parentNode.sourcePool, parentNode);\r\n        parentNode.children.push(childFiberNode);\r\n    }\r\n}\r\n//! -----------------render子函数组件-----------------------\r\nfunction renderFunctionComponent(fiber) {\r\n    if (typeof fiber.stateNode !== 'function')\r\n        return;\r\n    const { template, data = {}, components = {} } = fiber.stateNode();\r\n    const childFiberNode = createFiberTree(template, { data, components }, fiber);\r\n    //todo 生成子树并链接\r\n    fiber.children = [childFiberNode];\r\n}\r\n//! -------------创建html并挂载到fiber节点上--------------------\r\nfunction createDomElement(fiber) {\r\n    //找到父dom节点 将创建好的dom节点添加进去\r\n    const parentDom = getParentDom(fiber);\r\n    let domElement = document.createElement(fiber.tag);\r\n    handleProps(fiber, domElement);\r\n    if (fiber.text) {\r\n        domElement.innerHTML = fiber.text;\r\n    }\r\n    parentDom.appendChild(domElement);\r\n    fiber.stateNode = domElement;\r\n    return domElement;\r\n}\r\n//! 预处理FiberNode  将模板和资源先挂载到节点上-----------------\r\nfunction preHandleFiberNode(source, resources, workInProgressFiber) {\r\n    //todo 切换当前工作fiber\r\n    GlobalFiber_1.global.workInprogressFiberNode = workInProgressFiber;\r\n    //todo 判断传入的source 转换成vnode\r\n    let vnode = typeof source === 'string' ? (0, tplToVnode_1.tplToVDOM)(source) : source;\r\n    //todo 合并处理vnode和Fiber 挂载resource\r\n    const { children = [], tag } = vnode;\r\n    workInProgressFiber = conbineVnodAndFiber(workInProgressFiber, vnode, resources);\r\n    return { children, tag };\r\n}\r\nexports.preHandleFiberNode = preHandleFiberNode;\r\n//! 处理函数组件节点\r\nfunction handleFunctionFiberNode(fiber, ComponentName) {\r\n    fiber.nodeType = 'FunctionComponent';\r\n    //todo 从sourcePool中获取子组件\r\n    const fc = fiber.sourcePool.components[ComponentName];\r\n    if (!fc) {\r\n        console.error(`子组件${ComponentName}未注册`);\r\n    }\r\n    //! 从资源池中拿取需要的props，给子函数组件绑定需要的props,并挂载子函数组件到fiber上\r\n    handleFunctionComponentProps(fiber, fc);\r\n}\r\nexports.handleFunctionFiberNode = handleFunctionFiberNode;\r\n//! ----------合并vnode和fiber  挂载resource-----------\r\nfunction conbineVnodAndFiber(fiber, vnode, resources) {\r\n    const { props, tag, text } = vnode;\r\n    fiber.props = props;\r\n    fiber.tag = tag;\r\n    fiber.text = text;\r\n    fiber.sourcePool = resources;\r\n    return fiber;\r\n}\r\nexports.conbineVnodAndFiber = conbineVnodAndFiber;\r\n//! ----------找到父dom节点---------------------\r\nfunction getParentDom(fiber) {\r\n    let parentNode = fiber.parentNode;\r\n    let parentDom = parentNode.stateNode;\r\n    if (!parentNode) {\r\n        return document.getElementById('root');\r\n    }\r\n    while (typeof parentDom === 'function') {\r\n        parentNode = parentNode.parentNode;\r\n        if (!parentNode) {\r\n            return document.getElementById('root');\r\n        }\r\n        parentDom = parentNode.stateNode;\r\n    }\r\n    return parentDom;\r\n}\r\nexports.getParentDom = getParentDom;\r\n//! ------------从资源池中拿取子组件需要的Props 处理后传递给子组件----------\r\n//! 将props设置为单向数据流   并返回处理好的子组件函数传递出去\r\nfunction handleFunctionComponentProps(fiber, functionComponent) {\r\n    const needProps = fiber.props;\r\n    const data = fiber.sourcePool.data;\r\n    //否则对其他组件进行处理\r\n    const nextProps = {};\r\n    for (let key in needProps) {\r\n        const originValue = needProps[key][0];\r\n        let value;\r\n        //! 对传入的props进行数据类型解析\r\n        if (data[originValue]) { //从需求池中找到了对应的数据\r\n            value = data[originValue];\r\n        }\r\n        else if (!isNaN((originValue - 0))) { //传入数字\r\n            value = originValue - 0;\r\n        }\r\n        else if (originValue[0] === '\"' || originValue[0] === \"'\") { //传入字符串\r\n            value = originValue.slice(1, originValue.length - 1).trim();\r\n        }\r\n        else { // 传入普通字符串\r\n            value = originValue;\r\n        }\r\n        nextProps[key] = value;\r\n    }\r\n    //todo 使用Objdect.defineoroperty包装props为只读(get set方法)\r\n    //todo 定义一个新对象  添加对应的属性并添加描述器get set \r\n    const newProps = {};\r\n    for (let key in nextProps) {\r\n        let val = nextProps[key]; // 设置该属性的初始值\r\n        Object.defineProperty(newProps, key, {\r\n            get: () => val,\r\n            set: (newVal) => {\r\n                console.warn('您正在尝试修改props, 不推荐此操作, 请保证数据单向流动');\r\n                val = newVal; // 修改时修改属性\r\n            }\r\n        });\r\n    }\r\n    //给函数组件绑定newProps  挂载到fiber上\r\n    const newFc = functionComponent.bind(null, newProps);\r\n    fiber.stateNode = newFc;\r\n    return newFc;\r\n}\r\nexports.handleFunctionComponentProps = handleFunctionComponentProps;\r\n//! 对标签中的属性进行处理 给dom节点添加标签 (未完成)\r\nfunction handleProps(curFiber, dom) {\r\n    const props = curFiber.props;\r\n    for (let key in props) {\r\n        const value = props[key];\r\n        switch (key) {\r\n            //todo  处理className (合并所有的类名)\r\n            case 'className':\r\n                let classNameStr = '';\r\n                for (let i = 0; i < value.length; i++) {\r\n                    classNameStr += value[i] + ' ';\r\n                }\r\n                dom.setAttribute(\"class\", classNameStr.trim());\r\n                break;\r\n            //todo  处理class (合并所有的类名)\r\n            case 'class':\r\n                let classStr = '';\r\n                for (let i = 0; i < value.length; i++) {\r\n                    classStr += value[i] + ' ';\r\n                }\r\n                dom.setAttribute(\"class\", classStr.trim());\r\n                break;\r\n            //todo  处理点击事件\r\n            case 'onClick':\r\n                //! 从组件的资源池里找对应的事件\r\n                const dataPool = curFiber.sourcePool.data;\r\n                const callback = dataPool[value[0]];\r\n                dom.onClick = callback;\r\n                // dom.addEventListener(\"click\", callback);\r\n                break;\r\n            //todo  处理其他\r\n            default:\r\n                dom.setAttribute(key, value[0]);\r\n                break;\r\n        }\r\n    }\r\n}\r\nexports.handleProps = handleProps;\r\n//! -------路由适配方法  待修改---------------------\r\nfunction useRoute(fiber) {\r\n    //todo  如果是Route组件 将container的fiber传递给子组件 (暂时放到全局)\r\n    if (fiber.tag === 'RouteContainer') {\r\n        window.$$routeContainerFiber = fiber;\r\n    }\r\n}\r\nexports.useRoute = useRoute;\r\n// 错误记录\r\n// 函数name被webpack打包后会变为bound+函数名\r\n// 不能直接给tag赋值 \r\n//! -------------废弃部分------------------------------\r\n{\r\n    // //这个应该在commit阶段执行\r\n    // function updateDomElement(fiber: FiberNode) {\r\n    //     let domElement = fiber.stateNode\r\n    //     handleProps(fiber, domElement)\r\n    //     if (fiber.text) { domElement.innerHTML = fiber.text }\r\n    //     return domElement\r\n    // }\r\n}\r\n\n\n//# sourceURL=webpack://myreact/./lzy-React/js/myJSX/createFiberTree.js?");
-
-        /***/
-      }),
-
-/***/ "./lzy-React/js/myJSX/tplScanner.js":
-/*!******************************************!*\
-  !*** ./lzy-React/js/myJSX/tplScanner.js ***!
-  \******************************************/
+/******/ 	var __webpack_modules__ = ([
+/* 0 */,
+/* 1 */
 /***/ ((__unused_webpack_module, exports) => {
 
-        eval("\r\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\r\n//! 字符串扫描解析器\r\nclass Scanner {\r\n    constructor(text) {\r\n        this.text = text;\r\n        // 指针\r\n        this.pos = 0;\r\n        // 尾巴  剩余字符\r\n        this.tail = text;\r\n    }\r\n    /**\r\n     * 路过指定内容\r\n     *\r\n     * @memberof Scanner\r\n     */\r\n    scan(tag) {\r\n        if (this.tail.indexOf(tag) === 0) {\r\n            // 直接跳过指定内容的长度\r\n            this.pos += tag.length;\r\n            // 更新tail\r\n            this.tail = this.text.substring(this.pos);\r\n        }\r\n    }\r\n    /**\r\n     * 让指针进行扫描，直到遇见指定内容，返回路过的文字\r\n     *\r\n     * @memberof Scanner\r\n     * @return str 收集到的字符串\r\n     */\r\n    scanUntil(stopTag) {\r\n        // 记录开始扫描时的初始值\r\n        const startPos = this.pos;\r\n        // 当尾巴的开头不是stopTg的时候，说明还没有扫描到stopTag\r\n        while (!this.eos() && this.tail.indexOf(stopTag) !== 0) {\r\n            // 改变尾巴为当前指针这个字符到最后的所有字符\r\n            this.tail = this.text.substring(++this.pos);\r\n        }\r\n        // 返回经过的文本数据\r\n        return this.text.substring(startPos, this.pos).trim();\r\n    }\r\n    /**\r\n     * 判断指针是否到达文本末尾（end of string）\r\n     *\r\n     * @memberof Scanner\r\n     */\r\n    eos() {\r\n        return this.pos >= this.text.length;\r\n    }\r\n}\r\nexports[\"default\"] = Scanner;\r\n\n\n//# sourceURL=webpack://myreact/./lzy-React/js/myJSX/tplScanner.js?");
 
-        /***/
-      }),
+            Object.defineProperty(exports, "__esModule", ({ value: true }));
+            exports.global = exports.updateRender = exports.render = exports.myUseEffect = exports.myUseState = void 0;
+            //! ----------Fiber节点结构---------------
+            class NewFiberNode {
+                constructor(fiberFlags, $fiber) {
+                    this.memorizedState = null, // fiber上的所有hook链表
+                        this.stateNode = null, // 对应的函数组件 或者Dom节点
+                        this.updateQueue = null, // Effects的更新链表
+                        this.stateQueueTimer = null, // 用于state的合并更新(setTimeout)
+                        this.fiberFlags = fiberFlags, // fiber的生命周期 判断是否初始化
+                        // this.effectTag = undefined, //  用于标记需要执行的Effect 执行对应操作
+                        this.hasRef = false, //ref相关tag
+                        this.ref = null,
+                        this.children = [],
+                        this.props = null,
+                        this.tag = null, // 节点的tag 比如div/Demo
+                        this.text = null,
+                        this.sourcePool = null, ///! 组件返回的资源  props和事件
+                        this.hookIndex = 0, // 用于记录hook的数量 以便查找
+                        this.parentNode = null,
+                        this.nodeType = undefined,
+                        this.alternate = null, // 对面fiber树对应的节点
+                        this.$fiber = $fiber, // 用于识别fiber是哪颗树
+                        this.key = null; // 用于进行列表的diff
+                }
+            }
+            //! -----需要使用的全局变量---------------
+            const global = {
+                workInprogressFiberNode: null,
+                workInProgressHook: { currentHook: null },
+                EffectList: { firstEffect: null, lastEffect: null, length: 0 },
+                destoryEffectsArr: [],
+                renderTag: 'mount', // 用于判断是否是首次更新
+            };
+            exports.global = global;
+            //! ----------拿取需要本次update需要更新的hook----------------------
+            function updateWorkInProgressHook(fiber) {
+                let index = fiber.hookIndex;
+                let currentHook = fiber.memorizedState;
+                while (currentHook && currentHook.index != index) {
+                    currentHook = currentHook.next;
+                }
+                // 因为链表是按顺序的 所以这个函数每执行一次就新增一个
+                fiber.hookIndex += 1;
+                return currentHook;
+            }
+            //! -------mountEffect(useEffect第一次执行)-------------
+            function mountEffect(fiberFlags, hookFlags, create, deps) {
+                //todo 创建Hook 成为fiber.memorizedState上的一项Hook (单向链表)
+                const hook = mountWorkInProgressHook();
+                //判断是否传入deps 不同时机执行useEffect
+                const nextDeps = deps === undefined ? null : deps;
+                //! 根据deps传入不同的情况  实现useEffect的不同使用
+                //此时memorizedState保存的就是最后更新的Effect数据(第一次destory为undefined)
+                if (nextDeps === null) {
+                    hook.memorizedState = pushEffect('nullDeps', create, undefined, nextDeps);
+                }
+                else if (nextDeps.length === 0) {
+                    hook.memorizedState = pushEffect('noDeps', create, undefined, nextDeps);
+                }
+                else {
+                    hook.memorizedState = pushEffect('depNoChange', create, undefined, nextDeps);
+                }
+                //todo mount后 hookFlag变为update
+                hook.hookFlags = 'update';
+            }
+            //! --------创建一个Hook 形成环链表 添加到hook队列--------------
+            function mountWorkInProgressHook() {
+                const fiber = global.workInprogressFiberNode; //! 测试
+                //todo 新建一个hook
+                const newHook = {
+                    index: 0,
+                    memorizedState: null,
+                    hookFlags: 'mount',
+                    next: null
+                };
+                // 添加Hook进单向链表
+                if (fiber.memorizedState !== null) {
+                    const lastHook = fiber.memorizedState;
+                    newHook.index = lastHook.index + 1;
+                    newHook.next = lastHook;
+                    fiber.memorizedState = newHook;
+                }
+                //接入hook到fiber上
+                fiber.memorizedState = newHook;
+                //接入hook到workProgress
+                global.workInProgressHook.currentHook = newHook;
+                return newHook;
+            }
+            //! -------updateEffect(useEffect后续更新)-------------
+            function updateEffect(fiberFlags, hookFlags, create, deps) {
+                const fiber = global.workInprogressFiberNode; //! 测试
+                const currentHook = updateWorkInProgressHook(fiber);
+                //判断是否传入deps 不同时机执行useEffect
+                const nextDeps = deps === undefined ? null : deps;
+                //!执行updateEffect 改变fiberFlages
+                //! fiber.fiberFlags = fiberFlags
+                //todo  如果有currentHook 获得上一次执行create返回的的销毁函数
+                if (currentHook !== null) {
+                    const prevEffect = currentHook.memorizedState; //最后一次Effect
+                    //todo update时从上一次的Effect中取出销毁函数(在commit阶段执行create函数并赋值了destory)
+                    const destory = prevEffect.destory;
+                    //! 根据传入的dep 判断是否执行effect
+                    //注意 无论如何都会推入Effect  
+                    if (nextDeps !== null) {
+                        //todo 浅比较上次和本次的deps是否相等  传入不同的tag  用于减少更新
+                        const prveDeps = prevEffect.deps;
+                        if (shallowCompareDeps(nextDeps, prveDeps)) {
+                            pushEffect('depNoChange', create, destory, nextDeps);
+                            return;
+                        }
+                        //todo 如果deps发生改变  传入的tag为'depChanged' commit时这个Effects才会被执行
+                        //todo  (执行的最后一个effect要被赋值给memorizedState)
+                        else {
+                            currentHook.memorizedState =
+                                pushEffect('depChanged', create, destory, nextDeps);
+                        }
+                    }
+                    //! 如果没有传deps 表示任意时候都执行
+                    if (nextDeps === null) {
+                        pushEffect('nullDeps', create, undefined, nextDeps);
+                    }
+                }
+            }
+            //! ------浅比较前后deps是否发生变化-------------------
+            function shallowCompareDeps(nextDeps, prveDeps) {
+                //todo console.log('前后dep对比', prveDeps, nextDeps);
+                // 选取最大的lenght
+                const length = nextDeps.length > prveDeps.length ? nextDeps.length : prveDeps.length;
+                let res = true;
+                for (let i = 0; i < length; i++) {
+                    if (nextDeps[i] !== prveDeps[i])
+                        return res = false;
+                }
+                return res;
+            }
+            //! --------pushEffect创建/增加Effects更新链表---------------
+            function pushEffect(tag, create, destory, deps) {
+                const fiber = global.workInprogressFiberNode; //! 测试
+                // 创建Effect 
+                const effect = {
+                    tag,
+                    create,
+                    destory,
+                    deps,
+                    next: null
+                };
+                //todo 如果Hook上没有更新链表  创建更新链表  如果有则插入一个effect到更新环链表尾部
+                const updateQueue = { lastEffect: null };
+                if (fiber.updateQueue === null) {
+                    updateQueue.lastEffect = effect.next = effect; // 自身形成环状链表
+                    //更新fiber上的updateQueue环链表
+                    fiber.updateQueue = updateQueue;
+                }
+                else {
+                    const lastEffect = fiber.updateQueue.lastEffect;
+                    if (lastEffect === null) { //todo 有链表结构但是链表为空
+                        updateQueue.lastEffect = effect.next = effect; // 自身形成环状链表
+                    }
+                    else { // todo 插入effect到环链表尾端
+                        const firstEffect = lastEffect.next;
+                        lastEffect.next = effect;
+                        effect.next = firstEffect;
+                        updateQueue.lastEffect = effect;
+                        //更新fiber上的updateQueue环链表
+                        fiber.updateQueue = updateQueue;
+                    }
+                }
+                //todo 返回这个Effect 会被赋值给hook.memorizedState(最后一次更新的状态)
+                return effect;
+            }
+            //!------------useEffect主体--------------
+            function myUseEffect(create, deps) {
+                const nextDeps = deps === undefined ? null : deps;
+                const fiber = global.workInprogressFiberNode; //! 测试
+                // 第一次useEffect执行mountEffect
+                if (fiber.fiberFlags === 'mount') {
+                    const hookFlags = 'mount';
+                    mountEffect('mount', hookFlags, create, nextDeps);
+                    // 后续useEffect执行updateEffect
+                }
+                else if (fiber.fiberFlags === 'update') {
+                    const hookFlags = 'update';
+                    updateEffect('update', hookFlags, create, nextDeps);
+                }
+                //创建一个新的Effect项 推入全局EffectList中 
+            }
+            exports.myUseEffect = myUseEffect;
+            //! ---------------useState返回的updater方法(updateState方法)-------------------
+            function dispatchAction(queue, curFiber, newVal) {
+                //todo 如果newVal未发生变化不执行更新(可以用于手动强制更新)
+                // const oldVal = curFiber.memorizedState.memorizedState
+                // if (newVal === oldVal) return
+                //todo 更新state队列(在render阶段执行)
+                updateQueue(queue, newVal);
+                //todo 这里使用防抖 所有queue更新完后再执行render  将timer设置在fiber上以适配Rekv
+                //将多个同步setState的render合并为一个
+                clearTimeout(curFiber.stateQueueTimer);
+                curFiber.stateQueueTimer = setTimeout(() => {
+                    //! 从当前fiber节点  重新执行函数式组件  更新子fiber树(需要传入当前fiber进行递归) 
+                    if (typeof curFiber.stateNode === 'function') {
+                        const wkInFiber = curFiber.alternate;
+                        updateRender(curFiber.stateNode, wkInFiber, curFiber);
+                    }
+                }, 0);
+            }
+            //! 更新setate更新队列
+            function updateQueue(queue, newVal) {
+                //创建updater环链表 将action挂载上去
+                const updater = {
+                    action: newVal,
+                    next: null
+                };
+                //pending上没有updater 自己形成环状链表  ; 有updater链表  插入一个updater
+                if (queue.pending === null) {
+                    updater.next = updater;
+                }
+                else {
+                    updater.next = queue.pending.next;
+                    queue.pending.next = updater;
+                }
+                // 让此updater成为lastUpdater
+                queue.pending = updater;
+            }
+            //! 创建一个useStateHook并添加到链表中------------------------
+            function createHook(initialState) {
+                const fiber = global.workInprogressFiberNode; //! 测试
+                // 创建useState类型的hook
+                const hook = {
+                    hookFlags: 'mount',
+                    index: fiber.memorizedState ? fiber.memorizedState.index + 1 : 0,
+                    memorizedState: initialState,
+                    updateStateQueue: { pending: null },
+                    next: null
+                };
+                // 将hook添加到fiber上,且将hook链接到全局hooks链表上  成为last项
+                if (!fiber.memorizedState) {
+                    global.workInProgressHook.currentHook = hook;
+                }
+                else {
+                    const lastEffect = fiber.memorizedState;
+                    hook.next = lastEffect;
+                }
+                global.workInProgressHook.currentHook = hook;
+                fiber.memorizedState = hook;
+                return hook;
+            }
+            //! 更新该Hook的memorizedState-----------------------------
+            function updateUseStateHook(hook) {
+                // 取出更新链表上的最后一个state
+                let baseState = hook.memorizedState;
+                //pending保存了链表最后一项   next就指向第一个update
+                if (hook.updateStateQueue.pending) {
+                    let firstUpdate = hook.updateStateQueue.pending.next;
+                    // queue链表 执行update(执行update上的action(update传入的参数 num=>num+1))  
+                    do {
+                        const action = firstUpdate.action;
+                        //todo 更新baseState 分为传入函数和传入newValue两种情况
+                        baseState = typeof action === 'function'
+                            ? action(baseState)
+                            : action;
+                        firstUpdate = firstUpdate.next; // 链表后移
+                        // 终止遍历链表
+                    } while (firstUpdate !== hook.updateStateQueue.pending.next);
+                    // 清空state更新链表
+                    hook.updateStateQueue.pending = null;
+                }
+                // 遍历结束 将更新后的baseState存放到hook.memorizedState上
+                hook.memorizedState = baseState;
+                return baseState;
+            }
+            //! ----------执行useState会执行state的计算过程----------------
+            function myUseState(initialState) {
+                //todo  需要找到当前的fiber节点()
+                let fiber = global.workInprogressFiberNode;
+                //取出当前hook 如果是mount阶段就创建一个hook(初始值为initState)
+                let hook;
+                if (fiber.fiberFlags === 'mount') {
+                    hook = createHook(initialState); //创建hook 添加到hook链表
+                }
+                else {
+                    // 更新情况 找到对应的hook
+                    hook = updateWorkInProgressHook(fiber);
+                }
+                //todo 更新hook上保存的state
+                const baseState = updateUseStateHook(hook);
+                //todo 执行完useState 钩子状态变为update
+                hook.hookFlags = 'update';
+                //todo 返回最新的状态 和updateAction 
+                //todo bind本次useState的fiber节点 用于从当前组件开始更新
+                return [baseState, dispatchAction.bind(null, hook.updateStateQueue, fiber)];
+            }
+            exports.myUseState = myUseState;
+            //! 更新事件
+            function reconcileEvent(workInProgressFiber, currentFiber) {
+                // TODO 如果节点有挂载事件  需要更新这些事件!!!!!!!!!
+                const wkProps = workInProgressFiber.props;
+                if (!wkProps)
+                    return;
+                // 如果有事件 创建对应的Effect
+                const hasEvent = wkProps.hasOwnProperty('onClick' || 0);
+                if (hasEvent) {
+                    pushEffectList('Update', workInProgressFiber);
+                }
+            }
+            //! 判断是否有useEffect钩子调用
+            function reconcileUseEffect(workInProgressFiber, currentFiber) {
+                if (workInProgressFiber.updateQueue) {
+                    pushEffectList('UseEffect', workInProgressFiber);
+                }
+            }
+            //! 计算Props
+            function reconcileProps(workInProgressFiber, currentFiber) {
+                pushEffectList('Update', workInProgressFiber);
+            }
+            //! 计算Text
+            function reconcileText(workInProgressFiber, currentFiber) {
+                if (!workInProgressFiber.text || !currentFiber.text)
+                    return;
+                if (workInProgressFiber.text !== currentFiber.text) {
+                    pushEffectList('Update', workInProgressFiber);
+                }
+            }
+            //! 计算tag
+            function reconcileTag(workInProgressFiber, currentFiber) {
+            }
+            //! 添加(待优化)
+            function reconcilePlacement(workInProgressFiber, currentFiber) {
+                const wkKey = workInProgressFiber === null || workInProgressFiber === void 0 ? void 0 : workInProgressFiber.key;
+                const curKey = currentFiber === null || currentFiber === void 0 ? void 0 : currentFiber.key;
+                // 或者有cur  无work算为插入节点
+                if (!currentFiber && workInProgressFiber) {
+                    pushEffectList('Placement', workInProgressFiber);
+                }
+            }
+            //! 删除
+            function reconcileDeletion(workInProgressFiber, currentFiber) {
+                //todo wk没有节点 current有节点 删除current
+                if (!workInProgressFiber && currentFiber) {
+                    pushEffectList('Delete', currentFiber);
+                    return false;
+                }
+                //todo 如果有key  且不一样 删除current 否则下一次会进行大量更新(需要重写)
+                else if (workInProgressFiber.key || currentFiber.key) {
+                    if (workInProgressFiber.key !== currentFiber.key) {
+                        pushEffectList('Delete', currentFiber);
+                        return false;
+                    }
+                }
+                return true;
+            }
+            //! 创建并添加Effect到EffectList
+            function pushEffectList(tag, targetFiber, callback) {
+                const newEffect = {
+                    tag,
+                    targetFiber,
+                    callback: '暂定',
+                    next: null
+                };
+                //todo 链接到全局EffectList单链表
+                const EffectList = global.EffectList;
+                if (EffectList.firstEffect === null) {
+                    EffectList.firstEffect = newEffect;
+                    EffectList.lastEffect = newEffect;
+                }
+                else {
+                    EffectList.lastEffect.next = newEffect;
+                    EffectList.lastEffect = newEffect;
+                }
+                EffectList.length += 1;
+            }
+            //! diff两个节点综合方法
+            //! ----------比较wk和cur两个fiber  生成不同的Effect (打上tag)-------------
+            function reconcileFiberNode(workInProgressFiber, currentFiber) {
+                //TODO 开始先进行删除和添加的diff计算  (需要在最先进行 因为之后的就不需要进行了)
+                reconcilePlacement(workInProgressFiber, currentFiber);
+                let needDiff = true;
+                if (workInProgressFiber && !currentFiber) {
+                    // reconcilePlacement(workInProgressFiber, currentFiber)
+                    needDiff = false;
+                }
+                else if (!workInProgressFiber && currentFiber) {
+                    reconcileDeletion(workInProgressFiber, currentFiber);
+                    needDiff = false;
+                }
+                else if (workInProgressFiber.key !== currentFiber.key) {
+                }
+                if (needDiff) {
+                    // TODO 进行text的判断 生成Effect
+                    reconcileText(workInProgressFiber, currentFiber);
+                    //TODO 有事件更新事件
+                    reconcileEvent(workInProgressFiber, currentFiber);
+                    //TODO 判断是否使用了useEffect
+                    reconcileUseEffect(workInProgressFiber, currentFiber);
+                }
+            }
+            //! ----------------模拟render部分------------------------
+            //! 更改并生成fiber树  (结束后fiber由mount变为update)
+            function renderPart(functionComponent, rootDom, workInProgress) {
+                //todo 通过functionComponents生成第一个组件节点 如App
+                const { template, resource, currentRootFiber } = firstRenderApp(functionComponent, workInProgress, rootDom);
+                //todo根据组件构建fiberTree(首次)
+                const fiberTree = createFiberTree(template, resource, currentRootFiber);
+                currentRootFiber.children.push(fiberTree);
+                return currentRootFiber;
+            }
+            //todo 获取上一次的fiberTree 执行所有打上tag的functionComponent进行state更新 再commit   
+            function updateRenderPart(functionComponent, workInProgressFiber, currentFiber) {
+                // 改变tag
+                global.renderTag = 'update';
+                // 处理根App节点 并链接两个节点
+                const { template, resource, workInProgressRootFiber } = firstUpdateRenderApp(functionComponent, workInProgressFiber, currentFiber);
+                // 更新函数组件(因为处理了根节点 从根节点的第一个子节点开始递归)
+                const secondWorkInProgress = workInProgressRootFiber.children[0];
+                const secondCurrent = currentFiber.children[0];
+                // 此时不需要创建fiberNode  所以不需要添加childFiber  直接在根fiber树上更新
+                const childFiber = updateFiberTree(template, resource, workInProgressRootFiber, secondWorkInProgress, secondCurrent);
+                if (workInProgressRootFiber.children.length === 0) {
+                    workInProgressRootFiber.children = [childFiber];
+                }
+                return workInProgressRootFiber;
+            }
+            //todo修补用工具函数对render根Fiber节点进行处理(否则无法渲染第一个根节点)
+            function firstRenderApp(functionComponent, currentRootFiber, rootDom) {
+                global.workInprogressFiberNode = currentRootFiber;
+                currentRootFiber.stateNode = functionComponent;
+                currentRootFiber.nodeType = 'AppNode';
+                //! 用于解决webpack 函数名出现bound问题 并赋值给此fiber的tag
+                const functionNameArr = functionComponent.name.split(' ');
+                currentRootFiber.tag = functionNameArr[0] === 'bound'
+                    ? functionNameArr[1]
+                    : functionNameArr[0];
+                //! 处理向下传递的resource
+                const { template, data, components } = functionComponent();
+                const resource = { data, components };
+                currentRootFiber.fiberFlags = 'update';
+                return { template, resource, currentRootFiber };
+            }
+            function firstUpdateRenderApp(functionComponent, workInProgressRootFiber, currentRootFiber) {
+                if (!workInProgressRootFiber) {
+                    workInProgressRootFiber = firstCreateAlternate(currentRootFiber);
+                }
+                global.workInprogressFiberNode = workInProgressRootFiber;
+                workInProgressRootFiber.stateNode = functionComponent;
+                //! 用于解决webpack 函数名出现bound问题
+                const functionNameArr = functionComponent.name.split(' ');
+                let functionName = functionNameArr[0] === 'bound'
+                    ? functionNameArr[1]
+                    : functionNameArr[0];
+                workInProgressRootFiber.tag = functionName;
+                const { template, data, components } = functionComponent();
+                const resource = { data, components };
+                return { template, resource, workInProgressRootFiber };
+            }
+            function firstCreateAlternate(currentRootFiber) {
+                //todo 新建一个fiberNode
+                const workInProgressRootFiber = new NewFiberNode('update', '$2');
+                //! 复制一些通用属性
+                workInProgressRootFiber.stateQueueTimer = currentRootFiber.stateQueueTimer;
+                workInProgressRootFiber.updateQueue = currentRootFiber.updateQueue;
+                workInProgressRootFiber.hookIndex = currentRootFiber.hookIndex;
+                workInProgressRootFiber.memorizedState = currentRootFiber.memorizedState;
+                workInProgressRootFiber.nodeType = currentRootFiber.nodeType;
+                //! 合并两个节点
+                workInProgressRootFiber.alternate = currentRootFiber;
+                currentRootFiber.alternate = workInProgressRootFiber;
+                return workInProgressRootFiber;
+            }
+            //! -----------------模拟Commit阶段-----------------------------
+            //! 分为三部分  beforeMutation  mutation  layout阶段
+            //! before 前置处理  mutation 渲染dom节点   layout  处理useEffect useLayoutEffect
+            function commitPart(finishedWorkFiber) {
+                //todo  mutation阶段 
+                commitFiberNodeMutation(global.EffectList);
+                //todo  layout阶段  调用Effects链表 执行create函数()
+                //todo 处理ref
+            }
+            function updateCommitPart(finishedWorkFiber) {
+                //todo  mutation阶段 遍历EffectList单链表 预留优先级调用 更新fiber
+                commitFiberNodeMutation(global.EffectList);
+                //todo  layout阶段  调用Effects链表 执行create函数()
+                //todo 处理ref
+            }
+            //! mutation阶段  遍历EffectList  对每个节点执行更新(分为添加  删除  更新 三大部分 )
+            function commitFiberNodeMutation(EffectList, lane) {
+                console.log('本次更新的EffectList', EffectList);
+                let currentEffect = EffectList.firstEffect;
+                // TODO 在这里将effect循环用requestAnimationFrame抱起来执行中断
+                while (currentEffect !== null) {
+                    let effectTag = currentEffect.tag;
+                    let targetFiber = currentEffect.targetFiber;
+                    //! 经过相应处理 最后执行commitWork方法
+                    switch (effectTag) {
+                        case 'Placement': //todo  添加
+                            commitPlacement(targetFiber);
+                            break;
+                        case 'Delete': //todo  删除
+                            commitDeletion(targetFiber);
+                            break;
+                        case 'Update': //todo  更新
+                            commitUpdate(targetFiber);
+                            break;
+                        case 'UseEffect': //todo 调用了useEffect钩子
+                            commitUpdate(targetFiber);
+                        default:
+                            // commitUpdate(targetFiber) //todo 处理更新链表(effect链表和其他的effect应该是在一起的)
+                            break;
+                    }
+                    currentEffect = currentEffect.next;
+                }
+            }
+            //todo 待完成 插入dom节点
+            function commitPlacement(finishedWorkFiber) {
+                createDomElement(finishedWorkFiber);
+            }
+            // todo 不同类型的fiberNode执行不同的更新 (在这里处理useEffect链表)
+            function commitUpdate(finishedWorkFiber) {
+                const fiberType = finishedWorkFiber.nodeType;
+                switch (fiberType) {
+                    //todo 函数组件 处理effects链表  
+                    case 'FunctionComponent':
+                        //遍历effect更新链表  执行每个上一次的destory和本次create,并挂载destory
+                        //在之前finishedWork阶段已经将所有effects收集 挂载到finishedWorkFiber上
+                        callDestoryAndUnmountDestoryList(finishedWorkFiber);
+                        callCreateAndMountDestoryList(finishedWorkFiber);
+                        break;
+                    //todo dom节点  执行dom更新操作
+                    case 'HostComponent':
+                        commitUpdateDom(finishedWorkFiber);
+                        break;
+                    //todo text节点 单独更新
+                    case 'HostText':
+                        commitUpdateText(finishedWorkFiber);
+                }
+            }
+            // todo 删除多余的currentFiber和dom节点
+            function commitDeletion(currentFiber) {
+                // 删除dom节点
+                const dom = currentFiber.stateNode;
+                if (typeof dom !== 'function') {
+                    dom.remove();
+                }
+                //从父节点处遍历删除该节点
+                const parentNode = currentFiber.parentNode;
+                parentNode.children.forEach((childNode, index) => {
+                    if (childNode === currentFiber) {
+                        parentNode.children.splice(index, 1);
+                    }
+                });
+            }
+            //todo 记录  我这里直接遍历fiber树  发现有需要变更的节点直接进行变更,
+            //todo 而react中在render阶段遍历 发现变更 打上tag  生成update , 推入effect链表中  为了实现优先级调度
+            // 错误记录 : 赋值dom节点新的text后   没有handleProps   
+            // 因为新的click函数的获取在这里   如果不执行  每次点击执行的都是上一次的点击事件 
+            // 所以不更新视图
+            // todo dom节点的更新
+            function commitUpdateDom(finishedWorkFiber) {
+                const domElement = finishedWorkFiber.stateNode;
+                if (typeof domElement === 'function')
+                    return;
+                diffProps(finishedWorkFiber, domElement);
+            }
+            //TODO text节点的更新
+            function commitUpdateText(finishedWorkFiber) {
+                const domElement = finishedWorkFiber.stateNode;
+                if (typeof domElement === 'function')
+                    return;
+                // 这里更改的是dom.firstChild  会新建一个nodeValue
+                //! 注意 这里需要处理props  不然点击事件不会更新  第二次点击num不会++  
+                //! 点击时获取的num变量还是上一次的变量
+                diffProps(finishedWorkFiber, domElement);
+                // ! 比较text是否变化 变化则更改dom
+                let fiberText = finishedWorkFiber.text;
+                let domText = domElement.firstChild.nodeValue;
+                if (domText !== fiberText) {
+                    console.log('更新text');
+                    domElement.firstChild.nodeValue = fiberText;
+                }
+            }
+            //! 对标签中的属性进行diff处理 (使用前后两棵fiber树进行diff)
+            function diffProps(curFiber, dom) {
+                const props = curFiber.props;
+                for (let key in props) {
+                    const value = props[key];
+                    switch (key) {
+                        //todo  处理className (合并所有的类名)
+                        case 'className':
+                            let classNameStr = '';
+                            for (let i = 0; i < value.length; i++) {
+                                classNameStr += value[i] + ' ';
+                            }
+                            dom.setAttribute("class", classNameStr.trim());
+                            break;
+                        //todo  处理class (合并所有的类名)
+                        case 'class':
+                            let classStr = '';
+                            for (let i = 0; i < value.length; i++) {
+                                classStr += value[i] + ' ';
+                            }
+                            dom.setAttribute("class", classStr.trim());
+                            break;
+                        //todo  处理点击事件
+                        case 'onClick':
+                            //! 从组件的资源池里找对应的事件
+                            const dataPool = curFiber.sourcePool.data;
+                            const callback = dataPool[value[0]];
+                            dom.onclick = callback; // 这里不能使用addEventListener  因为需要删除上一个点击事件
+                            break;
+                        //todo  处理其他
+                        default:
+                            dom.setAttribute(key, value[0]);
+                            break;
+                    }
+                }
+            }
+            //! 执行所有上一次挂载的destory  并销毁
+            function callDestoryAndUnmountDestoryList(finishedWorkFiber) {
+                //! (此时生成了新的fiber  老fiber会被unmount) 所以destory是在组件unmount时执行的
+                var updateQueue = finishedWorkFiber.updateQueue;
+                var lastEffect = updateQueue !== null ? updateQueue.lastEffect : null;
+                if (lastEffect !== null) {
+                    var firstEffect = lastEffect.next;
+                    var currentEffect = firstEffect;
+                    do {
+                        //todo 判断是否需要执行 执行destory
+                        callDestoryByTag(currentEffect);
+                        currentEffect = currentEffect.next;
+                    } while (currentEffect !== firstEffect);
+                }
+            }
+            //! 执行所有的create 挂载destory
+            function callCreateAndMountDestoryList(finishedWorkFiber) {
+                const updateQueue = finishedWorkFiber.updateQueue;
+                var lastEffect = updateQueue !== null ? updateQueue.lastEffect : null;
+                //todo do while遍历effect环链表 执行destory
+                if (lastEffect !== null) {
+                    var firstEffect = lastEffect.next;
+                    var currentEffect = firstEffect;
+                    do {
+                        //todo 判断是否需要执行 执行create
+                        callCreateByTag(currentEffect);
+                        currentEffect = currentEffect.next;
+                    } while (currentEffect !== firstEffect);
+                }
+            }
+            //! 判断tag  执行create函数
+            function callCreateByTag(effect) {
+                //判断effectTag决定是否执行Effect(mount和dep变更时执行)
+                //React底层通过二进制来打tag
+                const isFiberMount = Boolean(global.renderTag === 'mount');
+                const isDepChange = Boolean(effect.tag === 'depChanged');
+                const isNullDeps = Boolean(effect.tag === 'nullDeps');
+                const isNoDeps = Boolean(effect.tag === 'noDeps');
+                let needCallCreate = false;
+                //根据不同情况 决定是否执行create 
+                if ((isFiberMount || isDepChange || isNullDeps) || (isFiberMount && isNoDeps)) {
+                    needCallCreate = true;
+                }
+                //判断tag如果需要执行  执行create 挂载destory
+                if (needCallCreate) {
+                    const create = effect.create;
+                    effect.destory = create();
+                }
+            }
+            //! 判断tag  执行destory函数(需要修改)
+            function callDestoryByTag(effect) {
+                //判断effectTag决定是否执行Effect(mount和dep变更时执行)
+                //React底层通过二进制来打tag
+                const isFiberMount = Boolean(global.renderTag === 'mount');
+                const isDepChange = Boolean(effect.tag === 'depChanged');
+                const isNullDeps = Boolean(effect.tag === 'nullDeps');
+                const isNoDeps = Boolean(effect.tag === 'noDeps');
+                let needCallDestory = false;
+                //根据不同情况 决定是否执行create 
+                if ((isFiberMount || isDepChange || isNullDeps) || (isFiberMount && isNoDeps)) {
+                    needCallDestory = true;
+                }
+                //判断tag如果需要执行  执行并销毁effect上的destory
+                var destory = effect.destory;
+                if (destory !== undefined && needCallDestory) {
+                    destory();
+                    effect.destory = undefined;
+                }
+            }
+            //! ----------遍历fiber  收集effect 挂载到本次root节点 识别删除节点------------------
+            function finishedWork(workInProgressFiber, currentFiber) {
+                // 遍历fiber树 将所有Effect添加进root节点的update环链表中
+                //TODO  这里相当于重置了updateQueue
+                const root = workInProgressFiber;
+                let rootUpdateQueue = { lastEffect: null };
+                // 首屏不需要diff  更新需要进行diff计算
+                global.renderTag === 'mount'
+                    ? finishedWorkLoop(workInProgressFiber, rootUpdateQueue)
+                    : updateFinishedWorkLoop(workInProgressFiber, currentFiber, rootUpdateQueue);
+                // 处理好的updateQueue成为到本次root节点的updateQueue
+                root.updateQueue = rootUpdateQueue;
+                return root;
+            }
+            //! 遍历fiber  拼接所有的effect   
+            function finishedWorkLoop(workInProgressFiber, rootUpdateQueue) {
+                // 拼接两个链表
+                collectEffect(workInProgressFiber, rootUpdateQueue);
+                // 继续遍历fiber树  拼接链表
+                const wkChildren = workInProgressFiber.children;
+                for (let i = 0; i < wkChildren.length; i++) {
+                    finishedWorkLoop(wkChildren[i], rootUpdateQueue);
+                }
+            }
+            //! 更新时的finishedWork
+            function updateFinishedWorkLoop(workInProgressFiber, currentFiber, rootUpdateQueue) {
+                // 拼接两个链表
+                collectEffect(workInProgressFiber, rootUpdateQueue);
+                //TODO ---------diff两个节点 打上tag 生成Effect交给commit阶段更新------------
+                reconcileFiberNode(workInProgressFiber, currentFiber);
+                // 遍历fiber树 (最长遍历) (需要注意fiber为null的情况)
+                let length;
+                let wkChildren = [];
+                let curChildren = [];
+                if (workInProgressFiber && currentFiber) {
+                    wkChildren = workInProgressFiber.children;
+                    curChildren = currentFiber.children;
+                    length = wkChildren.length > curChildren.length
+                        ? wkChildren.length : curChildren.length;
+                }
+                else if (!workInProgressFiber) {
+                    curChildren = currentFiber.children;
+                    length = currentFiber.children.length;
+                }
+                else if (!currentFiber) {
+                    wkChildren = workInProgressFiber.children;
+                    length = workInProgressFiber.children.length;
+                }
+                // 继续遍历fiber树  拼接链表
+                for (let i = 0; i < length; i++) {
+                    updateFinishedWorkLoop(wkChildren[i], curChildren[i], rootUpdateQueue);
+                }
+            }
+            //! 收集所有的Effect(hook)
+            function collectEffect(fiber, rootUpdateQueue) {
+                if (!fiber)
+                    return;
+                const fiberUpdateQueue = fiber.updateQueue;
+                if (fiberUpdateQueue && fiberUpdateQueue.lastEffect) {
+                    rootUpdateQueue.lastEffect = fiberUpdateQueue.lastEffect;
+                    fiberUpdateQueue.lastEffect.next = rootUpdateQueue.lastEffect.next;
+                }
+            }
+            //!--------------综合Render方法-------------------
+            function render(functionComponent, rootDom) {
+                console.log('------------render-------------');
+                //todo 初始化workInProgress树
+                const workInProgressFiber = new NewFiberNode('mount', '$1');
+                global.workInprogressFiberNode = workInProgressFiber; //挂载到全局
+                //todo render阶段
+                const beginWorkFiber = renderPart(functionComponent, rootDom, workInProgressFiber);
+                // 从下往上遍历fiber收集所有的Effects 形成环链表 上传递优先级给root
+                //! 这里finishedWork应该在renderPart中   待修改
+                const finishedWorkFiber = finishedWork(beginWorkFiber, null);
+                //todo commit阶段
+                commitPart(finishedWorkFiber);
+            }
+            exports.render = render;
+            function updateRender(functionComponent, workInProgressFiber, currentFiber) {
+                console.log('------------updateRender-------------');
+                resetFiber(currentFiber); //更新render时需要先将fiber的数据重置  重新挂载数据
+                if (workInProgressFiber) {
+                    resetFiber(workInProgressFiber); //更新render时需要先将fiber的数据重置  重新挂载数据
+                }
+                // 更新fiber树
+                const beginWorkFiber = updateRenderPart(functionComponent, workInProgressFiber, currentFiber);
+                // 从下往上遍历fiber收集所有的Effects 形成环链表 上传递优先级给root
+                const finishedWorkFiber = finishedWork(beginWorkFiber, currentFiber);
+                updateCommitPart(finishedWorkFiber);
+            }
+            exports.updateRender = updateRender;
+            //todo ----遍历清空fiber树上的hookIndex 和 queue 和 EffectTag
+            function resetFiber(fiber) {
+                fiber.hookIndex = 0;
+                fiber.updateQueue = null;
+                global.EffectList = { firstEffect: null, lastEffect: null, length: 0 };
+                global.destoryEffectsArr = [];
+                if (fiber.children.length !== 0) {
+                    fiber.children.forEach((fiber) => {
+                        resetFiber(fiber);
+                    });
+                }
+            }
+            //! 创建fiberNode树(Vnode树) 深度优先遍历vnode树  包装成fiberNode
+            //! 根据fiberNode和FunctionComponent创建FiberNode 生成Fiber树
+            //todo 传入parentNode 给子fiber挂载parentNode属性  用于向上查找dom节点和fiber
+            function createFiberTree(source, resources, parentNode) {
+                //todo 创建一个新的fiber节点(浅拷贝) 更新当前工作节点
+                let newFiberNode = new NewFiberNode('mount', '$1');
+                //todo 预处理Fiber  生成vnode 挂载resource
+                const { children, tag } = preHandleFiberNode(source, resources, newFiberNode);
+                //todo 挂载父节点
+                newFiberNode.parentNode = parentNode;
+                //TODO -----------如果tag大写 解析为组件节点(无children) ----------------
+                if (tag[0] === tag[0].toUpperCase()) {
+                    //! 处理为组件节点   并继续向下递归render子函数组件
+                    handleFunctionFiberNode(newFiberNode, tag);
+                    renderFunctionComponent(newFiberNode);
+                }
+                //TODO ----------小写的情况  是domComponent节点/text节点  创建对应的dom并添加--------
+                else {
+                    newFiberNode.nodeType = 'HostText';
+                    createDomElement(newFiberNode);
+                }
+                //todo 继续向下深度优先递归  创建子fiber 挂到当前节点
+                createFiberTreeLoop(children, newFiberNode);
+                newFiberNode.fiberFlags = 'update';
+                //模拟finishowrk
+                // console.log('finishWork', newFiberNode.tag);
+                //适配路由
+                useRoute(newFiberNode);
+                return newFiberNode;
+            }
+            //! 根据子vnode 递归创建子fiberNode 并进行拼接-------------
+            function createFiberTreeLoop(childVnodes, parentNode) {
+                if (childVnodes.length > 0) {
+                    parentNode.nodeType = 'HostComponent';
+                    for (let i = 0; i < childVnodes.length; i++) {
+                        const childFiberNode = createFiberTree(childVnodes[i], parentNode.sourcePool, parentNode);
+                        parentNode.children.push(childFiberNode);
+                    }
+                }
+            }
+            //! -----------------render子函数组件-----------------------
+            function renderFunctionComponent(fiber) {
+                if (typeof fiber.stateNode !== 'function')
+                    return;
+                const { template, data, components } = fiber.stateNode();
+                const childFiberNode = createFiberTree(template, { data, components }, fiber);
+                //todo 生成子树并链接
+                fiber.children = [childFiberNode];
+            }
+            //! -------------创建html并挂载到fiber节点上--------------------
+            function createDomElement(fiber) {
+                //找到父dom节点 将创建好的dom节点添加进去
+                const parentDom = getParentDom(fiber);
+                let domElement = document.createElement(fiber.tag);
+                handleProps(fiber, domElement);
+                if (fiber.text) {
+                    domElement.innerHTML = fiber.text;
+                }
+                parentDom.appendChild(domElement);
+                fiber.stateNode = domElement;
+                return domElement;
+            }
+            //! 预处理FiberNode  将模板和资源先挂载到节点上-----------------
+            function preHandleFiberNode(source, resources, workInProgressFiber) {
+                //todo 切换当前工作fiber
+                global.workInprogressFiberNode = workInProgressFiber;
+                //todo 判断传入的source 转换成vnode
+                let vnode = typeof source === 'string' ? tplToVDOM(source) : source;
+                //todo 合并处理vnode和Fiber 挂载resource
+                const { children = [], tag } = vnode;
+                conbineVnodAndFiber(workInProgressFiber, vnode, resources);
+                return { children, tag };
+            }
+            //! 处理函数组件节点
+            function handleFunctionFiberNode(fiber, ComponentName) {
+                fiber.nodeType = 'FunctionComponent';
+                //todo 从sourcePool中获取子组件
+                const fc = fiber.sourcePool.components[ComponentName];
+                if (!fc) {
+                    console.error(`子组件${ComponentName}未注册`);
+                }
+                //! 从资源池中拿取需要的props，给子函数组件绑定需要的props,并挂载子函数组件到fiber上
+                handleFunctionComponentProps(fiber, fc);
+            }
+            //! ----------合并vnode和fiber 处理key 挂载resource-----------
+            function conbineVnodAndFiber(fiber, vnode, resources) {
+                const { props, tag, text } = vnode;
+                fiber.props = props;
+                fiber.tag = tag;
+                fiber.text = text;
+                fiber.sourcePool = resources;
+                //单独对key进行处理
+                if (props.key) {
+                    const key = props.key[0] - 0;
+                    fiber.key = key;
+                }
+            }
+            //! ----------找到父dom节点---------------------
+            function getParentDom(fiber) {
+                let parentNode = fiber.parentNode;
+                let parentDom = parentNode.stateNode;
+                if (!parentNode) {
+                    return document.getElementById('root');
+                }
+                while (typeof parentDom === 'function') {
+                    parentNode = parentNode.parentNode;
+                    if (!parentNode) {
+                        return document.getElementById('root');
+                    }
+                    parentDom = parentNode.stateNode;
+                }
+                return parentDom;
+            }
+            //! ------------从资源池中拿取子组件需要的Props 处理后传递给子组件----------
+            //! 将props设置为单向数据流   并返回处理好的子组件函数传递出去
+            function handleFunctionComponentProps(fiber, functionComponent) {
+                const needProps = fiber.props;
+                const data = fiber.sourcePool.data;
+                //否则对其他组件进行处理
+                const nextProps = {};
+                for (let key in needProps) {
+                    const originValue = needProps[key][0];
+                    let value;
+                    //! 对传入的props进行数据类型解析
+                    if (data[originValue]) { //从需求池中找到了对应的数据
+                        value = data[originValue];
+                    }
+                    else if (!isNaN((originValue - 0))) { //传入数字
+                        value = originValue - 0;
+                    }
+                    else if (originValue[0] === '"' || originValue[0] === "'") { //传入字符串
+                        value = originValue.slice(1, originValue.length - 1).trim();
+                    }
+                    else { // 传入普通字符串
+                        value = originValue;
+                    }
+                    nextProps[key] = value;
+                }
+                //todo 使用Objdect.defineoroperty包装props为只读(get set方法)
+                //todo 定义一个新对象  添加对应的属性并添加描述器get set 
+                const newProps = {};
+                for (let key in nextProps) {
+                    let val = nextProps[key]; // 设置该属性的初始值
+                    Object.defineProperty(newProps, key, {
+                        get: () => val,
+                        set: (newVal) => {
+                            console.warn('您正在尝试修改props, 不推荐此操作, 请保证数据单向流动');
+                            val = newVal; // 修改时修改属性
+                        }
+                    });
+                }
+                //给函数组件绑定newProps  挂载到fiber上
+                const newFc = functionComponent.bind(null, newProps);
+                fiber.stateNode = newFc;
+                return newFc;
+            }
+            //! 对标签中的属性进行处理 给dom节点添加标签 (未完成)
+            function handleProps(curFiber, dom) {
+                const props = curFiber.props;
+                for (let key in props) {
+                    const value = props[key];
+                    switch (key) {
+                        //todo  处理className (合并所有的类名)
+                        case 'className':
+                            let classNameStr = '';
+                            for (let i = 0; i < value.length; i++) {
+                                classNameStr += value[i] + ' ';
+                            }
+                            dom.setAttribute("class", classNameStr.trim());
+                            break;
+                        //todo  处理class (合并所有的类名)
+                        case 'class':
+                            let classStr = '';
+                            for (let i = 0; i < value.length; i++) {
+                                classStr += value[i] + ' ';
+                            }
+                            dom.setAttribute("class", classStr.trim());
+                            break;
+                        //todo  处理点击事件
+                        case 'onClick':
+                            //! 从组件的资源池里找对应的事件
+                            const dataPool = curFiber.sourcePool.data;
+                            const callback = dataPool[value[0]];
+                            dom.onclick = callback;
+                            break;
+                        //todo  处理其他
+                        default:
+                            dom.setAttribute(key, value[0]);
+                            break;
+                    }
+                }
+            }
+            //! -------路由适配方法  待修改---------------------
+            function useRoute(fiber) {
+                //todo  如果是Route组件 将container的fiber传递给子组件 (暂时放到全局)
+                if (fiber.tag === 'RouteContainer') {
+                    // window.$$routeContainerFiber = fiber
+                }
+            }
+            //! ---------------更新fiberTree (在这里生成第二棵fiberTree)-------------------
+            function updateFiberTree(source, resources, parentNode, workInProgressFiber, currentFiber) {
+                // 添加节点逻辑
+                if (!currentFiber) {
+                    const placementFiber = placementFiberTree(source, resources, parentNode);
+                    return placementFiber;
+                }
+                // 如果没有  生成一个alternate链接上去 
+                if (!workInProgressFiber) {
+                    workInProgressFiber = createAlternate(currentFiber);
+                }
+                //todo 预处理Fiber  生成vnode 挂载resource
+                const { children, tag } = preHandleFiberNode(source, resources, workInProgressFiber);
+                //todo 挂载parentNode
+                workInProgressFiber.parentNode = parentNode;
+                //TODO -----------如果tag大写 解析为组件 ----------------
+                if (tag[0] === tag[0].toUpperCase()) {
+                    //! 处理为组件节点
+                    handleFunctionFiberNode(workInProgressFiber, tag);
+                    // ! 函数节点执行函数并继续向下更新fiberTree
+                    updateRenderFunctionComponent(workInProgressFiber, currentFiber);
+                }
+                //TODO ----------小写的情况  是domComponent节点/text节点 挂载dom节点--------
+                else {
+                    workInProgressFiber.nodeType = 'HostText';
+                    workInProgressFiber.stateNode = currentFiber.stateNode;
+                }
+                //todo 如果有children 深度优先遍历  
+                if (children.length > 0) {
+                    workInProgressFiber.nodeType = 'HostComponent';
+                    updateFiberTreeLoop(children, workInProgressFiber, currentFiber);
+                }
+                //适配路由
+                useRoute(workInProgressFiber);
+                return workInProgressFiber;
+            }
+            //! 根据子vnode 递归更新子fiberNode 并进行拼接-------------
+            function updateFiberTreeLoop(childVnodes, workInProgressFiber, currentFiber) {
+                //删除节点的情况  将workInprogress之前多出的节点删除
+                if (workInProgressFiber.children.length > childVnodes.length) {
+                    const position = childVnodes.length;
+                    workInProgressFiber.children.splice(position);
+                }
+                for (let i = 0; i < childVnodes.length; i++) {
+                    //! 当map添加item时  可能造成vnode和childrenFiber数量不等
+                    //! 如果发现没有此fiber 就再根据vnode创建一个fiber
+                    const vnode = childVnodes[i];
+                    const resources = workInProgressFiber.sourcePool;
+                    //todo 这里发现有添加节点的情况创建了 fiberNode          
+                    let childWkFiber = workInProgressFiber.children[i];
+                    let childCurFiebr = currentFiber.children[i];
+                    //todo 有则创建子节点 进行拼接 无则直接遍历更新
+                    if (childWkFiber) {
+                        updateFiberTree(vnode, resources, workInProgressFiber, childWkFiber, childCurFiebr);
+                    }
+                    else {
+                        workInProgressFiber.children[i] = updateFiberTree(vnode, resources, workInProgressFiber, childWkFiber, childCurFiebr);
+                    }
+                }
+            }
+            //! -----------------update子函数组件-----------------------
+            function updateRenderFunctionComponent(workInProgressFiber, currentFiber) {
+                //处理函数组件  执行函数获得新的数据  往下传递 继续向下递归
+                if (typeof workInProgressFiber.stateNode !== 'function')
+                    return;
+                const { template, data = {}, components = {} } = workInProgressFiber.stateNode();
+                //todo继续让子fiber向下递归更新
+                let childWkFiber = workInProgressFiber.children[0];
+                let childCurFiebr = currentFiber.children[0];
+                const resources = { data, components };
+                //todo 如果没有子节点  那么需要在这里链接父子树  或者直接向下遍历更新
+                if (!childWkFiber) {
+                    workInProgressFiber.children = [updateFiberTree(template, resources, workInProgressFiber, childWkFiber, childCurFiebr)];
+                }
+                else {
+                    updateFiberTree(template, resources, workInProgressFiber, childWkFiber, childCurFiebr);
+                }
+            }
+            //! 创建Placement的fiberNode  类似createFiberTree
+            function placementFiberTree(source, resources, parentNode) {
+                //todo 创建一个新的fiber节点(浅拷贝) 更新当前工作节点
+                let newFiberNode = new NewFiberNode('mount', parentNode.$fiber);
+                //todo 预处理Fiber  生成vnode 挂载resource
+                const { children, tag } = preHandleFiberNode(source, resources, newFiberNode);
+                //todo 挂载父节点
+                newFiberNode.parentNode = parentNode;
+                //TODO -----------如果tag大写 解析为组件节点(无children) ----------------
+                if (tag[0] === tag[0].toUpperCase()) {
+                    //! 处理为组件节点   并继续向下递归render子函数组件
+                    handleFunctionFiberNode(newFiberNode, tag);
+                    placementFunctionComponent(newFiberNode);
+                }
+                //TODO ----------小写的情况  是dom节点 创建Effect 交给commit阶段执行添加--------
+                else {
+                    newFiberNode.nodeType = 'HostText';
+                }
+                //todo 继续向下深度优先递归  创建子fiber 挂到当前节点
+                placementFiberTreeLoop(children, newFiberNode);
+                newFiberNode.fiberFlags = 'update';
+                //适配路由
+                useRoute(newFiberNode);
+                //todo 在这里创建一个effect!
+                return newFiberNode;
+            }
+            //! 根据子vnode 递归创建创建Placement的fiberNode 并进行拼接-------------
+            function placementFiberTreeLoop(childVnodes, parentNode) {
+                if (childVnodes.length > 0) {
+                    parentNode.nodeType = 'HostComponent';
+                    for (let i = 0; i < childVnodes.length; i++) {
+                        const childFiberNode = placementFiberTree(childVnodes[i], parentNode.sourcePool, parentNode);
+                        parentNode.children.push(childFiberNode);
+                    }
+                }
+            }
+            //! 添加函数组件节点
+            function placementFunctionComponent(fiber) {
+                if (typeof fiber.stateNode !== 'function')
+                    return;
+                const { template, data = {}, components = {} } = fiber.stateNode();
+                const childFiberNode = placementFiberTree(template, { data, components }, fiber);
+                //todo 生成子树并链接
+                fiber.children = [childFiberNode];
+            }
+            //! ---------创建Fiber替代并链接----------
+            function createAlternate(currentFiber) {
+                //todo 新建一个fiberNode
+                const workInProgressFiber = new NewFiberNode('update', '$2');
+                //! 将一些属性复制给workInProgress
+                workInProgressFiber.stateQueueTimer = currentFiber.stateQueueTimer;
+                workInProgressFiber.updateQueue = currentFiber.updateQueue;
+                workInProgressFiber.hookIndex = currentFiber.hookIndex;
+                workInProgressFiber.memorizedState = currentFiber.memorizedState;
+                workInProgressFiber.nodeType = currentFiber.nodeType;
+                //! 链接两个fiber 
+                workInProgressFiber.alternate = currentFiber;
+                currentFiber.alternate = workInProgressFiber;
+                return workInProgressFiber;
+            }
+            //! 字符串扫描解析器
+            class Scanner {
+                constructor(text) {
+                    this.text = text;
+                    // 指针
+                    this.pos = 0;
+                    // 尾巴  剩余字符
+                    this.tail = text;
+                }
+                /**
+                 * 路过指定内容
+                 *
+                 * @memberof Scanner
+                 */
+                scan(tag) {
+                    if (this.tail.indexOf(tag) === 0) {
+                        // 直接跳过指定内容的长度
+                        this.pos += tag.length;
+                        // 更新tail
+                        this.tail = this.text.substring(this.pos);
+                    }
+                }
+                /**
+                 * 让指针进行扫描，直到遇见指定内容，返回路过的文字
+                 *
+                 * @memberof Scanner
+                 * @return str 收集到的字符串
+                 */
+                scanUntil(stopTag) {
+                    // 记录开始扫描时的初始值
+                    const startPos = this.pos;
+                    // 当尾巴的开头不是stopTg的时候，说明还没有扫描到stopTag
+                    while (!this.eos() && this.tail.indexOf(stopTag) !== 0) {
+                        // 改变尾巴为当前指针这个字符到最后的所有字符
+                        this.tail = this.text.substring(++this.pos);
+                    }
+                    // 返回经过的文本数据
+                    return this.text.substring(startPos, this.pos).trim();
+                }
+                /**
+                 * 判断指针是否到达文本末尾（end of string）
+                 *
+                 * @memberof Scanner
+                 */
+                eos() {
+                    return this.pos >= this.text.length;
+                }
+            }
+            //! 拆分html中的事件  (键值对)
+            function eventParser(html) {
+                const jsEXP = /\w*\={{([\s\S]*?)}*}/;
+                let newHtml = html;
+                const event = {};
+                //todo 没有检测到事件直接退出
+                if (!jsEXP.test(html))
+                    return { newHtml, event };
+                //TODO  循环拆离里面所有的JS语法 转换成键值对  
+                const kvArr = [];
+                let kv = [];
+                while (kv) {
+                    kv = jsEXP.exec(newHtml);
+                    if (kv) {
+                        kvArr.push(kv[0]);
+                        newHtml = newHtml.replace(kv[0], '');
+                    }
+                }
+                //todo 将键值对数组拆分保存到event对象中
+                kvArr.forEach((item) => {
+                    //删去最后两个}} 根据={{拆分成key value
+                    let newItem = item.slice(0, item.length - 2);
+                    const arr = newItem.split('={{');
+                    //todo 使用eval将函数字符串转化为可执行的函数
+                    let val = eval("(" + arr[1] + ")");
+                    event[arr[0]] = val;
+                });
+                return { newHtml, event };
+            }
+            //! 拆分html中的属性  (键值对)
+            function allPropsParser(html) {
+                //todo 正则适配
+                // const classEXP = /\w*\="([\s\S]*?)"/
+                const classEXP = /[\w-]*="([\s\S]*?)"/; //! 包括横杠类名
+                const singleEXP = /\w*\='([\s\S]*?)'/;
+                const eventEXP = /\w*\={([\s\S]*?)}/;
+                //todo 将中间多个空格合并为一个
+                let newHtml2 = html.replace(/ +/g, ' ');
+                const props = {};
+                //todo 没有检测到事件直接退出
+                const hasProps = classEXP.test(html) || singleEXP.test(html) || eventEXP.test(html);
+                if (!hasProps)
+                    return { newHtml2, props };
+                //TODO  循环拆离里面所有的JS语法 转换成键值对  
+                const kvArr = [];
+                let kv = [];
+                while (kv) {
+                    kv = classEXP.exec(newHtml2) ||
+                        singleEXP.exec(newHtml2) ||
+                        eventEXP.exec(newHtml2);
+                    if (kv) {
+                        kvArr.push(kv[0]);
+                        newHtml2 = newHtml2.replace(kv[0], '');
+                    }
+                }
+                //todo 将键值对数组拆分保存到event对象中
+                kvArr.forEach((item) => {
+                    let kv = item.split('='); //从等号拆分
+                    const k = kv[0]; //对key value进行处理
+                    const v = kv[1].slice(1, kv[1].length - 1).split(' ');
+                    props[k] = v; //赋值给对象
+                });
+                return { newHtml2, props };
+            }
+            //! 将html模板字符串转换成tokens数组
+            function collectTokens(html) {
+                const scanner = new Scanner(html);
+                const tokens = [];
+                let word = '';
+                while (!scanner.eos()) {
+                    // 扫描文本
+                    const text = scanner.scanUntil('<');
+                    scanner.scan('<');
+                    tokens[tokens.length - 1] && tokens[tokens.length - 1].push(text);
+                    // 扫描标签<>中的内容
+                    word = scanner.scanUntil('>');
+                    scanner.scan('>');
+                    // 如果没有扫描到值，就跳过本次进行下一次扫描
+                    if (!word)
+                        continue;
+                    //todo 对本次扫描的字符串进行事件处理
+                    const { newHtml, event } = eventParser(word); //todo 拆分事件
+                    word = newHtml;
+                    const { newHtml2, props } = allPropsParser(word); //todo 拆分事件
+                    word = newHtml2;
+                    // 区分开始标签 # 和结束标签 /
+                    if (word.startsWith('/')) {
+                        tokens.push(['/', word.slice(1)]);
+                    }
+                    else {
+                        //todo 如果有属性存在，则解析属性 (且将event添加进去)
+                        const firstSpaceIdx = word.indexOf(' ');
+                        if (firstSpaceIdx === -1) {
+                            tokens.push(['#', word, Object.assign(Object.assign({}, event), props),]);
+                        }
+                        else {
+                            // 解析属性
+                            tokens.push(['#', word.slice(0, firstSpaceIdx), Object.assign(Object.assign({}, event), props)]);
+                        }
+                    }
+                }
+                return tokens;
+            }
+            //! 将tokens数组形成dom树形结构
+            function nestTokens(tokens) {
+                const nestedTokens = [];
+                const stack = [];
+                let collector = nestedTokens;
+                for (let i = 0, len = tokens.length; i < len; i++) {
+                    const token = tokens[i];
+                    switch (token[0]) {
+                        case '#':
+                            // 收集当前token
+                            collector.push(token);
+                            // 压入栈中
+                            stack.push(token);
+                            // 由于进入了新的嵌套结构，新建一个数组保存嵌套结构
+                            // 并修改collector的指向
+                            token.splice(2, 0, []);
+                            collector = token[2];
+                            break;
+                        case '/':
+                            // 出栈
+                            stack.pop();
+                            // 将收集器指向上一层作用域中用于存放嵌套结构的数组
+                            collector = stack.length > 0
+                                ? stack[stack.length - 1][2]
+                                : nestedTokens;
+                            break;
+                        default:
+                            collector.push(token);
+                    }
+                }
+                return nestedTokens;
+            }
+            //! 将tokens树转化为虚拟dom树
+            function tokens2vdom(tokens) {
+                const vdom = {};
+                for (let i = 0, len = tokens.length; i < len; i++) {
+                    const token = tokens[i];
+                    vdom['tag'] = token[1];
+                    vdom['props'] = token[3];
+                    if (token[4]) {
+                        vdom['text'] = token[token.length - 1];
+                    }
+                    else {
+                        vdom['text'] = undefined;
+                    }
+                    const children = token[2];
+                    if (children.length === 0) {
+                        vdom['children'] = undefined;
+                        continue;
+                    }
+                    ;
+                    vdom['children'] = [];
+                    for (let j = 0; j < children.length; j++) {
+                        vdom['children'].push(tokens2vdom([children[j]]));
+                    }
+                    if (vdom['children'].length === 0) {
+                        delete vdom['children'];
+                    }
+                }
+                return vdom;
+            }
+            //! 总和方法 转换html模板为虚拟dom
+            function tplToVDOM(html) {
+                const tokensArr = collectTokens(html);
+                const tokensTree = nestTokens(tokensArr);
+                const vdom = tokens2vdom(tokensTree);
+                return vdom;
+            }
+
+
+            /***/
+})
+/******/]);
 
-/***/ "./lzy-React/js/myJSX/tplToVnode.js":
-/*!******************************************!*\
-  !*** ./lzy-React/js/myJSX/tplToVnode.js ***!
-  \******************************************/
-/***/ (function (__unused_webpack_module, exports, __webpack_require__) {
 
-        eval("\r\nvar __importDefault = (this && this.__importDefault) || function (mod) {\r\n    return (mod && mod.__esModule) ? mod : { \"default\": mod };\r\n};\r\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\r\nexports.tokens2vdom = exports.nestTokens = exports.collectTokens = exports.tplToVDOM = void 0;\r\nconst tplScanner_1 = __importDefault(__webpack_require__(/*! ./tplScanner */ \"./lzy-React/js/myJSX/tplScanner.js\"));\r\n//! 拆分html中的事件  (键值对)\r\nfunction eventParser(html) {\r\n    const jsEXP = /\\w*\\={{([\\s\\S]*?)}*}/;\r\n    let newHtml = html;\r\n    const event = {};\r\n    //todo 没有检测到事件直接退出\r\n    if (!jsEXP.test(html))\r\n        return { newHtml, event };\r\n    //TODO  循环拆离里面所有的JS语法 转换成键值对  \r\n    const kvArr = [];\r\n    let kv = [];\r\n    while (kv) {\r\n        kv = jsEXP.exec(newHtml);\r\n        if (kv) {\r\n            kvArr.push(kv[0]);\r\n            newHtml = newHtml.replace(kv[0], '');\r\n        }\r\n    }\r\n    //todo 将键值对数组拆分保存到event对象中\r\n    kvArr.forEach((item) => {\r\n        //删去最后两个}} 根据={{拆分成key value\r\n        let newItem = item.slice(0, item.length - 2);\r\n        const arr = newItem.split('={{');\r\n        //todo 使用eval将函数字符串转化为可执行的函数\r\n        let val = eval(\"(\" + arr[1] + \")\");\r\n        event[arr[0]] = val;\r\n    });\r\n    return { newHtml, event };\r\n}\r\n//! 拆分html中的属性222  (键值对)\r\nfunction allPropsParser(html) {\r\n    //todo 正则适配\r\n    // const classEXP = /\\w*\\=\"([\\s\\S]*?)\"/\r\n    const classEXP = /[\\w-]*=\"([\\s\\S]*?)\"/; //! 包括横杠类名\r\n    const singleEXP = /\\w*\\='([\\s\\S]*?)'/;\r\n    const eventEXP = /\\w*\\={([\\s\\S]*?)}/;\r\n    //todo 将中间多个空格合并为一个\r\n    let newHtml2 = html.replace(/ +/g, ' ');\r\n    const props = {};\r\n    //todo 没有检测到事件直接退出\r\n    const hasProps = classEXP.test(html) || singleEXP.test(html) || eventEXP.test(html);\r\n    if (!hasProps)\r\n        return { newHtml2, props };\r\n    //TODO  循环拆离里面所有的JS语法 转换成键值对  \r\n    const kvArr = [];\r\n    let kv = [];\r\n    while (kv) {\r\n        kv = classEXP.exec(newHtml2) ||\r\n            singleEXP.exec(newHtml2) ||\r\n            eventEXP.exec(newHtml2);\r\n        if (kv) {\r\n            kvArr.push(kv[0]);\r\n            newHtml2 = newHtml2.replace(kv[0], '');\r\n        }\r\n    }\r\n    //todo 将键值对数组拆分保存到event对象中\r\n    kvArr.forEach((item) => {\r\n        let kv = item.split('='); //从等号拆分\r\n        const k = kv[0]; //对key value进行处理\r\n        const v = kv[1].slice(1, kv[1].length - 1).split(' ');\r\n        props[k] = v; //赋值给对象\r\n    });\r\n    return { newHtml2, props };\r\n}\r\n//! 将html模板字符串转换成tokens数组\r\nfunction collectTokens(html) {\r\n    const scanner = new tplScanner_1.default(html);\r\n    const tokens = [];\r\n    let word = '';\r\n    while (!scanner.eos()) {\r\n        // 扫描文本\r\n        const text = scanner.scanUntil('<');\r\n        scanner.scan('<');\r\n        tokens[tokens.length - 1] && tokens[tokens.length - 1].push(text);\r\n        // 扫描标签<>中的内容\r\n        word = scanner.scanUntil('>');\r\n        scanner.scan('>');\r\n        // 如果没有扫描到值，就跳过本次进行下一次扫描\r\n        if (!word)\r\n            continue;\r\n        //todo 对本次扫描的字符串进行事件处理\r\n        const { newHtml, event } = eventParser(word); //todo 拆分事件\r\n        word = newHtml;\r\n        const { newHtml2, props } = allPropsParser(word); //todo 拆分事件\r\n        word = newHtml2;\r\n        // 区分开始标签 # 和结束标签 /\r\n        if (word.startsWith('/')) {\r\n            tokens.push(['/', word.slice(1)]);\r\n        }\r\n        else {\r\n            //todo 如果有属性存在，则解析属性 (且将event添加进去)\r\n            const firstSpaceIdx = word.indexOf(' ');\r\n            if (firstSpaceIdx === -1) {\r\n                tokens.push(['#', word, Object.assign(Object.assign({}, event), props),]);\r\n            }\r\n            else {\r\n                // 解析属性\r\n                tokens.push(['#', word.slice(0, firstSpaceIdx), Object.assign(Object.assign({}, event), props)]);\r\n            }\r\n        }\r\n    }\r\n    return tokens;\r\n}\r\nexports.collectTokens = collectTokens;\r\n//! 将tokens数组形成dom树形结构\r\nfunction nestTokens(tokens) {\r\n    const nestedTokens = [];\r\n    const stack = [];\r\n    let collector = nestedTokens;\r\n    for (let i = 0, len = tokens.length; i < len; i++) {\r\n        const token = tokens[i];\r\n        switch (token[0]) {\r\n            case '#':\r\n                // 收集当前token\r\n                collector.push(token);\r\n                // 压入栈中\r\n                stack.push(token);\r\n                // 由于进入了新的嵌套结构，新建一个数组保存嵌套结构\r\n                // 并修改collector的指向\r\n                token.splice(2, 0, []);\r\n                collector = token[2];\r\n                break;\r\n            case '/':\r\n                // 出栈\r\n                stack.pop();\r\n                // 将收集器指向上一层作用域中用于存放嵌套结构的数组\r\n                collector = stack.length > 0\r\n                    ? stack[stack.length - 1][2]\r\n                    : nestedTokens;\r\n                break;\r\n            default:\r\n                collector.push(token);\r\n        }\r\n    }\r\n    return nestedTokens;\r\n}\r\nexports.nestTokens = nestTokens;\r\n//! 将tokens树转化为虚拟dom树\r\nfunction tokens2vdom(tokens) {\r\n    const vdom = {};\r\n    for (let i = 0, len = tokens.length; i < len; i++) {\r\n        const token = tokens[i];\r\n        vdom['tag'] = token[1];\r\n        vdom['props'] = token[3];\r\n        if (token[4]) {\r\n            vdom['text'] = token[token.length - 1];\r\n        }\r\n        else {\r\n            vdom['text'] = undefined;\r\n        }\r\n        const children = token[2];\r\n        if (children.length === 0) {\r\n            vdom['children'] = undefined;\r\n            continue;\r\n        }\r\n        ;\r\n        vdom['children'] = [];\r\n        for (let j = 0; j < children.length; j++) {\r\n            vdom['children'].push(tokens2vdom([children[j]]));\r\n        }\r\n        if (vdom['children'].length === 0) {\r\n            delete vdom['children'];\r\n        }\r\n    }\r\n    return vdom;\r\n}\r\nexports.tokens2vdom = tokens2vdom;\r\n//! 总和方法 转换html模板为虚拟dom\r\nfunction tplToVDOM(html) {\r\n    const tokensArr = collectTokens(html);\r\n    const tokensTree = nestTokens(tokensArr);\r\n    const vdom = tokens2vdom(tokensTree);\r\n    return vdom;\r\n}\r\nexports.tplToVDOM = tplToVDOM;\r\n\n\n//# sourceURL=webpack://myreact/./lzy-React/js/myJSX/tplToVnode.js?");
 
-        /***/
-      }),
 
-/***/ "./lzy-React/js/myJSX/updateFiberTree.js":
-/*!***********************************************!*\
-  !*** ./lzy-React/js/myJSX/updateFiberTree.js ***!
-  \***********************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
-        eval("\r\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\r\nexports.updateFiberTree = void 0;\r\nconst GlobalFiber_1 = __webpack_require__(/*! ../myReactCore/GlobalFiber */ \"./lzy-React/js/myReactCore/GlobalFiber.js\");\r\nconst createFiberTree_1 = __webpack_require__(/*! ./createFiberTree */ \"./lzy-React/js/myJSX/createFiberTree.js\");\r\n// //! ---------------更新fiberTree (todo!!在这里生成第二棵fiberTree 判断节点是否变化)-------------------\r\n// function updateFiberTree(source: any, resources: any, fiber: FiberNode,) {\r\n//     //todo 判断传入的source 转换成vnode\r\n//     let vnode = typeof source === 'string' ? tplToVDOM(source) : source\r\n//     //todo 赋值当前正在工作的fiber节点\r\n//     let currentFiber = global.currentFiberNode = fiber\r\n//     //todo 合并处理vnode和Fiber 挂载resource\r\n//     const { children = [], tag, text, props } = vnode\r\n//     //todo 合并vnode和fiber属性\r\n//     currentFiber = conbineVnodAndFiber(currentFiber, vnode, resources)\r\n//     //TODO -----------如果tag大写 解析为组件 ----------------\r\n//     if (tag[0] == tag[0].toUpperCase()) {\r\n//         //! 从sourcePool中获取子组件\r\n//         const fc = currentFiber.sourcePool.components[tag]\r\n//         //! 从资源池中拿取需要的props，给子函数组件绑定需要的props,并挂载子函数组件到fiber上\r\n//         handleFunctionComponentProps(currentFiber, fc)\r\n//         //! 执行函数并继续向下更新fiberTree\r\n//         updateRenderFunctionComponent(currentFiber)\r\n//     }\r\n//     //todo 如果有children 深度优先遍历  \r\n//     if (children) {\r\n//         for (let i = 0; i < children.length; i++) {\r\n//             //! 当map添加item时  可能造成vnode和childrenFiber数量不等\r\n//             //! 如果发现没有此fiber 就再根据vnode创建一个fiber\r\n//             const vnode = children[i]\r\n//             const resources = currentFiber.sourcePool\r\n//             //todo 这里发现有添加节点的情况创建了 fiberNode\r\n//             const childFiber = currentFiber.children[i] || createFiberTree(vnode, resources, currentFiber)\r\n//             currentFiber.children[i] = updateFiberTree(vnode, childFiber, resources)\r\n//         }\r\n//     }\r\n//     //todo  如果是Route组件 将container的fiber传递给子组件 (暂时放到全局)\r\n//     //! 用于适配路由\r\n//     if (fiber.tag === 'RouteContainer') {\r\n//         window.$$routeContainerFiber = fiber\r\n//     }\r\n//     return currentFiber\r\nfunction updateFiberTree(source, resources, workInProgressFiber, currentFiber) {\r\n    // 添加节点逻辑\r\n    if (!workInProgressFiber && !currentFiber) {\r\n        console.log('需要添加节点');\r\n    }\r\n    // 如果没有  生成一个alternate并挂载  \r\n    if (!workInProgressFiber) {\r\n        workInProgressFiber = createAlternate(currentFiber);\r\n    }\r\n    //todo 预处理Fiber  生成vnode 挂载resource\r\n    const { children, tag } = (0, createFiberTree_1.preHandleFiberNode)(source, resources, workInProgressFiber);\r\n    //TODO -----------如果tag大写 解析为组件 ----------------\r\n    if (tag[0] === tag[0].toUpperCase()) {\r\n        //! 处理为组件节点\r\n        (0, createFiberTree_1.handleFunctionFiberNode)(workInProgressFiber, tag);\r\n        // ! 函数节点执行函数并继续向下更新fiberTree\r\n        updateRenderFunctionComponent(workInProgressFiber, currentFiber);\r\n    }\r\n    //TODO ----------小写的情况  是domComponent节点/text节点 挂载dom节点--------\r\n    else {\r\n        workInProgressFiber.nodeType = 'HostText';\r\n        workInProgressFiber.stateNode = currentFiber.stateNode;\r\n    }\r\n    //TODO ---------diff两个节点 打上tag 生成Effect交给commit阶段更新------------\r\n    reconcileFiberNode(workInProgressFiber, currentFiber);\r\n    //todo 如果有children 深度优先遍历  \r\n    if (children.length > 0) {\r\n        workInProgressFiber.nodeType = 'HostComponent';\r\n        updateFiberTreeLoop(children, workInProgressFiber, currentFiber);\r\n    }\r\n    // 模拟finishedWork\r\n    // workInProgressFiber.fiberFlags = 'update'\r\n    // console.log('finishWork', workInProgressFiber.tag);\r\n    //适配路由\r\n    (0, createFiberTree_1.useRoute)(workInProgressFiber);\r\n    return workInProgressFiber;\r\n}\r\nexports.updateFiberTree = updateFiberTree;\r\n//! 根据子vnode 递归更新子fiberNode 并进行拼接-------------\r\nfunction updateFiberTreeLoop(childVnodes, workInProgressFiber, currentFiber) {\r\n    for (let i = 0; i < childVnodes.length; i++) {\r\n        //! 当map添加item时  可能造成vnode和childrenFiber数量不等\r\n        //! 如果发现没有此fiber 就再根据vnode创建一个fiber\r\n        const vnode = childVnodes[i];\r\n        const resources = workInProgressFiber.sourcePool;\r\n        //todo 这里发现有添加节点的情况创建了 fiberNode          \r\n        const childWkFiber = workInProgressFiber.children[i];\r\n        const childCurFiebr = currentFiber.children[i] || (0, createFiberTree_1.createFiberTree)(vnode, resources, currentFiber);\r\n        //todo 有则创建子节点 进行拼接 无则直接遍历更新\r\n        if (childWkFiber) {\r\n            updateFiberTree(vnode, resources, childWkFiber, childCurFiebr);\r\n        }\r\n        else {\r\n            workInProgressFiber.children[i] = updateFiberTree(vnode, resources, childWkFiber, childCurFiebr);\r\n        }\r\n    }\r\n}\r\n//! ---------创建Fiber替代并链接----------\r\nfunction createAlternate(currentFiber) {\r\n    //todo 新建一个fiberNode\r\n    const workInProgressFiber = new GlobalFiber_1.NewFiberNode('update', '$2');\r\n    //! 将一些属性复制给workInProgress\r\n    workInProgressFiber.stateQueueTimer = currentFiber.stateQueueTimer;\r\n    workInProgressFiber.updateQueue = currentFiber.updateQueue;\r\n    workInProgressFiber.hookIndex = currentFiber.hookIndex;\r\n    workInProgressFiber.memorizedState = currentFiber.memorizedState;\r\n    //! 链接两个fiber \r\n    workInProgressFiber.alternate = currentFiber;\r\n    currentFiber.alternate = workInProgressFiber;\r\n    return workInProgressFiber;\r\n}\r\n//! ----------比较wk和cur两个fiber  生成Effect 打上tag-------------\r\nfunction reconcileFiberNode(workInProgressFiber, currentFiber) {\r\n    // console.log(workInProgressFiber.props, currentFiber.props);\r\n    // console.log(workInProgressFiber.tag, currentFiber.tag);\r\n    // console.log(workInProgressFiber.text, currentFiber.text);\r\n}\r\n//! -----------------update子函数组件-----------------------\r\nfunction updateRenderFunctionComponent(workInProgressFiber, currentFiber) {\r\n    //处理函数组件  执行函数获得新的数据  往下传递 继续向下递归\r\n    if (typeof workInProgressFiber.stateNode !== 'function')\r\n        return;\r\n    const { template, data = {}, components = {} } = workInProgressFiber.stateNode();\r\n    //todo继续让子fiber向下递归更新\r\n    let childWkFiber = workInProgressFiber.children[0];\r\n    let childCurFiebr = currentFiber.children[0];\r\n    //todo 如果没有子节点  那么需要在这里链接父子树  或者直接向下遍历更新\r\n    if (!childWkFiber) {\r\n        workInProgressFiber.children = [updateFiberTree(template, { data, components }, childWkFiber, childCurFiebr)];\r\n    }\r\n    else {\r\n        updateFiberTree(template, { data, components }, childWkFiber, childCurFiebr);\r\n    }\r\n}\r\n\n\n//# sourceURL=webpack://myreact/./lzy-React/js/myJSX/updateFiberTree.js?");
 
-        /***/
-      }),
 
-/***/ "./lzy-React/js/myReactCore/GlobalFiber.js":
-/*!*************************************************!*\
-  !*** ./lzy-React/js/myReactCore/GlobalFiber.js ***!
-  \*************************************************/
-/***/ ((__unused_webpack_module, exports) => {
-
-        eval("\r\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\r\nexports.NewFiberNode = exports.updateWorkInProgressHook = exports.global = void 0;\r\n//! ----------Fiber节点结构---------------\r\nclass NewFiberNode {\r\n    constructor(fiberFlags, $fiber) {\r\n        this.memorizedState = null, // fiber上的所有hook链表\r\n            this.stateNode = null, // 对应的函数组件 或者Dom节点\r\n            this.updateQueue = null, // Effects的更新链表\r\n            this.stateQueueTimer = null, // 用于state的合并更新(setTimeout)\r\n            this.fiberFlags = fiberFlags, // fiber的生命周期 判断是否初始化\r\n            this.hasRef = false, //ref相关tag\r\n            this.ref = null,\r\n            this.children = [],\r\n            this.props = null,\r\n            this.tag = null, // 节点的tag 比如div/Demo\r\n            this.text = null,\r\n            this.sourcePool = null, ///! 组件返回的资源  props和事件\r\n            this.hookIndex = 0, // 用于记录hook的数量 以便查找\r\n            this.parentNode = null,\r\n            this.nodeType = undefined,\r\n            this.alternate = null, // 对面fiber树对应的节点\r\n            this.$fiber = $fiber; // 用于识别fiber是哪颗树\r\n    }\r\n}\r\nexports.NewFiberNode = NewFiberNode;\r\n//! -----需要使用的全局变量---------------\r\nconst global = {\r\n    workInprogressFiberNode: null,\r\n    workInProgressHook: { currentHook: null },\r\n    destoryEffectsArr: [],\r\n    renderTag: 'mount' // 用于判断是否是首次更新\r\n};\r\nexports.global = global;\r\n//! ----------拿取需要本次update需要更新的hook----------------------\r\nfunction updateWorkInProgressHook(fiber) {\r\n    let index = fiber.hookIndex;\r\n    let currentHook = fiber.memorizedState;\r\n    while (currentHook && currentHook.index != index) {\r\n        currentHook = currentHook.next;\r\n    }\r\n    // 因为链表是按顺序的 所以这个函数每执行一次就新增一个\r\n    fiber.hookIndex += 1;\r\n    return currentHook;\r\n}\r\nexports.updateWorkInProgressHook = updateWorkInProgressHook;\r\n\n\n//# sourceURL=webpack://myreact/./lzy-React/js/myReactCore/GlobalFiber.js?");
-
-        /***/
-      }),
-
-/***/ "./lzy-React/js/myReactCore/render.js":
-/*!********************************************!*\
-  !*** ./lzy-React/js/myReactCore/render.js ***!
-  \********************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-        eval("\r\n//待办项 :1  将fiber树转换为二叉树\r\n//        2  将diff过程放在finishWork中  并收集effect向上\r\n//         3  实现双缓存  双fiber树机制\r\n//           4 hook.memorizedState并不会保存所有的状态\r\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\r\nexports.resetFiber = exports.updateRender = exports.render = void 0;\r\n//待办项\r\n// 1. 继续updateFiberTree$2  和 firstUpdateRenderApp的工作   \r\n//! render分为2部分  render阶段 - commit阶段  最后unmount\r\nconst GlobalFiber_1 = __webpack_require__(/*! ./GlobalFiber */ \"./lzy-React/js/myReactCore/GlobalFiber.js\");\r\nconst createFiberTree_1 = __webpack_require__(/*! ../myJSX/createFiberTree */ \"./lzy-React/js/myJSX/createFiberTree.js\");\r\nconst updateFiberTree_1 = __webpack_require__(/*! ../myJSX/updateFiberTree */ \"./lzy-React/js/myJSX/updateFiberTree.js\");\r\n//! ----------------模拟render部分------------------------\r\n//! 更改并生成fiber树  (结束后fiber由mount变为update)\r\nfunction renderPart(functionComponent, rootDom, workInProgress) {\r\n    //todo 通过functionComponents生成第一个组件节点 如App\r\n    const { template, resource, currentRootFiber } = firstRenderApp(functionComponent, workInProgress, rootDom);\r\n    //todo根据组件构建fiberTree(首次)\r\n    const fiberTree = (0, createFiberTree_1.createFiberTree)(template, resource, currentRootFiber);\r\n    currentRootFiber.children.push(fiberTree);\r\n    return currentRootFiber;\r\n}\r\n//todo 获取上一次的fiberTree 执行所有打上tag的functionComponent进行state更新 再commit   \r\nfunction updateRenderPart(functionComponent, workInProgressFiber, currentFiber) {\r\n    // 改变tag\r\n    GlobalFiber_1.global.renderTag = 'update';\r\n    // 处理根App节点 并链接两个节点\r\n    const { template, resource, workInProgressRootFiber } = firstUpdateRenderApp(functionComponent, workInProgressFiber, currentFiber);\r\n    // 更新函数组件(因为处理了根节点 从根节点的第一个子节点开始递归)\r\n    const secondWorkInProgress = workInProgressRootFiber.children[0];\r\n    const secondCurrent = currentFiber.children[0];\r\n    // 此时不需要创建fiberNode  所以不需要添加childFiber  直接在根fiber树上更新\r\n    const childFiber = (0, updateFiberTree_1.updateFiberTree)(template, resource, secondWorkInProgress, secondCurrent);\r\n    if (workInProgressRootFiber.children.length === 0) {\r\n        workInProgressRootFiber.children = [childFiber];\r\n    }\r\n    return workInProgressRootFiber;\r\n}\r\n//todo修补用工具函数对render根Fiber节点进行处理(否则无法渲染第一个根节点)\r\nfunction firstRenderApp(functionComponent, currentRootFiber, rootDom) {\r\n    GlobalFiber_1.global.workInprogressFiberNode = currentRootFiber;\r\n    currentRootFiber.stateNode = functionComponent;\r\n    currentRootFiber.nodeType = 'AppNode';\r\n    //! 用于解决webpack 函数名出现bound问题 并赋值给此fiber的tag\r\n    const functionNameArr = functionComponent.name.split(' ');\r\n    currentRootFiber.tag = functionNameArr[0] === 'bound'\r\n        ? functionNameArr[1]\r\n        : functionNameArr[0];\r\n    //! 处理向下传递的resource\r\n    const { template, data, components } = functionComponent();\r\n    const resource = { data, components };\r\n    currentRootFiber.fiberFlags = 'update';\r\n    return { template, resource, currentRootFiber };\r\n}\r\nfunction firstUpdateRenderApp(functionComponent, workInProgressRootFiber, currentRootFiber) {\r\n    if (!workInProgressRootFiber) {\r\n        workInProgressRootFiber = firstCreateAlternate(currentRootFiber);\r\n    }\r\n    GlobalFiber_1.global.workInprogressFiberNode = workInProgressRootFiber;\r\n    workInProgressRootFiber.stateNode = functionComponent;\r\n    //! 用于解决webpack 函数名出现bound问题\r\n    const functionNameArr = functionComponent.name.split(' ');\r\n    let functionName = functionNameArr[0] === 'bound'\r\n        ? functionNameArr[1]\r\n        : functionNameArr[0];\r\n    workInProgressRootFiber.tag = functionName;\r\n    const { template, data, components } = functionComponent();\r\n    const resource = { data, components };\r\n    return { template, resource, workInProgressRootFiber };\r\n}\r\nfunction firstCreateAlternate(currentRootFiber) {\r\n    //todo 新建一个fiberNode\r\n    const workInProgressRootFiber = new GlobalFiber_1.NewFiberNode('update', '$2');\r\n    //! 复制一些通用属性\r\n    workInProgressRootFiber.stateQueueTimer = currentRootFiber.stateQueueTimer;\r\n    workInProgressRootFiber.updateQueue = currentRootFiber.updateQueue;\r\n    workInProgressRootFiber.hookIndex = currentRootFiber.hookIndex;\r\n    workInProgressRootFiber.memorizedState = currentRootFiber.memorizedState;\r\n    //! 合并两个节点\r\n    workInProgressRootFiber.alternate = currentRootFiber;\r\n    currentRootFiber.alternate = workInProgressRootFiber;\r\n    return workInProgressRootFiber;\r\n}\r\n//! -----------------模拟Commit阶段-----------------------------\r\n//! 分为三部分  beforeMutation  mutation  layout阶段\r\n//! before 前置处理  mutation 渲染dom节点   layout  处理useEffect useLayoutEffect\r\nfunction commitPart(finishedWorkFiber) {\r\n    //todo  mutation阶段 \r\n    commitFiberNodeMutation(finishedWorkFiber);\r\n    //todo  layout阶段  调用Effects链表 执行create函数()\r\n    //todo 处理ref\r\n}\r\nfunction updateCommitPart(finishedWorkFiber) {\r\n    //todo  mutation阶段\r\n    commitFiberNodeMutation(finishedWorkFiber);\r\n    //todo  layout阶段  调用Effects链表 执行create函数()\r\n    //todo 处理ref\r\n}\r\n//! mutation阶段  遍历fiber树  每个节点执行更新(分为添加  删除  更新 三大部分 )\r\n// 递归遍历fiber树(todo: 需要更改为二叉树)\r\nfunction commitFiberNodeMutation(finishedWorkFiber) {\r\n    let finishedWorkFlag = 'update';\r\n    //! 经过相应处理 最后执行commitWork方法\r\n    switch (finishedWorkFlag) {\r\n        case 'placement': //todo  添加\r\n            // commitPlacement()\r\n            break;\r\n        case 'delete': //todo  删除\r\n            // commitDelete()\r\n            break;\r\n        case 'update': //todo  更新\r\n            commitWork(finishedWorkFiber);\r\n            break;\r\n    }\r\n    if (finishedWorkFiber.children) {\r\n        finishedWorkFiber.children.forEach((finishedWorkFiber) => {\r\n            commitFiberNodeMutation(finishedWorkFiber);\r\n        });\r\n    }\r\n}\r\n// todo 不同类型的fiberNode执行不同的更新\r\nfunction commitWork(finishedWorkFiber) {\r\n    const fiberType = finishedWorkFiber.nodeType;\r\n    switch (fiberType) {\r\n        //todo 函数组件 处理effects链表  \r\n        case 'FunctionComponent':\r\n            //遍历effect更新链表  执行每个上一次的destory和本次create,并挂载destory\r\n            //在之前finishedWork阶段已经将所有effects收集 挂载到finishedWorkFiber上\r\n            callDestoryAndUnmountDestoryList(finishedWorkFiber);\r\n            callCreateAndMountDestoryList(finishedWorkFiber);\r\n            break;\r\n        //todo dom节点  执行dom更新操作\r\n        case 'HostComponent':\r\n            commitUpdateDom(finishedWorkFiber);\r\n            break;\r\n        //todo text节点 单独更新\r\n        case 'HostText':\r\n            commitUpdateText(finishedWorkFiber);\r\n    }\r\n}\r\n//todo 记录  我这里直接遍历fiber树  发现有需要变更的节点直接进行变更,\r\n//todo 而react中在render阶段遍历 发现变更 打上tag  生成update , 推入effect链表中  为了实现优先级调度\r\n// 错误记录 : 赋值dom节点新的text后   没有handleProps   \r\n// 因为新的click函数的获取在这里   如果不执行  每次点击执行的都是上一次的点击事件 \r\n// 所以不更新视图\r\n// todo dom节点的更新\r\nfunction commitUpdateDom(finishedWorkFiber) {\r\n    const domElement = finishedWorkFiber.stateNode;\r\n    if (typeof domElement === 'function')\r\n        return;\r\n    diffProps(finishedWorkFiber, domElement);\r\n}\r\n//TODO text节点的更新\r\nfunction commitUpdateText(finishedWorkFiber) {\r\n    const domElement = finishedWorkFiber.stateNode;\r\n    if (typeof domElement === 'function')\r\n        return;\r\n    // 这里更改的是dom.firstChild  会新建一个nodeValue\r\n    //! 注意 这里需要处理props  不然点击事件不会更新  第二次点击num不会++  \r\n    //! 点击时获取的num变量还是上一次的变量\r\n    diffProps(finishedWorkFiber, domElement);\r\n    // ! 比较text是否变化 变化则更改dom\r\n    let fiberText = finishedWorkFiber.text;\r\n    let domText = domElement.firstChild.nodeValue;\r\n    if (domText !== fiberText) {\r\n        domElement.firstChild.nodeValue = fiberText;\r\n    }\r\n}\r\n//! 对标签中的属性进行diff处理 (使用前后两棵fiber树进行diff)\r\nfunction diffProps(curFiber, dom) {\r\n    const props = curFiber.props;\r\n    for (let key in props) {\r\n        const value = props[key];\r\n        switch (key) {\r\n            //todo  处理className (合并所有的类名)\r\n            case 'className':\r\n                let classNameStr = '';\r\n                for (let i = 0; i < value.length; i++) {\r\n                    classNameStr += value[i] + ' ';\r\n                }\r\n                dom.setAttribute(\"class\", classNameStr.trim());\r\n                break;\r\n            //todo  处理class (合并所有的类名)\r\n            case 'class':\r\n                let classStr = '';\r\n                for (let i = 0; i < value.length; i++) {\r\n                    classStr += value[i] + ' ';\r\n                }\r\n                dom.setAttribute(\"class\", classStr.trim());\r\n                break;\r\n            //todo  处理点击事件\r\n            case 'onClick':\r\n                //! 从组件的资源池里找对应的事件\r\n                const dataPool = curFiber.sourcePool.data;\r\n                const callback = dataPool[value[0]];\r\n                dom.onclick = callback; // 这里不能使用addEventListener  因为需要删除上一个点击事件\r\n                break;\r\n            //todo  处理其他\r\n            default:\r\n                dom.setAttribute(key, value[0]);\r\n                break;\r\n        }\r\n    }\r\n}\r\n//! 执行所有上一次挂载的destory  并销毁\r\nfunction callDestoryAndUnmountDestoryList(finishedWorkFiber) {\r\n    //! (此时生成了新的fiber  老fiber会被unmount) 所以destory是在组件unmount时执行的\r\n    var updateQueue = finishedWorkFiber.updateQueue;\r\n    var lastEffect = updateQueue !== null ? updateQueue.lastEffect : null;\r\n    if (lastEffect !== null) {\r\n        var firstEffect = lastEffect.next;\r\n        var currentEffect = firstEffect;\r\n        do {\r\n            //todo 判断是否需要执行 执行destory\r\n            callDestoryByTag(currentEffect);\r\n            currentEffect = currentEffect.next;\r\n        } while (currentEffect !== firstEffect);\r\n    }\r\n}\r\n//! 执行所有的create 挂载destory\r\nfunction callCreateAndMountDestoryList(finishedWorkFiber) {\r\n    const updateQueue = finishedWorkFiber.updateQueue;\r\n    var lastEffect = updateQueue !== null ? updateQueue.lastEffect : null;\r\n    //todo do while遍历effect环链表 执行destory\r\n    if (lastEffect !== null) {\r\n        var firstEffect = lastEffect.next;\r\n        var currentEffect = firstEffect;\r\n        do {\r\n            //todo 判断是否需要执行 执行create\r\n            callCreateByTag(currentEffect);\r\n            currentEffect = currentEffect.next;\r\n        } while (currentEffect !== firstEffect);\r\n    }\r\n}\r\n//! 判断tag  执行create函数\r\nfunction callCreateByTag(effect) {\r\n    //判断effectTag决定是否执行Effect(mount和dep变更时执行)\r\n    //React底层通过二进制来打tag\r\n    const isFiberMount = Boolean(GlobalFiber_1.global.renderTag === 'mount');\r\n    const isDepChange = Boolean(effect.tag === 'depChanged');\r\n    const isNullDeps = Boolean(effect.tag === 'nullDeps');\r\n    const isNoDeps = Boolean(effect.tag === 'noDeps');\r\n    let needCallCreate = false;\r\n    //根据不同情况 决定是否执行create \r\n    if ((isFiberMount || isDepChange || isNullDeps) || (isFiberMount && isNoDeps)) {\r\n        needCallCreate = true;\r\n    }\r\n    //判断tag如果需要执行  执行create 挂载destory\r\n    if (needCallCreate) {\r\n        const create = effect.create;\r\n        effect.destory = create();\r\n    }\r\n}\r\n//! 判断tag  执行destory函数(需要修改)\r\nfunction callDestoryByTag(effect) {\r\n    //判断effectTag决定是否执行Effect(mount和dep变更时执行)\r\n    //React底层通过二进制来打tag\r\n    const isFiberMount = Boolean(GlobalFiber_1.global.renderTag === 'mount');\r\n    const isDepChange = Boolean(effect.tag === 'depChanged');\r\n    const isNullDeps = Boolean(effect.tag === 'nullDeps');\r\n    const isNoDeps = Boolean(effect.tag === 'noDeps');\r\n    let needCallDestory = false;\r\n    //根据不同情况 决定是否执行create \r\n    if ((isFiberMount || isDepChange || isNullDeps) || (isFiberMount && isNoDeps)) {\r\n        needCallDestory = true;\r\n    }\r\n    //判断tag如果需要执行  执行并销毁effect上的destory\r\n    var destory = effect.destory;\r\n    if (destory !== undefined && needCallDestory) {\r\n        destory();\r\n        effect.destory = undefined;\r\n    }\r\n}\r\n//! ----------遍历fiber  收集effect 挂载到本次更新的root节点 ------------------\r\nfunction finishedWork(beginWorkFiber) {\r\n    // 遍历fiber树 将所有Effect添加进root节点的update环链表中\r\n    //TODO  这里相当于重置了updateQueue\r\n    let rootUpdateQueue = { lastEffect: null };\r\n    conbineEffectsLink(beginWorkFiber, rootUpdateQueue);\r\n    // 处理好的updateQueue成为到本次root节点的updateQueue\r\n    beginWorkFiber.updateQueue = rootUpdateQueue;\r\n    return beginWorkFiber;\r\n}\r\n//! 遍历fiber  拼接所有的effect  \r\nfunction conbineEffectsLink(fiber, rootUpdateQueue) {\r\n    // 拼接两个链表\r\n    const fiberUpdateQueue = fiber.updateQueue;\r\n    if (fiberUpdateQueue && fiberUpdateQueue.lastEffect) {\r\n        rootUpdateQueue.lastEffect = fiberUpdateQueue.lastEffect;\r\n        fiberUpdateQueue.lastEffect.next = rootUpdateQueue.lastEffect.next;\r\n    }\r\n    // 遍历fiber树  拼接链表\r\n    if (fiber.children.length !== 0) {\r\n        fiber.children.forEach((fiber) => {\r\n            conbineEffectsLink(fiber, rootUpdateQueue);\r\n        });\r\n    }\r\n}\r\n//!--------------综合Render方法-------------------\r\nfunction render(functionComponent, rootDom) {\r\n    console.log('------------render-------------');\r\n    //todo 初始化workInProgress树\r\n    const workInProgressFiber = new GlobalFiber_1.NewFiberNode('mount', '$1');\r\n    GlobalFiber_1.global.workInprogressFiberNode = workInProgressFiber; //挂载到全局\r\n    //todo render阶段\r\n    const beginWorkFiber = renderPart(functionComponent, rootDom, workInProgressFiber);\r\n    // 从下往上遍历fiber收集所有的Effects 形成环链表 上传递优先级给root\r\n    //! 这里finishedWork应该在renderPart中   待修改\r\n    const finishedWorkFiber = finishedWork(beginWorkFiber);\r\n    //todo commit阶段\r\n    commitPart(finishedWorkFiber);\r\n}\r\nexports.render = render;\r\nfunction updateRender(functionComponent, workInProgressFiber, currentFiber) {\r\n    console.log('------------updateRender-------------');\r\n    resetFiber(currentFiber); //更新render时需要先将fiber的数据重置  重新挂载数据\r\n    if (workInProgressFiber) {\r\n        resetFiber(workInProgressFiber); //更新render时需要先将fiber的数据重置  重新挂载数据\r\n    }\r\n    // 更新fiber树\r\n    const beginWorkFiber = updateRenderPart(functionComponent, workInProgressFiber, currentFiber);\r\n    // 从下往上遍历fiber收集所有的Effects 形成环链表 上传递优先级给root\r\n    const finishedWorkFiber = finishedWork(beginWorkFiber);\r\n    console.log('本次commit的fiber', finishedWorkFiber.$fiber);\r\n    console.log('本次commit的fiber', finishedWorkFiber);\r\n    updateCommitPart(finishedWorkFiber);\r\n}\r\nexports.updateRender = updateRender;\r\n//todo ----遍历清空fiber树上的hookIndex 和 queue\r\nfunction resetFiber(fiberTree) {\r\n    fiberTree.hookIndex = 0;\r\n    fiberTree.updateQueue = null;\r\n    GlobalFiber_1.global.destoryEffectsArr = [];\r\n    if (fiberTree.children.length !== 0) {\r\n        fiberTree.children.forEach((fiber) => {\r\n            resetFiber(fiber);\r\n        });\r\n    }\r\n}\r\nexports.resetFiber = resetFiber;\r\n//! --------------废弃部分   handleProps 和 createElement放在了createFiber文件中----------------\r\n{\r\n    //! (从更新的rootDom处开始)根据fiberTree创建html\r\n    function updateHtml(fiber, rootDom) {\r\n        //todo 深度优先递归children 从dom下一层渲染子dom节点 \r\n        fiber.children.forEach((fiber) => {\r\n            createHtml(fiber, rootDom);\r\n        });\r\n    }\r\n    function createHtml(fiber, rootDom) {\r\n        //不同的tag标签创建不同的html标签\r\n        let dom = document.createElement(fiber.tag);\r\n        //todo 如果是组件节点   挂载ref \r\n        if (fiber.tag[0] === fiber.tag[0].toUpperCase()) {\r\n            dom = document.createElement('fc-' + fiber.tag);\r\n            fiber.ref = dom;\r\n            //todo 如果是小写 判断为html标签 填充文本 处理属性\r\n        }\r\n        else {\r\n            handleProps(fiber, dom);\r\n            if (fiber.text) {\r\n                dom.innerHTML = fiber.text;\r\n            }\r\n        }\r\n        //todo 深度优先递归children 从dom开始渲染子dom节点 \r\n        fiber.children.forEach((fiber) => {\r\n            createHtml(fiber, dom);\r\n        });\r\n        rootDom.appendChild(dom);\r\n    }\r\n    //! 遍历树获取所有的Effect(执行create和生成destory函数数组)\r\n    function handleEffect(fiber) {\r\n        let destoryEffectsArr = [];\r\n        if (fiber.updateQueue) {\r\n            const createEffectsArr = createCallbackQueue(fiber);\r\n            destoryEffectsArr = doCreateQueue(createEffectsArr);\r\n        }\r\n        if (fiber.children.length !== 0) {\r\n            fiber.children.forEach((fiber) => {\r\n                handleEffect(fiber);\r\n            });\r\n        }\r\n        GlobalFiber_1.global.destoryEffectsArr.push(...destoryEffectsArr);\r\n    }\r\n    //todo 遍历Effect链表 将需要执行的Effect推入数组--------------\r\n    function createCallbackQueue(fiber) {\r\n        const createEffectsArr = [];\r\n        const lastEffect = fiber.updateQueue.lastEffect;\r\n        const firstEffect = lastEffect.next;\r\n        let currentEffect = firstEffect;\r\n        do {\r\n            //判断effectTag决定是否执行Effect(mount和dep变更时执行)\r\n            //React底层通过二进制来打tag\r\n            const isFiberMount = Boolean(GlobalFiber_1.global.renderTag === 'mount');\r\n            const isDepChange = Boolean(currentEffect.tag === 'depChanged');\r\n            const isNullDeps = Boolean(currentEffect.tag === 'nullDeps');\r\n            const isNoDeps = Boolean(currentEffect.tag === 'noDeps');\r\n            //根据不同情况 将Effect推入数组  达到不同的useEffect的效果\r\n            if (isFiberMount || isDepChange || isNullDeps) {\r\n                createEffectsArr.push(currentEffect);\r\n            }\r\n            else if (isFiberMount && isNoDeps) {\r\n                createEffectsArr.push(currentEffect);\r\n            }\r\n            currentEffect = currentEffect.next;\r\n        } while (currentEffect !== firstEffect);\r\n        return createEffectsArr;\r\n    }\r\n    //todo 遍历执行需要执行的Effect---生成destory---------\r\n    function doCreateQueue(createEffectsArr) {\r\n        const destoryEffectsArr = [];\r\n        //todo 遍历Effects数组 执行create  \r\n        //todo 生成destoryEffect数组 将destory存放到对应的Effect上\r\n        for (let i = 0; i < createEffectsArr.length; i++) {\r\n            const destory = createEffectsArr[i].create(); // 执行create\r\n            if (destory) {\r\n                createEffectsArr[i].destory = destory; // 赋值destory\r\n                destoryEffectsArr.push(createEffectsArr[i]); //推入destory数组\r\n            }\r\n        }\r\n        return destoryEffectsArr;\r\n    }\r\n}\r\n// this.jql += ` AND description ~ ${keyword[0]}`; // 描述查询\r\n// this.jql += ` OR issuekey = ${keyword[0]}`; // ID查询\r\n\n\n//# sourceURL=webpack://myreact/./lzy-React/js/myReactCore/render.js?");
-
-        /***/
-      }),
-
-/***/ "./lzy-React/js/myRekV/index.js":
-/*!**************************************!*\
-  !*** ./lzy-React/js/myRekV/index.js ***!
-  \**************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-        eval("\r\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\r\nexports.Rekv = void 0;\r\nconst useState_1 = __webpack_require__(/*! ../myHook/useState */ \"./lzy-React/js/myHook/useState.js\");\r\nconst useEffect_1 = __webpack_require__(/*! ../myHook/useEffect */ \"./lzy-React/js/myHook/useEffect.js\");\r\n// ----------------------使用的工具函数0-------------------\r\nconst utils_1 = __webpack_require__(/*! ./utils */ \"./lzy-React/js/myRekV/utils.js\");\r\nclass Rekv {\r\n    // 构造函数\r\n    constructor(args) {\r\n        this.delegate = {}; // 拦截器\r\n        this._events = {}; // 键值对  根据不同key存放对应的updater数组\r\n        this._updateId = 0; // updater的ID 用于优化类组件\r\n        this._state = {}; // 全局state\r\n        this._inDelegate = false; // 拦截器相关\r\n        //todo ---------传入state的key  使用useEffect监听_state中的[key] ---------------- \r\n        this.useState = (...keys) => {\r\n            const [value, setValue] = (0, useState_1.myUseState)(this._state); //!_state对象\r\n            //声明updater   \r\n            const updater = () => {\r\n                setValue(this._state);\r\n            };\r\n            //todo 监听keys数组  对其中每个添加/删除listener(on/off)\r\n            (0, useEffect_1.myUseEffect)(() => {\r\n                for (let i = 0, len = keys.length; i < len; i++) {\r\n                    this.on(keys[i], updater);\r\n                }\r\n                return () => {\r\n                    for (let i = 0, len = keys.length; i < len; i++) {\r\n                        this.off(keys[i], updater);\r\n                    }\r\n                };\r\n            }, keys);\r\n            return this._state; //todo 直接返回当前状态\r\n        };\r\n        if (!(0, utils_1.isPlainObject)(args.allStates)) {\r\n            throw new Error('init state is not a plain object');\r\n        }\r\n        this._state = args.allStates;\r\n        const effects = {};\r\n        // 如果传入了effect项  则遍历里面的函数并call  \r\n        if (args.effects) {\r\n            const effectKeys = Object.keys(args.effects);\r\n            for (let i = 0, len = effectKeys.length; i < len; i++) {\r\n                const key = effectKeys[i];\r\n                const func = args.effects[key];\r\n                args.effects[key] = (...args) => func.call(this, ...args); //bind\r\n            }\r\n        }\r\n        // 绑定effects到实例上\r\n        this.effects = args.effects || effects;\r\n    }\r\n    //todo 使用添加一个listener(callback)  cb类型为<initState[K]>\r\n    //todo 每次执行on 都会往_event中推入一个[name]:updater项\r\n    on(name, callback) {\r\n        const s = this._events[name]; // _events =  {'name':undefined}\r\n        if (!s) { // 如果event中没有[name]属性  则将callback作为数组存入_event[name]\r\n            this._events[name] = [callback]; // _events =  {'name':[setValue(name1),setValue(name2)]}\r\n        }\r\n        else if (s.indexOf(callback) < 0) { // 如果有[name]属性  且其中无cb  则存入cb\r\n            s.push(callback);\r\n        }\r\n    }\r\n    // 从_event[name]中移除callback(listener)\r\n    off(name, callback) {\r\n        const s = this._events[name];\r\n        this._events[name] = [callback];\r\n        if (s) {\r\n            const index = s.indexOf(callback);\r\n            if (index >= 0) {\r\n                s.splice(index, 1);\r\n            }\r\n        }\r\n    }\r\n    //! --------- 两种setState方法  传入{...states} 或者(state)=> ({...states})---------\r\n    setState(param) {\r\n        let kvs; // {...states}\r\n        //todo 将state保存到kvs上\r\n        if ((0, utils_1.isFunction)(param)) {\r\n            kvs = param(this._state);\r\n        }\r\n        else {\r\n            kvs = param;\r\n        }\r\n        //todo 开启beforeUpdate拦截器(无则不开启)  执行对应逻辑\r\n        if (!this._inDelegate) {\r\n            this._inDelegate = true;\r\n            if (this.delegate && (0, utils_1.isFunction)(this.delegate.beforeUpdate)) {\r\n                const ret = this.delegate.beforeUpdate({ store: this, state: kvs });\r\n                if (ret) {\r\n                    kvs = ret;\r\n                }\r\n            }\r\n            if (Rekv.delegate && (0, utils_1.isFunction)(Rekv.delegate.beforeUpdate)) {\r\n                const ret = Rekv.delegate.beforeUpdate({ store: this, state: kvs });\r\n                if (ret) {\r\n                    kvs = ret;\r\n                }\r\n            }\r\n            this._inDelegate = false;\r\n        }\r\n        //todo 传入的states对象做类型判断\r\n        if (!(0, utils_1.isPlainObject)(kvs)) { // {...states}\r\n            throw new Error('setState() only receive an plain object');\r\n        }\r\n        const keys = Object.keys(kvs);\r\n        const needUpdateKeys = [];\r\n        const updatedValues = {};\r\n        //todo 前后states对象进行遍历对比(for循环)  \r\n        for (let i = 0, len = keys.length; i < len; i++) {\r\n            const key = keys[i];\r\n            if (this._state[key] !== kvs[key]) { //todo 不同的属性\r\n                needUpdateKeys.push(key); // key推入needUpdateKeys数组 //!最小量更新\r\n                updatedValues[key] = kvs[key]; // value推入updatedValue数组\r\n                this._state[key] = kvs[key]; // 更新_state\r\n            }\r\n        }\r\n        //todo 如果有需要更新的state（needUpdateKeys.length > 0）\r\n        if (needUpdateKeys.length > 0) {\r\n            this._state = Object.assign({}, this._state); // 拷贝\r\n            this.updateComponents(...needUpdateKeys);\r\n        }\r\n        //todo 开启afterUpdate拦截器(无则不开启)  执行对应逻辑\r\n        if (!this._inDelegate) {\r\n            this._inDelegate = true;\r\n            if (this.delegate && (0, utils_1.isFunction)(this.delegate.afterUpdate)) {\r\n                this.delegate.afterUpdate({ store: this, state: updatedValues });\r\n            }\r\n            if (Rekv.delegate && (0, utils_1.isFunction)(Rekv.delegate.afterUpdate)) {\r\n                Rekv.delegate.afterUpdate({ store: this, state: updatedValues });\r\n            }\r\n            this._inDelegate = false;\r\n        }\r\n    }\r\n    //todo 作为对象的getter\r\n    get currentState() {\r\n        return this._state;\r\n    }\r\n    //todo------------ 直接返回_state----------------------\r\n    getCurrentState() {\r\n        return this._state;\r\n    }\r\n    //todo -------------更新组件  传入needUpdate数组的keys---------------------\r\n    updateComponents(...keys) {\r\n        //todo batch函数将内部所有的setValue合并到一个setValue执行(react底层方法)\r\n        //! 暂时废弃\r\n        for (let i = 0, keysLen = keys.length; i < keysLen; i++) {\r\n            const key = keys[i]; //'name'\r\n            //todo 每次执行on 都会往_event中推入一个[name]:updater项\r\n            const updaters = this._events[key]; //取出该key的updater\r\n            if (Array.isArray(updaters)) {\r\n                for (let j = 0, updaterLen = updaters.length; j < updaterLen; j++) {\r\n                    const updater = updaters[j];\r\n                    // check whether the updater has been updated, the same updater may watch different keys\r\n                    updater.updateId = this._updateId; //! 隐式挂一个id属性\r\n                    updater(this._state[key]);\r\n                }\r\n            }\r\n        }\r\n        //todo----------- 每次更新id++  防止栈溢出----------------------\r\n        this._updateId++;\r\n        // istanbul ignore next\r\n        if (this._updateId >= 2147483647) {\r\n            // _updateId will be reset to zero to avoid overflow (2147483647 is 2**31-1)\r\n            this._updateId = 0;\r\n        }\r\n    }\r\n}\r\nexports.Rekv = Rekv;\r\n// 定义类中需要使用的数据\r\nRekv.delegate = {};\r\nexports[\"default\"] = Rekv;\r\n\n\n//# sourceURL=webpack://myreact/./lzy-React/js/myRekV/index.js?");
-
-        /***/
-      }),
-
-/***/ "./lzy-React/js/myRekV/utils.js":
-/*!**************************************!*\
-  !*** ./lzy-React/js/myRekV/utils.js ***!
-  \**************************************/
-/***/ ((__unused_webpack_module, exports) => {
-
-        eval("\r\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\r\nexports.isPlainObject = exports.isFunction = void 0;\r\nfunction isFunction(fn) {\r\n    return typeof fn === 'function';\r\n}\r\nexports.isFunction = isFunction;\r\n// 判断是否是原始对象(未包装过的对象)\r\nfunction isPlainObject(obj) {\r\n    if (typeof obj !== 'object' || obj === null)\r\n        return false;\r\n    // 找到原型练最里层(Object原型对象)  如果传入对象的原型对象就是Object原型对象 那么就是原始对象\r\n    //原始对象: 未经过包装的对象(比如vue的包装后的对象)\r\n    let proto = obj;\r\n    while (Object.getPrototypeOf(proto) !== null) {\r\n        proto = Object.getPrototypeOf(proto);\r\n    }\r\n    return Object.getPrototypeOf(obj) === proto;\r\n}\r\nexports.isPlainObject = isPlainObject;\r\n\n\n//# sourceURL=webpack://myreact/./lzy-React/js/myRekV/utils.js?");
-
-        /***/
-      }),
-
-/***/ "./lzy-React/js/myRouter/Link.js":
-/*!***************************************!*\
-  !*** ./lzy-React/js/myRouter/Link.js ***!
-  \***************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-        eval("\r\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\r\nconst index_1 = __webpack_require__(/*! ../../index */ \"./lzy-React/index.js\");\r\nconst index_2 = __webpack_require__(/*! ../../index */ \"./lzy-React/index.js\");\r\nfunction Link({ to, title, component }) {\r\n    //! 使用myUseEffect实现路由重定向\r\n    (0, index_2.myUseEffect)(() => {\r\n        if (to === '/') {\r\n            switchRouteHistory();\r\n        }\r\n    });\r\n    function handleRouteChange() {\r\n        if (location.hash === to.slice(1))\r\n            return;\r\n        switchRouteHistory();\r\n    }\r\n    //todo history模式路由页面简易逻辑\r\n    function switchRouteHistory() {\r\n        //todo 修改页面path\r\n        history.pushState(null, null, to);\r\n        //todo 获取容器DOM(刚开始获取不到)\r\n        const container = document.getElementById('routeContainer');\r\n        //todo 创建到容器节点时  将容器节点的fiber挂载到全局  以便获取(需修改)\r\n        const containerFiber = window.$$routeContainerFiber.children[0];\r\n        //todo 改变fiebrFlag，以便创建新的组件节点(需要修改)\r\n        containerFiber.fiberFlags = 'mount';\r\n        //todo 重新render该组件\r\n        //todo 重置当前fiber(初始化所有状态)\r\n        containerFiber.children = [];\r\n        containerFiber.memorizedState = null;\r\n        containerFiber.hookIndex = 0;\r\n        (0, index_1.render)(component, container, containerFiber);\r\n    }\r\n    //todo 测试 hash模式路由\r\n    function switchRouteHash() {\r\n        location.hash = to;\r\n        //todo 获取容器DOM(刚开始获取不到)\r\n        const container = document.getElementById('routeContainer');\r\n        //todo 创建到容器节点时  将容器节点的fiber挂载到全局  以便获取(需修改)\r\n        const containerFiber = window.$$routeContainerFiber;\r\n        //todo 改变fiebrFlag，以便创建新的组件节点(需要修改)\r\n        containerFiber.fiberFlags = 'mount';\r\n        //todo 重置当前fiber(初始化所有状态)\r\n        containerFiber.children = [];\r\n        containerFiber.memorizedState = null;\r\n        //todo 重新render该组件\r\n        (0, index_1.render)(component, container, containerFiber);\r\n    }\r\n    return {\r\n        data: { handleRouteChange },\r\n        template: `<a href='${to}' onClick={handleRouteChange}>${title}</a>`\r\n    };\r\n}\r\nexports[\"default\"] = Link;\r\n\n\n//# sourceURL=webpack://myreact/./lzy-React/js/myRouter/Link.js?");
-
-        /***/
-      }),
-
-/***/ "./lzy-React/js/myRouter/RouteContainer.js":
-/*!*************************************************!*\
-  !*** ./lzy-React/js/myRouter/RouteContainer.js ***!
-  \*************************************************/
-/***/ ((__unused_webpack_module, exports) => {
-
-        eval("\r\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\r\nfunction listenHashChange() {\r\n    window.onhashchange = (e) => {\r\n        console.log('老hash', e.oldURL);\r\n        console.log('新hash', e.newURL);\r\n        console.log('hash', location.hash);\r\n    };\r\n}\r\nfunction RouteContainer({ fiber }) {\r\n    listenHashChange();\r\n    return {\r\n        template: `<div id='routeContainer'></div>`\r\n    };\r\n}\r\nexports[\"default\"] = RouteContainer;\r\n\n\n//# sourceURL=webpack://myreact/./lzy-React/js/myRouter/RouteContainer.js?");
-
-        /***/
-      }),
-
-/***/ "./lzy-React/js/myRouter/index.js":
-/*!****************************************!*\
-  !*** ./lzy-React/js/myRouter/index.js ***!
-  \****************************************/
-/***/ (function (__unused_webpack_module, exports, __webpack_require__) {
-
-        eval("\r\nvar __importDefault = (this && this.__importDefault) || function (mod) {\r\n    return (mod && mod.__esModule) ? mod : { \"default\": mod };\r\n};\r\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\r\nexports.RouteContainer = exports.Link = void 0;\r\nconst Link_1 = __importDefault(__webpack_require__(/*! ./Link */ \"./lzy-React/js/myRouter/Link.js\"));\r\nexports.Link = Link_1.default;\r\nconst RouteContainer_1 = __importDefault(__webpack_require__(/*! ./RouteContainer */ \"./lzy-React/js/myRouter/RouteContainer.js\"));\r\nexports.RouteContainer = RouteContainer_1.default;\r\n\n\n//# sourceURL=webpack://myreact/./lzy-React/js/myRouter/index.js?");
-
-        /***/
-      }),
-
-/***/ "./src/App.lzy":
-/*!*********************!*\
-  !*** ./src/App.lzy ***!
-  \*********************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-        eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var _page_Demo__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./page/Demo */ \"./src/page/Demo.js\");\n/* harmony import */ var _components_Test__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/Test */ \"./src/components/Test.js\");\n/* harmony import */ var _page_RekvTest__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./page/RekvTest */ \"./src/page/RekvTest.js\");\n/* harmony import */ var _page_routePage__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./page/routePage */ \"./src/page/routePage.js\");\n/* harmony import */ var _lzy_page_JsyTest_lzy__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./lzy page/JsyTest.lzy */ \"./src/lzy page/JsyTest.lzy\");\n/* harmony import */ var _page_renderTest_lzy__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./page/renderTest.lzy */ \"./src/page/renderTest.lzy\");\n/* harmony import */ var _App_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./App.css */ \"./src/App.css\");\n//功能测试页面\n //开发测试\n\n //Rekv适配测试页面\n\n //路由测试页面\n\n //JSX测试页面\n\n // 结构渲染测试页面\n\n //引入CSS\n\n\n\nfunction App() {\n  const arr = new Array(100).fill(1);\n  return {\n    components: {\n      Test: _components_Test__WEBPACK_IMPORTED_MODULE_1__[\"default\"]\n    },\n    data: {},\n    template: `\n\n      <Test></Test>\n\n    `\n  };\n}\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (App);\n\n//# sourceURL=webpack://myreact/./src/App.lzy?");
-
-        /***/
-      }),
-
-/***/ "./src/lzy page/JsyTest.lzy":
-/*!**********************************!*\
-  !*** ./src/lzy page/JsyTest.lzy ***!
-  \**********************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-        eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var _Demo_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Demo.js */ \"./src/lzy page/Demo.js\");\n\n\nfunction Test() {\n  return {\n    components: {},\n    data: {},\n    template: `\n            <div>1</div>\n        `\n  };\n} //! 在{( )} 内部写JS代码  注意返回值会渲染到页面上  \n\n\nfunction JsyTest() {\n  const arr = [1, 2, 3];\n  const isT = true;\n  return {\n    components: {},\n    data: {},\n    template: `\n            ${isT ? `<div>True</div>` : `<div>false</div>`}\n            <div>------</div>\n            ${isT ? `<div>True</div>` : `<div>false</div>`}\n        `\n  };\n}\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (JsyTest);\n\n//# sourceURL=webpack://myreact/./src/lzy_page/JsyTest.lzy?");
-
-        /***/
-      }),
-
-/***/ "./src/page/renderTest.lzy":
-/*!*********************************!*\
-  !*** ./src/page/renderTest.lzy ***!
-  \*********************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-        eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var _lzy_React_index__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../lzy-React/index */ \"./lzy-React/index.js\");\n\n\nfunction RenderTest() {\n  const [num, setNum] = (0,_lzy_React_index__WEBPACK_IMPORTED_MODULE_0__.myUseState)(0);\n\n  function addNum() {\n    setNum(num + 1);\n  }\n\n  return {\n    components: {},\n    data: {\n      addNum: addNum\n    },\n    template: `\n            <span>\n                <h1>\n                    <button onClick={addNum}>点击测试: ${num} </button>\n                </h1>\n            </span>\n        `\n  };\n}\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (RenderTest);\n\n//# sourceURL=webpack://myreact/./src/page/renderTest.lzy?");
-
-        /***/
-      }),
-
-/***/ "./src/App.css":
-/*!*********************!*\
-  !*** ./src/App.css ***!
-  \*********************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-        eval("__webpack_require__.r(__webpack_exports__);\n// extracted by mini-css-extract-plugin\n\n\n//# sourceURL=webpack://myreact/./src/App.css?");
-
-        /***/
-      }),
-
-/***/ "./src/components/StoreTest.js":
-/*!*************************************!*\
-  !*** ./src/components/StoreTest.js ***!
-  \*************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-        eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../store */ \"./src/store/index.js\");\n/* harmony import */ var _lzy_React_index__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../lzy-React/index */ \"./lzy-React/index.js\");\n\r\n\r\n\r\n\r\n\r\nfunction StoreTest(props) {\r\n    const { age } = _store__WEBPACK_IMPORTED_MODULE_0__[\"default\"].useState('age')\r\n\r\n    //! 全局状态可作为依赖项 适配useEffect\r\n    ;(0,_lzy_React_index__WEBPACK_IMPORTED_MODULE_1__.myUseEffect)(() => {\r\n        console.log('age全局状态发生变化');\r\n    }, [])\r\n\r\n    return {\r\n        template: `<div>\r\n            <div>value:${age}</div>\r\n        </div>`\r\n    }\r\n}\r\n\r\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (StoreTest);\n\n//# sourceURL=webpack://myreact/./src/components/StoreTest.js?");
-
-        /***/
-      }),
-
-/***/ "./src/components/Test.js":
-/*!********************************!*\
-  !*** ./src/components/Test.js ***!
-  \********************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-        eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var _lzy_React_index__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../lzy-React/index */ \"./lzy-React/index.js\");\n\r\n\r\n\r\n\r\n\r\nfunction Test() {\r\n\r\n    const [num, setNum] = (0,_lzy_React_index__WEBPACK_IMPORTED_MODULE_0__.myUseState)(0)\r\n\r\n    function addNum() {\r\n        setNum(num + 1)        \r\n    }\r\n\r\n    return {\r\n        data: { addNum, num },\r\n        template: `<button onClick={addNum} id='btn'>Num:${num}</button>`,\r\n    }\r\n}\r\n\r\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Test);\n\n//# sourceURL=webpack://myreact/./src/components/Test.js?");
-
-        /***/
-      }),
-
-/***/ "./src/index.js":
-/*!**********************!*\
-  !*** ./src/index.js ***!
-  \**********************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-        eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _lzy_React_index__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lzy-React/index */ \"./lzy-React/index.js\");\n/* harmony import */ var _App_lzy__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./App.lzy */ \"./src/App.lzy\");\n\r\n\r\n\r\n\r\n\r\n//渲染树状dom树\r\nconsole.time('first-render');\r\n(0,_lzy_React_index__WEBPACK_IMPORTED_MODULE_0__.render)(_App_lzy__WEBPACK_IMPORTED_MODULE_1__[\"default\"], document.getElementById('root'))\r\nconsole.timeEnd('first-render');\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\n\n//# sourceURL=webpack://myreact/./src/index.js?");
-
-        /***/
-      }),
-
-/***/ "./src/lzy page/Demo.js":
-/*!******************************!*\
-  !*** ./src/lzy page/Demo.js ***!
-  \******************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-        eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var _lzy_React_index__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../lzy-React/index */ \"./lzy-React/index.js\");\n// import { myUseState, myUseEffect } from 'lzy-react'\r\n\r\n\r\n\r\n\r\n//! Demo组件\r\nfunction Demo(props) {\r\n\r\n    console.log(props);\r\n\r\n    const [age, setAge] = (0,_lzy_React_index__WEBPACK_IMPORTED_MODULE_0__.myUseState)(18)\r\n    const [num, setNum] = (0,_lzy_React_index__WEBPACK_IMPORTED_MODULE_0__.myUseState)(0)\r\n    const [arr, setArr] = (0,_lzy_React_index__WEBPACK_IMPORTED_MODULE_0__.myUseState)([])\r\n\r\n    const longList = new Array(5000).fill(1)\r\n\r\n    //! 支持useEffect全系使用(return函数 同样会发生死循环)\r\n    ;(0,_lzy_React_index__WEBPACK_IMPORTED_MODULE_0__.myUseEffect)(() => {\r\n        console.log('传入[],仅仅mount时执行');\r\n    }, [])\r\n\r\n    ;(0,_lzy_React_index__WEBPACK_IMPORTED_MODULE_0__.myUseEffect)(() => {\r\n        console.log('不传 任意时候执行');\r\n    })\r\n\r\n    ;(0,_lzy_React_index__WEBPACK_IMPORTED_MODULE_0__.myUseEffect)(() => {\r\n        setNum(num + 1)\r\n        console.log('监听age,age改变时执行');\r\n    }, [age])\r\n\r\n\r\n\r\n    //!定义onclick方法\r\n    function addNum() {\r\n        setNum(num + 1) //setArr并不是异步的  而是在App执行完毕之后才会进行更新\r\n    }\r\n    function addAge() {\r\n        setAge(age + 1)\r\n    }\r\n    function addArr() {\r\n        setArr([...arr, 'item'])\r\n    }\r\n\r\n\r\n    return ({\r\n        components: {},\r\n\r\n        data: { addNum, addAge, addArr },\r\n\r\n        template: `\r\n        <div>\r\n    \r\n        <h1>Demo</h1>\r\n        \r\n        <div>简单适配了bootStarp组件库</div>\r\n        <button type=\"button\" class=\"btn btn-primary\" onClick={addNum}>增加Num</button>\r\n        <button type=\"button\" class=\"btn btn-secondary\" onClick={addAge}>增加Age和Num</button>\r\n        <button type=\"button\" class=\"btn btn-success\" onClick={addArr}>增加Arr</button>\r\n\r\n    \r\n        <h3 className=\"blue\">当前Num:${num}</h3>\r\n        <h3 className='blue'>当前Age:${age}</h3>\r\n        \r\n        <h4 className='red'>列表渲染测试</h4>\r\n    \r\n        ${arr.map((item) => {\r\n            return `<div>${item}</div>`\r\n        })}\r\n        \r\n        </div>\r\n            `\r\n    })\r\n}\r\n\r\n\r\n'1434 0.9版本'\r\n\r\n\r\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Demo);\r\n\r\n\r\n\r\n\n\n//# sourceURL=webpack://myreact/./src/lzy_page/Demo.js?");
-
-        /***/
-      }),
-
-/***/ "./src/page/Demo.js":
-/*!**************************!*\
-  !*** ./src/page/Demo.js ***!
-  \**************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-        eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var _lzy_React_index__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../lzy-React/index */ \"./lzy-React/index.js\");\n/* harmony import */ var _components_Test__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/Test */ \"./src/components/Test.js\");\n// import { myUseState, myUseEffect } from 'lzy-react'\r\n\r\n\r\n\r\n\r\n//! Demo组件\r\nfunction Demo() {\r\n\r\n\r\n    const [age, setAge] = (0,_lzy_React_index__WEBPACK_IMPORTED_MODULE_0__.myUseState)(18)\r\n    const [num, setNum] = (0,_lzy_React_index__WEBPACK_IMPORTED_MODULE_0__.myUseState)(1)\r\n    const [arr, setArr] = (0,_lzy_React_index__WEBPACK_IMPORTED_MODULE_0__.myUseState)([])\r\n\r\n    const longList = new Array(5000).fill(1)\r\n\r\n    //! 支持useEffect全系使用(return函数 同样会发生死循环)\r\n    ;(0,_lzy_React_index__WEBPACK_IMPORTED_MODULE_0__.myUseEffect)(() => {\r\n        console.log('传入[],仅仅mount时执行');\r\n    }, [])\r\n\r\n\r\n    ;(0,_lzy_React_index__WEBPACK_IMPORTED_MODULE_0__.myUseEffect)(() => {\r\n        console.log('不传 任意时候执行');\r\n    })\r\n\r\n    ;(0,_lzy_React_index__WEBPACK_IMPORTED_MODULE_0__.myUseEffect)(() => {\r\n        console.log('监听age,age改变时执行', age);\r\n        return () => { console.log('返回的destory函数') }\r\n    }, [age])\r\n\r\n\r\n\r\n    //!定义onclick方法\r\n    function addNum() {\r\n        setNum(num + 1) //setArr并不是异步的  而是在App执行完毕之后才会进行更新\r\n    }\r\n    function addAge() {\r\n        setAge(age + 1)\r\n    }\r\n    function addArr() {\r\n        setArr([...arr, 'item'])\r\n    }\r\n\r\n\r\n    return ({\r\n        components: { Test: _components_Test__WEBPACK_IMPORTED_MODULE_1__[\"default\"] },\r\n\r\n        data: { addNum, addAge, addArr, num },\r\n\r\n        template: `\r\n        <div>\r\n       \r\n        <Test num={num}></Test>\r\n        <h1>Demo</h1>\r\n        \r\n        <div>简单适配了bootStarp组件库</div>\r\n        <button type=\"button\" class=\"btn btn-primary\" onClick={addNum}>增加Num</button>\r\n        <button type=\"button\" class=\"btn btn-secondary\" onClick={addAge}>增加Age和Num</button>\r\n        <button type=\"button\" class=\"btn btn-success\" onClick={addArr}>增加Arr</button>\r\n\r\n    \r\n        <h3 className=\"blue\">当前Num:${num}</h3>\r\n        <h3 className='blue'>当前Age:${age}</h3>\r\n        \r\n        <h4 className='red'>列表渲染测试</h4>\r\n    \r\n        ${arr.map((item) => {\r\n            return `<div>${item}</div>`\r\n        })}\r\n        \r\n        </div>\r\n            `\r\n    })\r\n}\r\n\r\n\r\n'1434 0.9版本'\r\n\r\n\r\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Demo);\r\n\r\n\r\n\r\n\n\n//# sourceURL=webpack://myreact/./src/page/Demo.js?");
-
-        /***/
-      }),
-
-/***/ "./src/page/RekvTest.js":
-/*!******************************!*\
-  !*** ./src/page/RekvTest.js ***!
-  \******************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-        eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var _components_StoreTest__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/StoreTest */ \"./src/components/StoreTest.js\");\n/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../store */ \"./src/store/index.js\");\n\r\n\r\n\r\n\r\nfunction RekvTest() {\r\n    \r\n    const { age, nameData } = _store__WEBPACK_IMPORTED_MODULE_1__[\"default\"].useState('age', 'nameData')\r\n    const arr = new Array(10).fill(1)\r\n\r\n    function changeState() {\r\n        console.log('增加');\r\n        _store__WEBPACK_IMPORTED_MODULE_1__[\"default\"].setState({ age: age + 1 })\r\n    }\r\n\r\n    return {\r\n        components: { StoreTest: _components_StoreTest__WEBPACK_IMPORTED_MODULE_0__[\"default\"] },\r\n        data: { changeState },\r\n        template: `<div>\r\n            <button onClick={changeState}>点击改变全局状态age</button>\r\n            ${arr.map(() => {\r\n            return `<StoreTest></StoreTest>`\r\n        })}\r\n        </div>`,\r\n\r\n    }\r\n}\r\n\r\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (RekvTest);\n\n//# sourceURL=webpack://myreact/./src/page/RekvTest.js?");
-
-        /***/
-      }),
-
-/***/ "./src/page/routePage.js":
-/*!*******************************!*\
-  !*** ./src/page/routePage.js ***!
-  \*******************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-        eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var _lzy_React_js_myRouter_index__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../lzy-React/js/myRouter/index */ \"./lzy-React/js/myRouter/index.js\");\n/* harmony import */ var _lzy_React_js_myRouter_index__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_lzy_React_js_myRouter_index__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _RekvTest__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./RekvTest */ \"./src/page/RekvTest.js\");\n/* harmony import */ var _Demo__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Demo */ \"./src/page/Demo.js\");\n/* harmony import */ var _components_Test__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/Test */ \"./src/components/Test.js\");\n\r\n\r\n\r\n\r\n\r\n\r\nfunction RoutePage() {\r\n\r\n\r\n    return {\r\n        components: { Link: _lzy_React_js_myRouter_index__WEBPACK_IMPORTED_MODULE_0__.Link, RouteContainer: _lzy_React_js_myRouter_index__WEBPACK_IMPORTED_MODULE_0__.RouteContainer },\r\n        data: { RekvTest: _RekvTest__WEBPACK_IMPORTED_MODULE_1__[\"default\"], Demo: _Demo__WEBPACK_IMPORTED_MODULE_2__[\"default\"], Test: _components_Test__WEBPACK_IMPORTED_MODULE_3__[\"default\"] },\r\n        template: `\r\n                    <div>\r\n                    <Link to=\"/#rekv\" component={RekvTest} title='跳转Rekv(重定向)'></Link>\r\n                    <br></br>\r\n                    <Link to=\"/#test\" component={Test} title='跳转Test'></Link>\r\n                    <br></br>\r\n                    <Link to=\"/#demo\" component={Demo} title='跳转Demo页面'></Link>\r\n                    <br></br>\r\n                    <RouteContainer></RouteContainer>\r\n                    </div>\r\n        `\r\n    }\r\n}\r\n\r\n\r\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (RoutePage);\n\n//# sourceURL=webpack://myreact/./src/page/routePage.js?");
-
-        /***/
-      }),
-
-/***/ "./src/store/index.js":
-/*!****************************!*\
-  !*** ./src/store/index.js ***!
-  \****************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-        eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var _lzy_React_index__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../lzy-React/index */ \"./lzy-React/index.js\");\n\r\n\r\n\r\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (new _lzy_React_index__WEBPACK_IMPORTED_MODULE_0__.Rekv({\r\n    allStates: {\r\n        nameData: ['张三', '李四'],\r\n        age: 18,\r\n    }\r\n}));\n\n//# sourceURL=webpack://myreact/./src/store/index.js?");
-
-        /***/
-      })
-
-    /******/
-  });
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
+
+
+
+
+
+
 /******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
@@ -308,82 +1381,129 @@
 /******/ 		var cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
-      /******/
-    }
+            /******/
+}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
-      /******/
-    };
+            /******/
+};
 /******/
 /******/ 		// Execute the module function
-/******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
-    /******/
-  }
-/******/
-/************************************************************************/
-/******/ 	/* webpack/runtime/compat get default export */
-/******/ 	(() => {
-/******/ 		// getDefaultExport function for compatibility with non-harmony modules
-/******/ 		__webpack_require__.n = (module) => {
-/******/ 			var getter = module && module.__esModule ?
-/******/ 				() => (module['default']) :
-/******/ 				() => (module);
-/******/ 			__webpack_require__.d(getter, { a: getter });
-/******/ 			return getter;
-      /******/
-    };
-    /******/
-  })();
-/******/
-/******/ 	/* webpack/runtime/define property getters */
-/******/ 	(() => {
-/******/ 		// define getter functions for harmony exports
-/******/ 		__webpack_require__.d = (exports, definition) => {
-/******/ 			for (var key in definition) {
-/******/ 				if (__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-          /******/
-        }
         /******/
-      }
-      /******/
-    };
-    /******/
-  })();
+}
 /******/
-/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	(() => {
-/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
-    /******/
-  })();
-/******/
-/******/ 	/* webpack/runtime/make namespace object */
+
+
+
+
+
+
 /******/ 	(() => {
 /******/ 		// define __esModule on exports
 /******/ 		__webpack_require__.r = (exports) => {
 /******/ 			if (typeof Symbol !== 'undefined' && Symbol.toStringTag) {
 /******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-        /******/
-      }
+                /******/
+}
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
-      /******/
-    };
+            /******/
+};
+        /******/
+})();
     /******/
-  })();
-/******/
-/************************************************************************/
-/******/
-/******/ 	// startup
-/******/ 	// Load entry module and return exports
-/******/ 	// This entry module can't be inlined because the eval devtool is used.
-/******/ 	var __webpack_exports__ = __webpack_require__("./src/index.js");
-  /******/
-  /******/
+
+
+
+
+    var __webpack_exports__ = {};
+
+
+
+
+    // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+    (() => {
+        __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _lzy_React_js_lzy_react_develpoment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
+
+
+        //! Demo组件
+        function Demo() {
+
+            const [age, setAge] = (0, _lzy_React_js_lzy_react_develpoment__WEBPACK_IMPORTED_MODULE_0__.myUseState)(18)
+            const [num, setNum] = (0, _lzy_React_js_lzy_react_develpoment__WEBPACK_IMPORTED_MODULE_0__.myUseState)(1)
+            const [arr, setArr] = (0, _lzy_React_js_lzy_react_develpoment__WEBPACK_IMPORTED_MODULE_0__.myUseState)([])
+
+            const longList = new Array(5000).fill(1)
+
+                //! 支持useEffect全系使用(return函数 同样会发生死循环)
+                ; (0, _lzy_React_js_lzy_react_develpoment__WEBPACK_IMPORTED_MODULE_0__.myUseEffect)(() => {
+                    console.log('传入[],仅仅mount时执行');
+                }, [])
+
+
+                ; (0, _lzy_React_js_lzy_react_develpoment__WEBPACK_IMPORTED_MODULE_0__.myUseEffect)(() => {
+                    console.log('不传 任意时候执行');
+                })
+
+                ; (0, _lzy_React_js_lzy_react_develpoment__WEBPACK_IMPORTED_MODULE_0__.myUseEffect)(() => {
+                    console.log('监听age,age改变时执行', age);
+                    return () => { console.log('返回的destory函数') }
+                }, [age])
+
+
+
+            //!定义onclick方法
+            function addNum() {
+                setNum(num + 1) //setArr并不是异步的  而是在App执行完毕之后才会进行更新
+            }
+            function addAge() {
+                setAge(age + 1)
+            }
+            function addArr() {
+                setArr([...arr, 'item'])
+            }
+
+
+            return ({
+                components: {},
+
+                data: { addNum, addAge, addArr },
+
+                template: `
+        <div>
+        <h1>Demo</h1>
+        
+        <div>简单适配了bootStarp组件库</div>
+        <button type="button" class="btn btn-primary" onClick={addNum}>增加Num</button>
+        <button type="button" class="btn btn-secondary" onClick={addAge}>增加Age和Num</button>
+        <button type="button" class="btn btn-success" onClick={addArr}>增加Arr</button>
+
+    
+        <h3 className="blue">当前Num:${num}</h3>
+        <h3 className='blue'>当前Age:${age}</h3>
+        
+        <h4 className='red'>列表渲染测试</h4>
+    
+        ${arr.map((item) => {
+                    return `<div>${item}</div>`
+                })}
+        
+        </div>
+            `
+            })
+        }
+
+        (0, _lzy_React_js_lzy_react_develpoment__WEBPACK_IMPORTED_MODULE_0__.render)(Demo, document.getElementById('root'))
+
+    })();
+
+    /******/
 })()
-  ;
+    ;

@@ -3,11 +3,17 @@ const Webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
+let babelJSX = {
+    loader: "babel-loader",
+    options: {
+        presets: ["@babel/preset-env", '@babel/preset-react']
+    }
+}
 
 
 module.exports = {
 
-    mode: 'development',//配置环境  生产模式不会压缩代码  利于调试
+    mode: 'none',//配置环境  生产模式不会压缩代码  利于调试
 
     entry: './src/index.js',
 
@@ -39,8 +45,11 @@ module.exports = {
         new Webpack.ProvidePlugin({
             '$': 'jquery',
             jQuery: "jquery",
-        })
+        }),
+
     ],
+
+
 
     //配置CSS模块化  --可以引入和打包CSS文件(使用普通css文件  如需使用less需要其他配置)
     //所有的.css文件都要经过css-loader的解析
@@ -50,7 +59,7 @@ module.exports = {
                 test: /\.css$/i,
                 use: [MiniCssExtractPlugin.loader, "css-loader"],
             },
-            // loader开发测试用配置
+            //! loader开发测试用配置
             {
                 test: /\.lzy$/,
                 use: [
@@ -59,15 +68,18 @@ module.exports = {
                 ]
             },
 
-
+            //! babel 转JSX测试
             // {
             //     test: /\.lzy$/,
-            //     use: ['babel-loader', 'lzy-loader']
+            //     use: [
+            //         { loader: path.resolve(__dirname, './lzy-loader/index.js') },
+            //         babelJSX
+            //     ]
             // }
         ],
     },
 
-
 }
+
 
 

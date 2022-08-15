@@ -1,7 +1,7 @@
 import { Effect, UseEffectHook } from '../myReactCore/Interface'
 //修改全局变量的方法
 import { global, updateWorkInProgressHook } from '../myReactCore/GlobalFiber'
-import { pushEffectList } from '../myReactCore/Reconciler'
+
 
 //! -------mountEffect(useEffect第一次执行)-------------
 function mountEffect(fiberFlags: string, hookFlags: string, create: Function, deps: any[] | null) {
@@ -64,7 +64,7 @@ function updateEffect(fiberFlags: string, hookFlags: string, create: Function, d
 
     const currentHook = updateWorkInProgressHook(fiber)
 
-
+    
     //判断是否传入deps 不同时机执行useEffect
     const nextDeps = deps === undefined ? null : deps
     //!执行updateEffect 改变fiberFlages
@@ -135,6 +135,7 @@ function pushEffect(tag: string, create: Function, destory: any, deps: any[] | n
 
     //todo 如果Hook上没有更新链表  创建更新链表  如果有则插入一个effect到更新环链表尾部
     const updateQueue: { lastEffect: Effect | null } = { lastEffect: null }
+
     if (fiber.updateQueue === null) {
         updateQueue.lastEffect = effect.next = effect // 自身形成环状链表
         //更新fiber上的updateQueue环链表
@@ -149,7 +150,7 @@ function pushEffect(tag: string, create: Function, destory: any, deps: any[] | n
             const firstEffect = lastEffect.next
             lastEffect.next = effect
             effect.next = firstEffect
-            updateQueue.lastEffect = effect //此时环链表上的最后一项就是effect
+            updateQueue.lastEffect = effect 
             //更新fiber上的updateQueue环链表
             fiber.updateQueue = updateQueue
         }
