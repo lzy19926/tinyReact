@@ -431,7 +431,7 @@ function finishedWork(workInProgressFiber: FiberNode, currentFiber: FiberNode) {
 //! 遍历fiber  拼接所有的effect   
 function finishedWorkLoop(workInProgressFiber: FiberNode, rootUpdateQueue: any) {
 
-    // 拼接两个链表
+    // 将updateQueue拼接到fiber的queue上
     collectEffect(workInProgressFiber, rootUpdateQueue)
 
     // 继续遍历fiber树  拼接链表

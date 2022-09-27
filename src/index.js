@@ -1,5 +1,5 @@
 import { render, myUseState, myUseEffect } from '../lzy-React/lib/index'
-
+import JsxTest from './jsxTest.lzy'
 //! Demo组件
 function Demo() {
 
@@ -67,7 +67,7 @@ function Demo() {
     })
 }
 
-render(Demo, document.getElementById('root'))
+render(JsxTest, document.getElementById('root'))
 
 
 

@@ -1,0 +1,3627 @@
+{
+    "hash": "1408d614adc8fa16331d",
+    "version": "5.72.0",
+    "time": 235,
+    "builtAt": 1660629971687,
+    "publicPath": "auto",
+    "outputPath": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\dist",
+    "assetsByChunkName": {
+        "main": [
+            "bundle.js"
+        ]
+    },
+    "assets": [
+        {
+            "type": "asset",
+            "name": "bundle.js",
+            "size": 82235,
+            "emitted": false,
+            "comparedForEmit": true,
+            "cached": false,
+            "info": {
+                "javascriptModule": false,
+                "size": 82235
+            },
+            "chunkNames": [
+                "main"
+            ],
+            "chunkIdHints": [],
+            "auxiliaryChunkNames": [],
+            "auxiliaryChunkIdHints": [],
+            "related": {},
+            "chunks": [
+                0
+            ],
+            "auxiliaryChunks": [],
+            "isOverSizeLimit": false
+        },
+        {
+            "type": "asset",
+            "name": "index.html",
+            "size": 381,
+            "emitted": false,
+            "comparedForEmit": true,
+            "cached": false,
+            "info": {
+                "size": 381
+            },
+            "chunkNames": [],
+            "chunkIdHints": [],
+            "auxiliaryChunkNames": [],
+            "auxiliaryChunkIdHints": [],
+            "related": {},
+            "chunks": [],
+            "auxiliaryChunks": [],
+            "isOverSizeLimit": false
+        }
+    ],
+    "chunks": [
+        {
+            "rendered": true,
+            "initial": true,
+            "entry": true,
+            "recorded": false,
+            "size": 78034,
+            "sizes": {
+                "javascript": 77364,
+                "runtime": 670
+            },
+            "names": [
+                "main"
+            ],
+            "idHints": [],
+            "runtime": [
+                "main"
+            ],
+            "files": [
+                "bundle.js"
+            ],
+            "auxiliaryFiles": [],
+            "hash": "2d86b29df2d38fb6a3c1",
+            "childrenByOrder": {},
+            "id": 0,
+            "siblings": [],
+            "parents": [],
+            "children": [],
+            "modules": [
+                {
+                    "type": "module",
+                    "moduleType": "javascript/auto",
+                    "layer": null,
+                    "size": 337,
+                    "sizes": {
+                        "javascript": 337
+                    },
+                    "built": true,
+                    "codeGenerated": true,
+                    "buildTimeExecuted": false,
+                    "cached": false,
+                    "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                    "name": "./lzy-React/lib/index.js",
+                    "nameForCondition": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                    "index": 1,
+                    "preOrderIndex": 1,
+                    "index2": 11,
+                    "postOrderIndex": 11,
+                    "cacheable": true,
+                    "optional": false,
+                    "orphan": false,
+                    "dependent": true,
+                    "issuer": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                    "issuerName": "./src/index.js",
+                    "issuerPath": [
+                        {
+                            "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                            "name": "./src/index.js",
+                            "id": 0
+                        }
+                    ],
+                    "failed": false,
+                    "errors": 0,
+                    "warnings": 0,
+                    "id": 1,
+                    "issuerId": 0,
+                    "chunks": [
+                        0
+                    ],
+                    "assets": [],
+                    "reasons": [
+                        {
+                            "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                            "module": "./src/index.js",
+                            "moduleName": "./src/index.js",
+                            "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                            "resolvedModule": "./src/index.js",
+                            "type": "harmony side effect evaluation",
+                            "active": true,
+                            "explanation": "",
+                            "userRequest": "../lzy-React/lib/index",
+                            "loc": "1:0-72",
+                            "moduleId": 0,
+                            "resolvedModuleId": 0
+                        },
+                        {
+                            "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                            "module": "./src/index.js",
+                            "moduleName": "./src/index.js",
+                            "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                            "resolvedModule": "./src/index.js",
+                            "type": "harmony import specifier",
+                            "active": true,
+                            "explanation": "",
+                            "userRequest": "../lzy-React/lib/index",
+                            "loc": "6:26-36",
+                            "moduleId": 0,
+                            "resolvedModuleId": 0
+                        },
+                        {
+                            "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                            "module": "./src/index.js",
+                            "moduleName": "./src/index.js",
+                            "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                            "resolvedModule": "./src/index.js",
+                            "type": "harmony import specifier",
+                            "active": true,
+                            "explanation": "",
+                            "userRequest": "../lzy-React/lib/index",
+                            "loc": "7:26-36",
+                            "moduleId": 0,
+                            "resolvedModuleId": 0
+                        },
+                        {
+                            "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                            "module": "./src/index.js",
+                            "moduleName": "./src/index.js",
+                            "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                            "resolvedModule": "./src/index.js",
+                            "type": "harmony import specifier",
+                            "active": true,
+                            "explanation": "",
+                            "userRequest": "../lzy-React/lib/index",
+                            "loc": "8:26-36",
+                            "moduleId": 0,
+                            "resolvedModuleId": 0
+                        },
+                        {
+                            "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                            "module": "./src/index.js",
+                            "moduleName": "./src/index.js",
+                            "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                            "resolvedModule": "./src/index.js",
+                            "type": "harmony import specifier",
+                            "active": true,
+                            "explanation": "",
+                            "userRequest": "../lzy-React/lib/index",
+                            "loc": "13:4-15",
+                            "moduleId": 0,
+                            "resolvedModuleId": 0
+                        },
+                        {
+                            "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                            "module": "./src/index.js",
+                            "moduleName": "./src/index.js",
+                            "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                            "resolvedModule": "./src/index.js",
+                            "type": "harmony import specifier",
+                            "active": true,
+                            "explanation": "",
+                            "userRequest": "../lzy-React/lib/index",
+                            "loc": "18:4-15",
+                            "moduleId": 0,
+                            "resolvedModuleId": 0
+                        },
+                        {
+                            "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                            "module": "./src/index.js",
+                            "moduleName": "./src/index.js",
+                            "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                            "resolvedModule": "./src/index.js",
+                            "type": "harmony import specifier",
+                            "active": true,
+                            "explanation": "",
+                            "userRequest": "../lzy-React/lib/index",
+                            "loc": "22:4-15",
+                            "moduleId": 0,
+                            "resolvedModuleId": 0
+                        },
+                        {
+                            "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                            "module": "./src/index.js",
+                            "moduleName": "./src/index.js",
+                            "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                            "resolvedModule": "./src/index.js",
+                            "type": "harmony import specifier",
+                            "active": true,
+                            "explanation": "",
+                            "userRequest": "../lzy-React/lib/index",
+                            "loc": "70:0-6",
+                            "moduleId": 0,
+                            "resolvedModuleId": 0
+                        }
+                    ],
+                    "usedExports": null,
+                    "providedExports": [
+                        "Rekv",
+                        "global",
+                        "myUseEffect",
+                        "myUseState",
+                        "render",
+                        "updateRender"
+                    ],
+                    "optimizationBailout": [],
+                    "depth": 1
+                },
+                {
+                    "type": "module",
+                    "moduleType": "javascript/auto",
+                    "layer": null,
+                    "size": 6409,
+                    "sizes": {
+                        "javascript": 6409
+                    },
+                    "built": true,
+                    "codeGenerated": true,
+                    "buildTimeExecuted": false,
+                    "cached": false,
+                    "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myHook\\useEffect.js",
+                    "name": "./lzy-React/lib/js/myHook/useEffect.js",
+                    "nameForCondition": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myHook\\useEffect.js",
+                    "index": 2,
+                    "preOrderIndex": 2,
+                    "index2": 1,
+                    "postOrderIndex": 1,
+                    "cacheable": true,
+                    "optional": false,
+                    "orphan": false,
+                    "dependent": true,
+                    "issuer": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                    "issuerName": "./lzy-React/lib/index.js",
+                    "issuerPath": [
+                        {
+                            "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                            "name": "./src/index.js",
+                            "id": 0
+                        },
+                        {
+                            "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                            "name": "./lzy-React/lib/index.js",
+                            "id": 1
+                        }
+                    ],
+                    "failed": false,
+                    "errors": 0,
+                    "warnings": 0,
+                    "id": 2,
+                    "issuerId": 1,
+                    "chunks": [
+                        0
+                    ],
+                    "assets": [],
+                    "reasons": [
+                        {
+                            "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                            "module": "./lzy-React/lib/index.js",
+                            "moduleName": "./lzy-React/lib/index.js",
+                            "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                            "resolvedModule": "./lzy-React/lib/index.js",
+                            "type": "harmony side effect evaluation",
+                            "active": true,
+                            "explanation": "",
+                            "userRequest": "./js/myHook/useEffect",
+                            "loc": "1:0-52",
+                            "moduleId": 1,
+                            "resolvedModuleId": 1
+                        },
+                        {
+                            "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                            "module": "./lzy-React/lib/index.js",
+                            "moduleName": "./lzy-React/lib/index.js",
+                            "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                            "resolvedModule": "./lzy-React/lib/index.js",
+                            "type": "harmony export imported specifier",
+                            "active": true,
+                            "explanation": "",
+                            "userRequest": "./js/myHook/useEffect",
+                            "loc": "7:0-70",
+                            "moduleId": 1,
+                            "resolvedModuleId": 1
+                        },
+                        {
+                            "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myRekV\\index.js",
+                            "module": "./lzy-React/lib/js/myRekV/index.js",
+                            "moduleName": "./lzy-React/lib/js/myRekV/index.js",
+                            "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myRekV\\index.js",
+                            "resolvedModule": "./lzy-React/lib/js/myRekV/index.js",
+                            "type": "cjs require",
+                            "active": true,
+                            "explanation": "",
+                            "userRequest": "../myHook/useEffect",
+                            "loc": "5:20-50",
+                            "moduleId": 11,
+                            "resolvedModuleId": 11
+                        }
+                    ],
+                    "usedExports": null,
+                    "providedExports": [
+                        "__esModule",
+                        "myUseEffect"
+                    ],
+                    "optimizationBailout": [],
+                    "depth": 2
+                },
+                {
+                    "type": "module",
+                    "moduleType": "javascript/auto",
+                    "layer": null,
+                    "size": 4828,
+                    "sizes": {
+                        "javascript": 4828
+                    },
+                    "built": true,
+                    "codeGenerated": true,
+                    "buildTimeExecuted": false,
+                    "cached": false,
+                    "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myHook\\useState.js",
+                    "name": "./lzy-React/lib/js/myHook/useState.js",
+                    "nameForCondition": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myHook\\useState.js",
+                    "index": 4,
+                    "preOrderIndex": 4,
+                    "index2": 8,
+                    "postOrderIndex": 8,
+                    "cacheable": true,
+                    "optional": false,
+                    "orphan": false,
+                    "dependent": true,
+                    "issuer": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                    "issuerName": "./lzy-React/lib/index.js",
+                    "issuerPath": [
+                        {
+                            "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                            "name": "./src/index.js",
+                            "id": 0
+                        },
+                        {
+                            "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                            "name": "./lzy-React/lib/index.js",
+                            "id": 1
+                        }
+                    ],
+                    "failed": false,
+                    "errors": 0,
+                    "warnings": 0,
+                    "id": 4,
+                    "issuerId": 1,
+                    "chunks": [
+                        0
+                    ],
+                    "assets": [],
+                    "reasons": [
+                        {
+                            "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                            "module": "./lzy-React/lib/index.js",
+                            "moduleName": "./lzy-React/lib/index.js",
+                            "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                            "resolvedModule": "./lzy-React/lib/index.js",
+                            "type": "harmony side effect evaluation",
+                            "active": true,
+                            "explanation": "",
+                            "userRequest": "./js/myHook/useState",
+                            "loc": "2:0-50",
+                            "moduleId": 1,
+                            "resolvedModuleId": 1
+                        },
+                        {
+                            "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                            "module": "./lzy-React/lib/index.js",
+                            "moduleName": "./lzy-React/lib/index.js",
+                            "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                            "resolvedModule": "./lzy-React/lib/index.js",
+                            "type": "harmony export imported specifier",
+                            "active": true,
+                            "explanation": "",
+                            "userRequest": "./js/myHook/useState",
+                            "loc": "7:0-70",
+                            "moduleId": 1,
+                            "resolvedModuleId": 1
+                        },
+                        {
+                            "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myRekV\\index.js",
+                            "module": "./lzy-React/lib/js/myRekV/index.js",
+                            "moduleName": "./lzy-React/lib/js/myRekV/index.js",
+                            "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myRekV\\index.js",
+                            "resolvedModule": "./lzy-React/lib/js/myRekV/index.js",
+                            "type": "cjs require",
+                            "active": true,
+                            "explanation": "",
+                            "userRequest": "../myHook/useState",
+                            "loc": "4:19-48",
+                            "moduleId": 11,
+                            "resolvedModuleId": 11
+                        }
+                    ],
+                    "usedExports": null,
+                    "providedExports": [
+                        "__esModule",
+                        "myUseState"
+                    ],
+                    "optimizationBailout": [],
+                    "depth": 2
+                },
+                {
+                    "type": "module",
+                    "moduleType": "javascript/auto",
+                    "layer": null,
+                    "size": 9824,
+                    "sizes": {
+                        "javascript": 9824
+                    },
+                    "built": true,
+                    "codeGenerated": true,
+                    "buildTimeExecuted": false,
+                    "cached": false,
+                    "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myJSX\\createFiberTree.js",
+                    "name": "./lzy-React/lib/js/myJSX/createFiberTree.js",
+                    "nameForCondition": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myJSX\\createFiberTree.js",
+                    "index": 6,
+                    "preOrderIndex": 6,
+                    "index2": 4,
+                    "postOrderIndex": 4,
+                    "cacheable": true,
+                    "optional": false,
+                    "orphan": false,
+                    "dependent": true,
+                    "issuer": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myReactCore\\render.js",
+                    "issuerName": "./lzy-React/lib/js/myReactCore/render.js",
+                    "issuerPath": [
+                        {
+                            "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                            "name": "./src/index.js",
+                            "id": 0
+                        },
+                        {
+                            "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                            "name": "./lzy-React/lib/index.js",
+                            "id": 1
+                        },
+                        {
+                            "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myReactCore\\render.js",
+                            "name": "./lzy-React/lib/js/myReactCore/render.js",
+                            "id": 5
+                        }
+                    ],
+                    "failed": false,
+                    "errors": 0,
+                    "warnings": 0,
+                    "id": 6,
+                    "issuerId": 5,
+                    "chunks": [
+                        0
+                    ],
+                    "assets": [],
+                    "reasons": [
+                        {
+                            "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myJSX\\updateFiberTree.js",
+                            "module": "./lzy-React/lib/js/myJSX/updateFiberTree.js",
+                            "moduleName": "./lzy-React/lib/js/myJSX/updateFiberTree.js",
+                            "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myJSX\\updateFiberTree.js",
+                            "resolvedModule": "./lzy-React/lib/js/myJSX/updateFiberTree.js",
+                            "type": "cjs require",
+                            "active": true,
+                            "explanation": "",
+                            "userRequest": "./createFiberTree",
+                            "loc": "5:26-54",
+                            "moduleId": 9,
+                            "resolvedModuleId": 9
+                        },
+                        {
+                            "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myReactCore\\render.js",
+                            "module": "./lzy-React/lib/js/myReactCore/render.js",
+                            "moduleName": "./lzy-React/lib/js/myReactCore/render.js",
+                            "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myReactCore\\render.js",
+                            "resolvedModule": "./lzy-React/lib/js/myReactCore/render.js",
+                            "type": "cjs require",
+                            "active": true,
+                            "explanation": "",
+                            "userRequest": "../myJSX/createFiberTree",
+                            "loc": "9:26-61",
+                            "moduleId": 5,
+                            "resolvedModuleId": 5
+                        }
+                    ],
+                    "usedExports": null,
+                    "providedExports": [
+                        "__esModule",
+                        "conbineVnodAndFiber",
+                        "createDomElement",
+                        "createFiberTree",
+                        "getParentDom",
+                        "handleFunctionComponentProps",
+                        "handleFunctionFiberNode",
+                        "handleProps",
+                        "preHandleFiberNode",
+                        "renderFunctionComponent",
+                        "useRoute"
+                    ],
+                    "optimizationBailout": [],
+                    "depth": 3
+                },
+                {
+                    "type": "module",
+                    "moduleType": "javascript/auto",
+                    "layer": null,
+                    "size": 1525,
+                    "sizes": {
+                        "javascript": 1525
+                    },
+                    "built": true,
+                    "codeGenerated": true,
+                    "buildTimeExecuted": false,
+                    "cached": false,
+                    "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myJSX\\tplScanner.js",
+                    "name": "./lzy-React/lib/js/myJSX/tplScanner.js",
+                    "nameForCondition": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myJSX\\tplScanner.js",
+                    "index": 8,
+                    "preOrderIndex": 8,
+                    "index2": 2,
+                    "postOrderIndex": 2,
+                    "cacheable": true,
+                    "optional": false,
+                    "orphan": false,
+                    "dependent": true,
+                    "issuer": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myJSX\\tplToVnode.js",
+                    "issuerName": "./lzy-React/lib/js/myJSX/tplToVnode.js",
+                    "issuerPath": [
+                        {
+                            "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                            "name": "./src/index.js",
+                            "id": 0
+                        },
+                        {
+                            "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                            "name": "./lzy-React/lib/index.js",
+                            "id": 1
+                        },
+                        {
+                            "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myReactCore\\render.js",
+                            "name": "./lzy-React/lib/js/myReactCore/render.js",
+                            "id": 5
+                        },
+                        {
+                            "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myJSX\\createFiberTree.js",
+                            "name": "./lzy-React/lib/js/myJSX/createFiberTree.js",
+                            "id": 6
+                        },
+                        {
+                            "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myJSX\\tplToVnode.js",
+                            "name": "./lzy-React/lib/js/myJSX/tplToVnode.js",
+                            "id": 7
+                        }
+                    ],
+                    "failed": false,
+                    "errors": 0,
+                    "warnings": 0,
+                    "id": 8,
+                    "issuerId": 7,
+                    "chunks": [
+                        0
+                    ],
+                    "assets": [],
+                    "reasons": [
+                        {
+                            "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myJSX\\tplToVnode.js",
+                            "module": "./lzy-React/lib/js/myJSX/tplToVnode.js",
+                            "moduleName": "./lzy-React/lib/js/myJSX/tplToVnode.js",
+                            "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myJSX\\tplToVnode.js",
+                            "resolvedModule": "./lzy-React/lib/js/myJSX/tplToVnode.js",
+                            "type": "cjs require",
+                            "active": true,
+                            "explanation": "",
+                            "userRequest": "./tplScanner",
+                            "loc": "7:37-60",
+                            "moduleId": 7,
+                            "resolvedModuleId": 7
+                        }
+                    ],
+                    "usedExports": null,
+                    "providedExports": [
+                        "__esModule",
+                        "default"
+                    ],
+                    "optimizationBailout": [],
+                    "depth": 5
+                },
+                {
+                    "type": "module",
+                    "moduleType": "javascript/auto",
+                    "layer": null,
+                    "size": 6617,
+                    "sizes": {
+                        "javascript": 6617
+                    },
+                    "built": true,
+                    "codeGenerated": true,
+                    "buildTimeExecuted": false,
+                    "cached": false,
+                    "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myJSX\\tplToVnode.js",
+                    "name": "./lzy-React/lib/js/myJSX/tplToVnode.js",
+                    "nameForCondition": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myJSX\\tplToVnode.js",
+                    "index": 7,
+                    "preOrderIndex": 7,
+                    "index2": 3,
+                    "postOrderIndex": 3,
+                    "cacheable": true,
+                    "optional": false,
+                    "orphan": false,
+                    "dependent": true,
+                    "issuer": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myJSX\\createFiberTree.js",
+                    "issuerName": "./lzy-React/lib/js/myJSX/createFiberTree.js",
+                    "issuerPath": [
+                        {
+                            "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                            "name": "./src/index.js",
+                            "id": 0
+                        },
+                        {
+                            "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                            "name": "./lzy-React/lib/index.js",
+                            "id": 1
+                        },
+                        {
+                            "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myReactCore\\render.js",
+                            "name": "./lzy-React/lib/js/myReactCore/render.js",
+                            "id": 5
+                        },
+                        {
+                            "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myJSX\\createFiberTree.js",
+                            "name": "./lzy-React/lib/js/myJSX/createFiberTree.js",
+                            "id": 6
+                        }
+                    ],
+                    "failed": false,
+                    "errors": 0,
+                    "warnings": 0,
+                    "id": 7,
+                    "issuerId": 6,
+                    "chunks": [
+                        0
+                    ],
+                    "assets": [],
+                    "reasons": [
+                        {
+                            "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myJSX\\createFiberTree.js",
+                            "module": "./lzy-React/lib/js/myJSX/createFiberTree.js",
+                            "moduleName": "./lzy-React/lib/js/myJSX/createFiberTree.js",
+                            "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myJSX\\createFiberTree.js",
+                            "resolvedModule": "./lzy-React/lib/js/myJSX/createFiberTree.js",
+                            "type": "cjs require",
+                            "active": true,
+                            "explanation": "",
+                            "userRequest": "./tplToVnode",
+                            "loc": "4:21-44",
+                            "moduleId": 6,
+                            "resolvedModuleId": 6
+                        },
+                        {
+                            "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myJSX\\tplToVnode.js",
+                            "module": "./lzy-React/lib/js/myJSX/tplToVnode.js",
+                            "moduleName": "./lzy-React/lib/js/myJSX/tplToVnode.js",
+                            "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myJSX\\tplToVnode.js",
+                            "resolvedModule": "./lzy-React/lib/js/myJSX/tplToVnode.js",
+                            "type": "cjs self exports reference",
+                            "active": true,
+                            "explanation": "",
+                            "userRequest": null,
+                            "loc": "2:23-27",
+                            "moduleId": 7,
+                            "resolvedModuleId": 7
+                        },
+                        {
+                            "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myJSX\\tplToVnode.js",
+                            "module": "./lzy-React/lib/js/myJSX/tplToVnode.js",
+                            "moduleName": "./lzy-React/lib/js/myJSX/tplToVnode.js",
+                            "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myJSX\\tplToVnode.js",
+                            "resolvedModule": "./lzy-React/lib/js/myJSX/tplToVnode.js",
+                            "type": "cjs self exports reference",
+                            "active": true,
+                            "explanation": "",
+                            "userRequest": null,
+                            "loc": "2:31-51",
+                            "moduleId": 7,
+                            "resolvedModuleId": 7
+                        }
+                    ],
+                    "usedExports": null,
+                    "providedExports": null,
+                    "optimizationBailout": [
+                        "CommonJS bailout: this is used directly at 2:23-27"
+                    ],
+                    "depth": 4
+                },
+                {
+                    "type": "module",
+                    "moduleType": "javascript/auto",
+                    "layer": null,
+                    "size": 7292,
+                    "sizes": {
+                        "javascript": 7292
+                    },
+                    "built": true,
+                    "codeGenerated": true,
+                    "buildTimeExecuted": false,
+                    "cached": false,
+                    "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myJSX\\updateFiberTree.js",
+                    "name": "./lzy-React/lib/js/myJSX/updateFiberTree.js",
+                    "nameForCondition": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myJSX\\updateFiberTree.js",
+                    "index": 9,
+                    "preOrderIndex": 9,
+                    "index2": 5,
+                    "postOrderIndex": 5,
+                    "cacheable": true,
+                    "optional": false,
+                    "orphan": false,
+                    "dependent": true,
+                    "issuer": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myReactCore\\render.js",
+                    "issuerName": "./lzy-React/lib/js/myReactCore/render.js",
+                    "issuerPath": [
+                        {
+                            "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                            "name": "./src/index.js",
+                            "id": 0
+                        },
+                        {
+                            "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                            "name": "./lzy-React/lib/index.js",
+                            "id": 1
+                        },
+                        {
+                            "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myReactCore\\render.js",
+                            "name": "./lzy-React/lib/js/myReactCore/render.js",
+                            "id": 5
+                        }
+                    ],
+                    "failed": false,
+                    "errors": 0,
+                    "warnings": 0,
+                    "id": 9,
+                    "issuerId": 5,
+                    "chunks": [
+                        0
+                    ],
+                    "assets": [],
+                    "reasons": [
+                        {
+                            "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myReactCore\\render.js",
+                            "module": "./lzy-React/lib/js/myReactCore/render.js",
+                            "moduleName": "./lzy-React/lib/js/myReactCore/render.js",
+                            "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myReactCore\\render.js",
+                            "resolvedModule": "./lzy-React/lib/js/myReactCore/render.js",
+                            "type": "cjs require",
+                            "active": true,
+                            "explanation": "",
+                            "userRequest": "../myJSX/updateFiberTree",
+                            "loc": "10:26-61",
+                            "moduleId": 5,
+                            "resolvedModuleId": 5
+                        }
+                    ],
+                    "usedExports": null,
+                    "providedExports": [
+                        "__esModule",
+                        "createAlternate",
+                        "updateFiberTree"
+                    ],
+                    "optimizationBailout": [],
+                    "depth": 3
+                },
+                {
+                    "type": "module",
+                    "moduleType": "javascript/auto",
+                    "layer": null,
+                    "size": 2322,
+                    "sizes": {
+                        "javascript": 2322
+                    },
+                    "built": true,
+                    "codeGenerated": true,
+                    "buildTimeExecuted": false,
+                    "cached": false,
+                    "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myReactCore\\GlobalFiber.js",
+                    "name": "./lzy-React/lib/js/myReactCore/GlobalFiber.js",
+                    "nameForCondition": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myReactCore\\GlobalFiber.js",
+                    "index": 3,
+                    "preOrderIndex": 3,
+                    "index2": 0,
+                    "postOrderIndex": 0,
+                    "cacheable": true,
+                    "optional": false,
+                    "orphan": false,
+                    "dependent": true,
+                    "issuer": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                    "issuerName": "./lzy-React/lib/index.js",
+                    "issuerPath": [
+                        {
+                            "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                            "name": "./src/index.js",
+                            "id": 0
+                        },
+                        {
+                            "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                            "name": "./lzy-React/lib/index.js",
+                            "id": 1
+                        }
+                    ],
+                    "failed": false,
+                    "errors": 0,
+                    "warnings": 0,
+                    "id": 3,
+                    "issuerId": 1,
+                    "chunks": [
+                        0
+                    ],
+                    "assets": [],
+                    "reasons": [
+                        {
+                            "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                            "module": "./lzy-React/lib/index.js",
+                            "moduleName": "./lzy-React/lib/index.js",
+                            "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                            "resolvedModule": "./lzy-React/lib/index.js",
+                            "type": "harmony side effect evaluation",
+                            "active": true,
+                            "explanation": "",
+                            "userRequest": "./js/myReactCore/GlobalFiber",
+                            "loc": "4:0-54",
+                            "moduleId": 1,
+                            "resolvedModuleId": 1
+                        },
+                        {
+                            "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                            "module": "./lzy-React/lib/index.js",
+                            "moduleName": "./lzy-React/lib/index.js",
+                            "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                            "resolvedModule": "./lzy-React/lib/index.js",
+                            "type": "harmony export imported specifier",
+                            "active": true,
+                            "explanation": "",
+                            "userRequest": "./js/myReactCore/GlobalFiber",
+                            "loc": "7:0-70",
+                            "moduleId": 1,
+                            "resolvedModuleId": 1
+                        },
+                        {
+                            "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myHook\\useEffect.js",
+                            "module": "./lzy-React/lib/js/myHook/useEffect.js",
+                            "moduleName": "./lzy-React/lib/js/myHook/useEffect.js",
+                            "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myHook\\useEffect.js",
+                            "resolvedModule": "./lzy-React/lib/js/myHook/useEffect.js",
+                            "type": "cjs require",
+                            "active": true,
+                            "explanation": "",
+                            "userRequest": "../myReactCore/GlobalFiber",
+                            "loc": "5:22-59",
+                            "moduleId": 2,
+                            "resolvedModuleId": 2
+                        },
+                        {
+                            "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myHook\\useState.js",
+                            "module": "./lzy-React/lib/js/myHook/useState.js",
+                            "moduleName": "./lzy-React/lib/js/myHook/useState.js",
+                            "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myHook\\useState.js",
+                            "resolvedModule": "./lzy-React/lib/js/myHook/useState.js",
+                            "type": "cjs require",
+                            "active": true,
+                            "explanation": "",
+                            "userRequest": "../myReactCore/GlobalFiber",
+                            "loc": "6:22-59",
+                            "moduleId": 4,
+                            "resolvedModuleId": 4
+                        },
+                        {
+                            "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myJSX\\createFiberTree.js",
+                            "module": "./lzy-React/lib/js/myJSX/createFiberTree.js",
+                            "moduleName": "./lzy-React/lib/js/myJSX/createFiberTree.js",
+                            "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myJSX\\createFiberTree.js",
+                            "resolvedModule": "./lzy-React/lib/js/myJSX/createFiberTree.js",
+                            "type": "cjs require",
+                            "active": true,
+                            "explanation": "",
+                            "userRequest": "../myReactCore/GlobalFiber",
+                            "loc": "5:22-59",
+                            "moduleId": 6,
+                            "resolvedModuleId": 6
+                        },
+                        {
+                            "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myJSX\\updateFiberTree.js",
+                            "module": "./lzy-React/lib/js/myJSX/updateFiberTree.js",
+                            "moduleName": "./lzy-React/lib/js/myJSX/updateFiberTree.js",
+                            "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myJSX\\updateFiberTree.js",
+                            "resolvedModule": "./lzy-React/lib/js/myJSX/updateFiberTree.js",
+                            "type": "cjs require",
+                            "active": true,
+                            "explanation": "",
+                            "userRequest": "../myReactCore/GlobalFiber",
+                            "loc": "4:22-59",
+                            "moduleId": 9,
+                            "resolvedModuleId": 9
+                        },
+                        {
+                            "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myReactCore\\Reconciler.js",
+                            "module": "./lzy-React/lib/js/myReactCore/Reconciler.js",
+                            "moduleName": "./lzy-React/lib/js/myReactCore/Reconciler.js",
+                            "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myReactCore\\Reconciler.js",
+                            "resolvedModule": "./lzy-React/lib/js/myReactCore/Reconciler.js",
+                            "type": "cjs require",
+                            "active": true,
+                            "explanation": "",
+                            "userRequest": "./GlobalFiber",
+                            "loc": "4:22-46",
+                            "moduleId": 10,
+                            "resolvedModuleId": 10
+                        },
+                        {
+                            "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myReactCore\\render.js",
+                            "module": "./lzy-React/lib/js/myReactCore/render.js",
+                            "moduleName": "./lzy-React/lib/js/myReactCore/render.js",
+                            "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myReactCore\\render.js",
+                            "resolvedModule": "./lzy-React/lib/js/myReactCore/render.js",
+                            "type": "cjs require",
+                            "active": true,
+                            "explanation": "",
+                            "userRequest": "./GlobalFiber",
+                            "loc": "8:22-46",
+                            "moduleId": 5,
+                            "resolvedModuleId": 5
+                        }
+                    ],
+                    "usedExports": null,
+                    "providedExports": [
+                        "NewFiberNode",
+                        "__esModule",
+                        "global",
+                        "updateWorkInProgressHook"
+                    ],
+                    "optimizationBailout": [],
+                    "depth": 2
+                },
+                {
+                    "type": "module",
+                    "moduleType": "javascript/auto",
+                    "layer": null,
+                    "size": 4177,
+                    "sizes": {
+                        "javascript": 4177
+                    },
+                    "built": true,
+                    "codeGenerated": true,
+                    "buildTimeExecuted": false,
+                    "cached": false,
+                    "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myReactCore\\Reconciler.js",
+                    "name": "./lzy-React/lib/js/myReactCore/Reconciler.js",
+                    "nameForCondition": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myReactCore\\Reconciler.js",
+                    "index": 10,
+                    "preOrderIndex": 10,
+                    "index2": 6,
+                    "postOrderIndex": 6,
+                    "cacheable": true,
+                    "optional": false,
+                    "orphan": false,
+                    "dependent": true,
+                    "issuer": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myReactCore\\render.js",
+                    "issuerName": "./lzy-React/lib/js/myReactCore/render.js",
+                    "issuerPath": [
+                        {
+                            "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                            "name": "./src/index.js",
+                            "id": 0
+                        },
+                        {
+                            "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                            "name": "./lzy-React/lib/index.js",
+                            "id": 1
+                        },
+                        {
+                            "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myReactCore\\render.js",
+                            "name": "./lzy-React/lib/js/myReactCore/render.js",
+                            "id": 5
+                        }
+                    ],
+                    "failed": false,
+                    "errors": 0,
+                    "warnings": 0,
+                    "id": 10,
+                    "issuerId": 5,
+                    "chunks": [
+                        0
+                    ],
+                    "assets": [],
+                    "reasons": [
+                        {
+                            "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myReactCore\\render.js",
+                            "module": "./lzy-React/lib/js/myReactCore/render.js",
+                            "moduleName": "./lzy-React/lib/js/myReactCore/render.js",
+                            "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myReactCore\\render.js",
+                            "resolvedModule": "./lzy-React/lib/js/myReactCore/render.js",
+                            "type": "cjs require",
+                            "active": true,
+                            "explanation": "",
+                            "userRequest": "./Reconciler",
+                            "loc": "11:21-44",
+                            "moduleId": 5,
+                            "resolvedModuleId": 5
+                        }
+                    ],
+                    "usedExports": null,
+                    "providedExports": [
+                        "__esModule",
+                        "reconcileFiberNode",
+                        "reconcileUseEffect"
+                    ],
+                    "optimizationBailout": [],
+                    "depth": 3
+                },
+                {
+                    "type": "module",
+                    "moduleType": "javascript/auto",
+                    "layer": null,
+                    "size": 23693,
+                    "sizes": {
+                        "javascript": 23693
+                    },
+                    "built": true,
+                    "codeGenerated": true,
+                    "buildTimeExecuted": false,
+                    "cached": false,
+                    "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myReactCore\\render.js",
+                    "name": "./lzy-React/lib/js/myReactCore/render.js",
+                    "nameForCondition": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myReactCore\\render.js",
+                    "index": 5,
+                    "preOrderIndex": 5,
+                    "index2": 7,
+                    "postOrderIndex": 7,
+                    "cacheable": true,
+                    "optional": false,
+                    "orphan": false,
+                    "dependent": true,
+                    "issuer": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                    "issuerName": "./lzy-React/lib/index.js",
+                    "issuerPath": [
+                        {
+                            "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                            "name": "./src/index.js",
+                            "id": 0
+                        },
+                        {
+                            "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                            "name": "./lzy-React/lib/index.js",
+                            "id": 1
+                        }
+                    ],
+                    "failed": false,
+                    "errors": 0,
+                    "warnings": 0,
+                    "id": 5,
+                    "issuerId": 1,
+                    "chunks": [
+                        0
+                    ],
+                    "assets": [],
+                    "reasons": [
+                        {
+                            "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                            "module": "./lzy-React/lib/index.js",
+                            "moduleName": "./lzy-React/lib/index.js",
+                            "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                            "resolvedModule": "./lzy-React/lib/index.js",
+                            "type": "harmony side effect evaluation",
+                            "active": true,
+                            "explanation": "",
+                            "userRequest": "./js/myReactCore/render",
+                            "loc": "3:0-63",
+                            "moduleId": 1,
+                            "resolvedModuleId": 1
+                        },
+                        {
+                            "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                            "module": "./lzy-React/lib/index.js",
+                            "moduleName": "./lzy-React/lib/index.js",
+                            "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                            "resolvedModule": "./lzy-React/lib/index.js",
+                            "type": "harmony export imported specifier",
+                            "active": true,
+                            "explanation": "",
+                            "userRequest": "./js/myReactCore/render",
+                            "loc": "7:0-70",
+                            "moduleId": 1,
+                            "resolvedModuleId": 1
+                        },
+                        {
+                            "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                            "module": "./lzy-React/lib/index.js",
+                            "moduleName": "./lzy-React/lib/index.js",
+                            "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                            "resolvedModule": "./lzy-React/lib/index.js",
+                            "type": "harmony export imported specifier",
+                            "active": true,
+                            "explanation": "",
+                            "userRequest": "./js/myReactCore/render",
+                            "loc": "7:0-70",
+                            "moduleId": 1,
+                            "resolvedModuleId": 1
+                        },
+                        {
+                            "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myHook\\useState.js",
+                            "module": "./lzy-React/lib/js/myHook/useState.js",
+                            "moduleName": "./lzy-React/lib/js/myHook/useState.js",
+                            "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myHook\\useState.js",
+                            "resolvedModule": "./lzy-React/lib/js/myHook/useState.js",
+                            "type": "cjs require",
+                            "active": true,
+                            "explanation": "",
+                            "userRequest": "../myReactCore/render",
+                            "loc": "4:17-49",
+                            "moduleId": 4,
+                            "resolvedModuleId": 4
+                        }
+                    ],
+                    "usedExports": null,
+                    "providedExports": [
+                        "__esModule",
+                        "render",
+                        "resetFiber",
+                        "updateRender"
+                    ],
+                    "optimizationBailout": [],
+                    "depth": 2
+                },
+                {
+                    "type": "module",
+                    "moduleType": "javascript/auto",
+                    "layer": null,
+                    "size": 7637,
+                    "sizes": {
+                        "javascript": 7637
+                    },
+                    "built": true,
+                    "codeGenerated": true,
+                    "buildTimeExecuted": false,
+                    "cached": false,
+                    "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myRekV\\index.js",
+                    "name": "./lzy-React/lib/js/myRekV/index.js",
+                    "nameForCondition": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myRekV\\index.js",
+                    "index": 11,
+                    "preOrderIndex": 11,
+                    "index2": 10,
+                    "postOrderIndex": 10,
+                    "cacheable": true,
+                    "optional": false,
+                    "orphan": false,
+                    "dependent": true,
+                    "issuer": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                    "issuerName": "./lzy-React/lib/index.js",
+                    "issuerPath": [
+                        {
+                            "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                            "name": "./src/index.js",
+                            "id": 0
+                        },
+                        {
+                            "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                            "name": "./lzy-React/lib/index.js",
+                            "id": 1
+                        }
+                    ],
+                    "failed": false,
+                    "errors": 0,
+                    "warnings": 0,
+                    "id": 11,
+                    "issuerId": 1,
+                    "chunks": [
+                        0
+                    ],
+                    "assets": [],
+                    "reasons": [
+                        {
+                            "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                            "module": "./lzy-React/lib/index.js",
+                            "moduleName": "./lzy-React/lib/index.js",
+                            "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                            "resolvedModule": "./lzy-React/lib/index.js",
+                            "type": "harmony side effect evaluation",
+                            "active": true,
+                            "explanation": "",
+                            "userRequest": "./js/myRekV/index",
+                            "loc": "5:0-36",
+                            "moduleId": 1,
+                            "resolvedModuleId": 1
+                        },
+                        {
+                            "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                            "module": "./lzy-React/lib/index.js",
+                            "moduleName": "./lzy-React/lib/index.js",
+                            "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                            "resolvedModule": "./lzy-React/lib/index.js",
+                            "type": "harmony export imported specifier",
+                            "active": true,
+                            "explanation": "",
+                            "userRequest": "./js/myRekV/index",
+                            "loc": "7:0-70",
+                            "moduleId": 1,
+                            "resolvedModuleId": 1
+                        }
+                    ],
+                    "usedExports": null,
+                    "providedExports": [
+                        "Rekv",
+                        "__esModule",
+                        "default"
+                    ],
+                    "optimizationBailout": [],
+                    "depth": 2
+                },
+                {
+                    "type": "module",
+                    "moduleType": "javascript/auto",
+                    "layer": null,
+                    "size": 831,
+                    "sizes": {
+                        "javascript": 831
+                    },
+                    "built": true,
+                    "codeGenerated": true,
+                    "buildTimeExecuted": false,
+                    "cached": false,
+                    "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myRekV\\utils.js",
+                    "name": "./lzy-React/lib/js/myRekV/utils.js",
+                    "nameForCondition": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myRekV\\utils.js",
+                    "index": 12,
+                    "preOrderIndex": 12,
+                    "index2": 9,
+                    "postOrderIndex": 9,
+                    "cacheable": true,
+                    "optional": false,
+                    "orphan": false,
+                    "dependent": true,
+                    "issuer": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myRekV\\index.js",
+                    "issuerName": "./lzy-React/lib/js/myRekV/index.js",
+                    "issuerPath": [
+                        {
+                            "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                            "name": "./src/index.js",
+                            "id": 0
+                        },
+                        {
+                            "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                            "name": "./lzy-React/lib/index.js",
+                            "id": 1
+                        },
+                        {
+                            "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myRekV\\index.js",
+                            "name": "./lzy-React/lib/js/myRekV/index.js",
+                            "id": 11
+                        }
+                    ],
+                    "failed": false,
+                    "errors": 0,
+                    "warnings": 0,
+                    "id": 12,
+                    "issuerId": 11,
+                    "chunks": [
+                        0
+                    ],
+                    "assets": [],
+                    "reasons": [
+                        {
+                            "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myRekV\\index.js",
+                            "module": "./lzy-React/lib/js/myRekV/index.js",
+                            "moduleName": "./lzy-React/lib/js/myRekV/index.js",
+                            "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myRekV\\index.js",
+                            "resolvedModule": "./lzy-React/lib/js/myRekV/index.js",
+                            "type": "cjs require",
+                            "active": true,
+                            "explanation": "",
+                            "userRequest": "./utils",
+                            "loc": "7:16-34",
+                            "moduleId": 11,
+                            "resolvedModuleId": 11
+                        }
+                    ],
+                    "usedExports": null,
+                    "providedExports": [
+                        "__esModule",
+                        "isFunction",
+                        "isPlainObject"
+                    ],
+                    "optimizationBailout": [],
+                    "depth": 3
+                },
+                {
+                    "type": "module",
+                    "moduleType": "javascript/auto",
+                    "layer": null,
+                    "size": 1872,
+                    "sizes": {
+                        "javascript": 1872
+                    },
+                    "built": true,
+                    "codeGenerated": true,
+                    "buildTimeExecuted": false,
+                    "cached": false,
+                    "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                    "name": "./src/index.js",
+                    "nameForCondition": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                    "index": 0,
+                    "preOrderIndex": 0,
+                    "index2": 12,
+                    "postOrderIndex": 12,
+                    "cacheable": true,
+                    "optional": false,
+                    "orphan": false,
+                    "dependent": false,
+                    "issuer": null,
+                    "issuerName": null,
+                    "issuerPath": null,
+                    "failed": false,
+                    "errors": 0,
+                    "warnings": 0,
+                    "id": 0,
+                    "issuerId": null,
+                    "chunks": [
+                        0
+                    ],
+                    "assets": [],
+                    "reasons": [
+                        {
+                            "moduleIdentifier": null,
+                            "module": null,
+                            "moduleName": null,
+                            "resolvedModuleIdentifier": null,
+                            "resolvedModule": null,
+                            "type": "entry",
+                            "active": true,
+                            "explanation": "",
+                            "userRequest": "./src/index.js",
+                            "loc": "main",
+                            "moduleId": null,
+                            "resolvedModuleId": null
+                        }
+                    ],
+                    "usedExports": null,
+                    "providedExports": [],
+                    "optimizationBailout": [],
+                    "depth": 0
+                },
+                {
+                    "type": "module",
+                    "moduleType": "runtime",
+                    "layer": null,
+                    "size": 308,
+                    "sizes": {
+                        "runtime": 308
+                    },
+                    "built": false,
+                    "codeGenerated": true,
+                    "buildTimeExecuted": false,
+                    "cached": false,
+                    "identifier": "webpack/runtime/define property getters",
+                    "name": "webpack/runtime/define property getters",
+                    "nameForCondition": null,
+                    "index": null,
+                    "preOrderIndex": null,
+                    "index2": null,
+                    "postOrderIndex": null,
+                    "optional": false,
+                    "orphan": false,
+                    "dependent": false,
+                    "failed": false,
+                    "errors": 0,
+                    "warnings": 0,
+                    "id": "",
+                    "chunks": [
+                        0
+                    ],
+                    "assets": [],
+                    "reasons": [],
+                    "usedExports": null,
+                    "providedExports": [],
+                    "optimizationBailout": [],
+                    "depth": null
+                },
+                {
+                    "type": "module",
+                    "moduleType": "runtime",
+                    "layer": null,
+                    "size": 88,
+                    "sizes": {
+                        "runtime": 88
+                    },
+                    "built": false,
+                    "codeGenerated": true,
+                    "buildTimeExecuted": false,
+                    "cached": false,
+                    "identifier": "webpack/runtime/hasOwnProperty shorthand",
+                    "name": "webpack/runtime/hasOwnProperty shorthand",
+                    "nameForCondition": null,
+                    "index": null,
+                    "preOrderIndex": null,
+                    "index2": null,
+                    "postOrderIndex": null,
+                    "optional": false,
+                    "orphan": false,
+                    "dependent": false,
+                    "failed": false,
+                    "errors": 0,
+                    "warnings": 0,
+                    "id": "",
+                    "chunks": [
+                        0
+                    ],
+                    "assets": [],
+                    "reasons": [],
+                    "usedExports": null,
+                    "providedExports": [],
+                    "optimizationBailout": [],
+                    "depth": null
+                },
+                {
+                    "type": "module",
+                    "moduleType": "runtime",
+                    "layer": null,
+                    "size": 274,
+                    "sizes": {
+                        "runtime": 274
+                    },
+                    "built": false,
+                    "codeGenerated": true,
+                    "buildTimeExecuted": false,
+                    "cached": false,
+                    "identifier": "webpack/runtime/make namespace object",
+                    "name": "webpack/runtime/make namespace object",
+                    "nameForCondition": null,
+                    "index": null,
+                    "preOrderIndex": null,
+                    "index2": null,
+                    "postOrderIndex": null,
+                    "optional": false,
+                    "orphan": false,
+                    "dependent": false,
+                    "failed": false,
+                    "errors": 0,
+                    "warnings": 0,
+                    "id": "",
+                    "chunks": [
+                        0
+                    ],
+                    "assets": [],
+                    "reasons": [],
+                    "usedExports": null,
+                    "providedExports": [],
+                    "optimizationBailout": [],
+                    "depth": null
+                }
+            ],
+            "origins": [
+                {
+                    "module": "",
+                    "moduleIdentifier": "",
+                    "moduleName": "",
+                    "loc": "main",
+                    "request": "./src/index.js"
+                }
+            ]
+        }
+    ],
+    "modules": [
+        {
+            "type": "module",
+            "moduleType": "javascript/auto",
+            "layer": null,
+            "size": 1872,
+            "sizes": {
+                "javascript": 1872
+            },
+            "built": true,
+            "codeGenerated": true,
+            "buildTimeExecuted": false,
+            "cached": false,
+            "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+            "name": "./src/index.js",
+            "nameForCondition": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+            "index": 0,
+            "preOrderIndex": 0,
+            "index2": 12,
+            "postOrderIndex": 12,
+            "cacheable": true,
+            "optional": false,
+            "orphan": false,
+            "issuer": null,
+            "issuerName": null,
+            "issuerPath": null,
+            "failed": false,
+            "errors": 0,
+            "warnings": 0,
+            "id": 0,
+            "issuerId": null,
+            "chunks": [
+                0
+            ],
+            "assets": [],
+            "reasons": [
+                {
+                    "moduleIdentifier": null,
+                    "module": null,
+                    "moduleName": null,
+                    "resolvedModuleIdentifier": null,
+                    "resolvedModule": null,
+                    "type": "entry",
+                    "active": true,
+                    "explanation": "",
+                    "userRequest": "./src/index.js",
+                    "loc": "main",
+                    "moduleId": null,
+                    "resolvedModuleId": null
+                }
+            ],
+            "usedExports": null,
+            "providedExports": [],
+            "optimizationBailout": [],
+            "depth": 0
+        },
+        {
+            "type": "module",
+            "moduleType": "javascript/auto",
+            "layer": null,
+            "size": 337,
+            "sizes": {
+                "javascript": 337
+            },
+            "built": true,
+            "codeGenerated": true,
+            "buildTimeExecuted": false,
+            "cached": false,
+            "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+            "name": "./lzy-React/lib/index.js",
+            "nameForCondition": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+            "index": 1,
+            "preOrderIndex": 1,
+            "index2": 11,
+            "postOrderIndex": 11,
+            "cacheable": true,
+            "optional": false,
+            "orphan": false,
+            "issuer": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+            "issuerName": "./src/index.js",
+            "issuerPath": [
+                {
+                    "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                    "name": "./src/index.js",
+                    "id": 0
+                }
+            ],
+            "failed": false,
+            "errors": 0,
+            "warnings": 0,
+            "id": 1,
+            "issuerId": 0,
+            "chunks": [
+                0
+            ],
+            "assets": [],
+            "reasons": [
+                {
+                    "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                    "module": "./src/index.js",
+                    "moduleName": "./src/index.js",
+                    "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                    "resolvedModule": "./src/index.js",
+                    "type": "harmony side effect evaluation",
+                    "active": true,
+                    "explanation": "",
+                    "userRequest": "../lzy-React/lib/index",
+                    "loc": "1:0-72",
+                    "moduleId": 0,
+                    "resolvedModuleId": 0
+                },
+                {
+                    "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                    "module": "./src/index.js",
+                    "moduleName": "./src/index.js",
+                    "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                    "resolvedModule": "./src/index.js",
+                    "type": "harmony import specifier",
+                    "active": true,
+                    "explanation": "",
+                    "userRequest": "../lzy-React/lib/index",
+                    "loc": "6:26-36",
+                    "moduleId": 0,
+                    "resolvedModuleId": 0
+                },
+                {
+                    "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                    "module": "./src/index.js",
+                    "moduleName": "./src/index.js",
+                    "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                    "resolvedModule": "./src/index.js",
+                    "type": "harmony import specifier",
+                    "active": true,
+                    "explanation": "",
+                    "userRequest": "../lzy-React/lib/index",
+                    "loc": "7:26-36",
+                    "moduleId": 0,
+                    "resolvedModuleId": 0
+                },
+                {
+                    "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                    "module": "./src/index.js",
+                    "moduleName": "./src/index.js",
+                    "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                    "resolvedModule": "./src/index.js",
+                    "type": "harmony import specifier",
+                    "active": true,
+                    "explanation": "",
+                    "userRequest": "../lzy-React/lib/index",
+                    "loc": "8:26-36",
+                    "moduleId": 0,
+                    "resolvedModuleId": 0
+                },
+                {
+                    "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                    "module": "./src/index.js",
+                    "moduleName": "./src/index.js",
+                    "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                    "resolvedModule": "./src/index.js",
+                    "type": "harmony import specifier",
+                    "active": true,
+                    "explanation": "",
+                    "userRequest": "../lzy-React/lib/index",
+                    "loc": "13:4-15",
+                    "moduleId": 0,
+                    "resolvedModuleId": 0
+                },
+                {
+                    "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                    "module": "./src/index.js",
+                    "moduleName": "./src/index.js",
+                    "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                    "resolvedModule": "./src/index.js",
+                    "type": "harmony import specifier",
+                    "active": true,
+                    "explanation": "",
+                    "userRequest": "../lzy-React/lib/index",
+                    "loc": "18:4-15",
+                    "moduleId": 0,
+                    "resolvedModuleId": 0
+                },
+                {
+                    "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                    "module": "./src/index.js",
+                    "moduleName": "./src/index.js",
+                    "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                    "resolvedModule": "./src/index.js",
+                    "type": "harmony import specifier",
+                    "active": true,
+                    "explanation": "",
+                    "userRequest": "../lzy-React/lib/index",
+                    "loc": "22:4-15",
+                    "moduleId": 0,
+                    "resolvedModuleId": 0
+                },
+                {
+                    "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                    "module": "./src/index.js",
+                    "moduleName": "./src/index.js",
+                    "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                    "resolvedModule": "./src/index.js",
+                    "type": "harmony import specifier",
+                    "active": true,
+                    "explanation": "",
+                    "userRequest": "../lzy-React/lib/index",
+                    "loc": "70:0-6",
+                    "moduleId": 0,
+                    "resolvedModuleId": 0
+                }
+            ],
+            "usedExports": null,
+            "providedExports": [
+                "Rekv",
+                "global",
+                "myUseEffect",
+                "myUseState",
+                "render",
+                "updateRender"
+            ],
+            "optimizationBailout": [],
+            "depth": 1
+        },
+        {
+            "type": "module",
+            "moduleType": "javascript/auto",
+            "layer": null,
+            "size": 6409,
+            "sizes": {
+                "javascript": 6409
+            },
+            "built": true,
+            "codeGenerated": true,
+            "buildTimeExecuted": false,
+            "cached": false,
+            "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myHook\\useEffect.js",
+            "name": "./lzy-React/lib/js/myHook/useEffect.js",
+            "nameForCondition": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myHook\\useEffect.js",
+            "index": 2,
+            "preOrderIndex": 2,
+            "index2": 1,
+            "postOrderIndex": 1,
+            "cacheable": true,
+            "optional": false,
+            "orphan": false,
+            "issuer": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+            "issuerName": "./lzy-React/lib/index.js",
+            "issuerPath": [
+                {
+                    "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                    "name": "./src/index.js",
+                    "id": 0
+                },
+                {
+                    "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                    "name": "./lzy-React/lib/index.js",
+                    "id": 1
+                }
+            ],
+            "failed": false,
+            "errors": 0,
+            "warnings": 0,
+            "id": 2,
+            "issuerId": 1,
+            "chunks": [
+                0
+            ],
+            "assets": [],
+            "reasons": [
+                {
+                    "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                    "module": "./lzy-React/lib/index.js",
+                    "moduleName": "./lzy-React/lib/index.js",
+                    "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                    "resolvedModule": "./lzy-React/lib/index.js",
+                    "type": "harmony side effect evaluation",
+                    "active": true,
+                    "explanation": "",
+                    "userRequest": "./js/myHook/useEffect",
+                    "loc": "1:0-52",
+                    "moduleId": 1,
+                    "resolvedModuleId": 1
+                },
+                {
+                    "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                    "module": "./lzy-React/lib/index.js",
+                    "moduleName": "./lzy-React/lib/index.js",
+                    "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                    "resolvedModule": "./lzy-React/lib/index.js",
+                    "type": "harmony export imported specifier",
+                    "active": true,
+                    "explanation": "",
+                    "userRequest": "./js/myHook/useEffect",
+                    "loc": "7:0-70",
+                    "moduleId": 1,
+                    "resolvedModuleId": 1
+                },
+                {
+                    "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myRekV\\index.js",
+                    "module": "./lzy-React/lib/js/myRekV/index.js",
+                    "moduleName": "./lzy-React/lib/js/myRekV/index.js",
+                    "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myRekV\\index.js",
+                    "resolvedModule": "./lzy-React/lib/js/myRekV/index.js",
+                    "type": "cjs require",
+                    "active": true,
+                    "explanation": "",
+                    "userRequest": "../myHook/useEffect",
+                    "loc": "5:20-50",
+                    "moduleId": 11,
+                    "resolvedModuleId": 11
+                }
+            ],
+            "usedExports": null,
+            "providedExports": [
+                "__esModule",
+                "myUseEffect"
+            ],
+            "optimizationBailout": [],
+            "depth": 2
+        },
+        {
+            "type": "module",
+            "moduleType": "javascript/auto",
+            "layer": null,
+            "size": 2322,
+            "sizes": {
+                "javascript": 2322
+            },
+            "built": true,
+            "codeGenerated": true,
+            "buildTimeExecuted": false,
+            "cached": false,
+            "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myReactCore\\GlobalFiber.js",
+            "name": "./lzy-React/lib/js/myReactCore/GlobalFiber.js",
+            "nameForCondition": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myReactCore\\GlobalFiber.js",
+            "index": 3,
+            "preOrderIndex": 3,
+            "index2": 0,
+            "postOrderIndex": 0,
+            "cacheable": true,
+            "optional": false,
+            "orphan": false,
+            "issuer": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+            "issuerName": "./lzy-React/lib/index.js",
+            "issuerPath": [
+                {
+                    "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                    "name": "./src/index.js",
+                    "id": 0
+                },
+                {
+                    "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                    "name": "./lzy-React/lib/index.js",
+                    "id": 1
+                }
+            ],
+            "failed": false,
+            "errors": 0,
+            "warnings": 0,
+            "id": 3,
+            "issuerId": 1,
+            "chunks": [
+                0
+            ],
+            "assets": [],
+            "reasons": [
+                {
+                    "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                    "module": "./lzy-React/lib/index.js",
+                    "moduleName": "./lzy-React/lib/index.js",
+                    "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                    "resolvedModule": "./lzy-React/lib/index.js",
+                    "type": "harmony side effect evaluation",
+                    "active": true,
+                    "explanation": "",
+                    "userRequest": "./js/myReactCore/GlobalFiber",
+                    "loc": "4:0-54",
+                    "moduleId": 1,
+                    "resolvedModuleId": 1
+                },
+                {
+                    "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                    "module": "./lzy-React/lib/index.js",
+                    "moduleName": "./lzy-React/lib/index.js",
+                    "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                    "resolvedModule": "./lzy-React/lib/index.js",
+                    "type": "harmony export imported specifier",
+                    "active": true,
+                    "explanation": "",
+                    "userRequest": "./js/myReactCore/GlobalFiber",
+                    "loc": "7:0-70",
+                    "moduleId": 1,
+                    "resolvedModuleId": 1
+                },
+                {
+                    "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myHook\\useEffect.js",
+                    "module": "./lzy-React/lib/js/myHook/useEffect.js",
+                    "moduleName": "./lzy-React/lib/js/myHook/useEffect.js",
+                    "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myHook\\useEffect.js",
+                    "resolvedModule": "./lzy-React/lib/js/myHook/useEffect.js",
+                    "type": "cjs require",
+                    "active": true,
+                    "explanation": "",
+                    "userRequest": "../myReactCore/GlobalFiber",
+                    "loc": "5:22-59",
+                    "moduleId": 2,
+                    "resolvedModuleId": 2
+                },
+                {
+                    "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myHook\\useState.js",
+                    "module": "./lzy-React/lib/js/myHook/useState.js",
+                    "moduleName": "./lzy-React/lib/js/myHook/useState.js",
+                    "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myHook\\useState.js",
+                    "resolvedModule": "./lzy-React/lib/js/myHook/useState.js",
+                    "type": "cjs require",
+                    "active": true,
+                    "explanation": "",
+                    "userRequest": "../myReactCore/GlobalFiber",
+                    "loc": "6:22-59",
+                    "moduleId": 4,
+                    "resolvedModuleId": 4
+                },
+                {
+                    "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myJSX\\createFiberTree.js",
+                    "module": "./lzy-React/lib/js/myJSX/createFiberTree.js",
+                    "moduleName": "./lzy-React/lib/js/myJSX/createFiberTree.js",
+                    "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myJSX\\createFiberTree.js",
+                    "resolvedModule": "./lzy-React/lib/js/myJSX/createFiberTree.js",
+                    "type": "cjs require",
+                    "active": true,
+                    "explanation": "",
+                    "userRequest": "../myReactCore/GlobalFiber",
+                    "loc": "5:22-59",
+                    "moduleId": 6,
+                    "resolvedModuleId": 6
+                },
+                {
+                    "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myJSX\\updateFiberTree.js",
+                    "module": "./lzy-React/lib/js/myJSX/updateFiberTree.js",
+                    "moduleName": "./lzy-React/lib/js/myJSX/updateFiberTree.js",
+                    "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myJSX\\updateFiberTree.js",
+                    "resolvedModule": "./lzy-React/lib/js/myJSX/updateFiberTree.js",
+                    "type": "cjs require",
+                    "active": true,
+                    "explanation": "",
+                    "userRequest": "../myReactCore/GlobalFiber",
+                    "loc": "4:22-59",
+                    "moduleId": 9,
+                    "resolvedModuleId": 9
+                },
+                {
+                    "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myReactCore\\Reconciler.js",
+                    "module": "./lzy-React/lib/js/myReactCore/Reconciler.js",
+                    "moduleName": "./lzy-React/lib/js/myReactCore/Reconciler.js",
+                    "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myReactCore\\Reconciler.js",
+                    "resolvedModule": "./lzy-React/lib/js/myReactCore/Reconciler.js",
+                    "type": "cjs require",
+                    "active": true,
+                    "explanation": "",
+                    "userRequest": "./GlobalFiber",
+                    "loc": "4:22-46",
+                    "moduleId": 10,
+                    "resolvedModuleId": 10
+                },
+                {
+                    "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myReactCore\\render.js",
+                    "module": "./lzy-React/lib/js/myReactCore/render.js",
+                    "moduleName": "./lzy-React/lib/js/myReactCore/render.js",
+                    "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myReactCore\\render.js",
+                    "resolvedModule": "./lzy-React/lib/js/myReactCore/render.js",
+                    "type": "cjs require",
+                    "active": true,
+                    "explanation": "",
+                    "userRequest": "./GlobalFiber",
+                    "loc": "8:22-46",
+                    "moduleId": 5,
+                    "resolvedModuleId": 5
+                }
+            ],
+            "usedExports": null,
+            "providedExports": [
+                "NewFiberNode",
+                "__esModule",
+                "global",
+                "updateWorkInProgressHook"
+            ],
+            "optimizationBailout": [],
+            "depth": 2
+        },
+        {
+            "type": "module",
+            "moduleType": "javascript/auto",
+            "layer": null,
+            "size": 4828,
+            "sizes": {
+                "javascript": 4828
+            },
+            "built": true,
+            "codeGenerated": true,
+            "buildTimeExecuted": false,
+            "cached": false,
+            "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myHook\\useState.js",
+            "name": "./lzy-React/lib/js/myHook/useState.js",
+            "nameForCondition": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myHook\\useState.js",
+            "index": 4,
+            "preOrderIndex": 4,
+            "index2": 8,
+            "postOrderIndex": 8,
+            "cacheable": true,
+            "optional": false,
+            "orphan": false,
+            "issuer": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+            "issuerName": "./lzy-React/lib/index.js",
+            "issuerPath": [
+                {
+                    "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                    "name": "./src/index.js",
+                    "id": 0
+                },
+                {
+                    "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                    "name": "./lzy-React/lib/index.js",
+                    "id": 1
+                }
+            ],
+            "failed": false,
+            "errors": 0,
+            "warnings": 0,
+            "id": 4,
+            "issuerId": 1,
+            "chunks": [
+                0
+            ],
+            "assets": [],
+            "reasons": [
+                {
+                    "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                    "module": "./lzy-React/lib/index.js",
+                    "moduleName": "./lzy-React/lib/index.js",
+                    "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                    "resolvedModule": "./lzy-React/lib/index.js",
+                    "type": "harmony side effect evaluation",
+                    "active": true,
+                    "explanation": "",
+                    "userRequest": "./js/myHook/useState",
+                    "loc": "2:0-50",
+                    "moduleId": 1,
+                    "resolvedModuleId": 1
+                },
+                {
+                    "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                    "module": "./lzy-React/lib/index.js",
+                    "moduleName": "./lzy-React/lib/index.js",
+                    "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                    "resolvedModule": "./lzy-React/lib/index.js",
+                    "type": "harmony export imported specifier",
+                    "active": true,
+                    "explanation": "",
+                    "userRequest": "./js/myHook/useState",
+                    "loc": "7:0-70",
+                    "moduleId": 1,
+                    "resolvedModuleId": 1
+                },
+                {
+                    "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myRekV\\index.js",
+                    "module": "./lzy-React/lib/js/myRekV/index.js",
+                    "moduleName": "./lzy-React/lib/js/myRekV/index.js",
+                    "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myRekV\\index.js",
+                    "resolvedModule": "./lzy-React/lib/js/myRekV/index.js",
+                    "type": "cjs require",
+                    "active": true,
+                    "explanation": "",
+                    "userRequest": "../myHook/useState",
+                    "loc": "4:19-48",
+                    "moduleId": 11,
+                    "resolvedModuleId": 11
+                }
+            ],
+            "usedExports": null,
+            "providedExports": [
+                "__esModule",
+                "myUseState"
+            ],
+            "optimizationBailout": [],
+            "depth": 2
+        },
+        {
+            "type": "module",
+            "moduleType": "javascript/auto",
+            "layer": null,
+            "size": 23693,
+            "sizes": {
+                "javascript": 23693
+            },
+            "built": true,
+            "codeGenerated": true,
+            "buildTimeExecuted": false,
+            "cached": false,
+            "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myReactCore\\render.js",
+            "name": "./lzy-React/lib/js/myReactCore/render.js",
+            "nameForCondition": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myReactCore\\render.js",
+            "index": 5,
+            "preOrderIndex": 5,
+            "index2": 7,
+            "postOrderIndex": 7,
+            "cacheable": true,
+            "optional": false,
+            "orphan": false,
+            "issuer": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+            "issuerName": "./lzy-React/lib/index.js",
+            "issuerPath": [
+                {
+                    "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                    "name": "./src/index.js",
+                    "id": 0
+                },
+                {
+                    "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                    "name": "./lzy-React/lib/index.js",
+                    "id": 1
+                }
+            ],
+            "failed": false,
+            "errors": 0,
+            "warnings": 0,
+            "id": 5,
+            "issuerId": 1,
+            "chunks": [
+                0
+            ],
+            "assets": [],
+            "reasons": [
+                {
+                    "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                    "module": "./lzy-React/lib/index.js",
+                    "moduleName": "./lzy-React/lib/index.js",
+                    "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                    "resolvedModule": "./lzy-React/lib/index.js",
+                    "type": "harmony side effect evaluation",
+                    "active": true,
+                    "explanation": "",
+                    "userRequest": "./js/myReactCore/render",
+                    "loc": "3:0-63",
+                    "moduleId": 1,
+                    "resolvedModuleId": 1
+                },
+                {
+                    "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                    "module": "./lzy-React/lib/index.js",
+                    "moduleName": "./lzy-React/lib/index.js",
+                    "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                    "resolvedModule": "./lzy-React/lib/index.js",
+                    "type": "harmony export imported specifier",
+                    "active": true,
+                    "explanation": "",
+                    "userRequest": "./js/myReactCore/render",
+                    "loc": "7:0-70",
+                    "moduleId": 1,
+                    "resolvedModuleId": 1
+                },
+                {
+                    "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                    "module": "./lzy-React/lib/index.js",
+                    "moduleName": "./lzy-React/lib/index.js",
+                    "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                    "resolvedModule": "./lzy-React/lib/index.js",
+                    "type": "harmony export imported specifier",
+                    "active": true,
+                    "explanation": "",
+                    "userRequest": "./js/myReactCore/render",
+                    "loc": "7:0-70",
+                    "moduleId": 1,
+                    "resolvedModuleId": 1
+                },
+                {
+                    "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myHook\\useState.js",
+                    "module": "./lzy-React/lib/js/myHook/useState.js",
+                    "moduleName": "./lzy-React/lib/js/myHook/useState.js",
+                    "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myHook\\useState.js",
+                    "resolvedModule": "./lzy-React/lib/js/myHook/useState.js",
+                    "type": "cjs require",
+                    "active": true,
+                    "explanation": "",
+                    "userRequest": "../myReactCore/render",
+                    "loc": "4:17-49",
+                    "moduleId": 4,
+                    "resolvedModuleId": 4
+                }
+            ],
+            "usedExports": null,
+            "providedExports": [
+                "__esModule",
+                "render",
+                "resetFiber",
+                "updateRender"
+            ],
+            "optimizationBailout": [],
+            "depth": 2
+        },
+        {
+            "type": "module",
+            "moduleType": "javascript/auto",
+            "layer": null,
+            "size": 7637,
+            "sizes": {
+                "javascript": 7637
+            },
+            "built": true,
+            "codeGenerated": true,
+            "buildTimeExecuted": false,
+            "cached": false,
+            "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myRekV\\index.js",
+            "name": "./lzy-React/lib/js/myRekV/index.js",
+            "nameForCondition": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myRekV\\index.js",
+            "index": 11,
+            "preOrderIndex": 11,
+            "index2": 10,
+            "postOrderIndex": 10,
+            "cacheable": true,
+            "optional": false,
+            "orphan": false,
+            "issuer": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+            "issuerName": "./lzy-React/lib/index.js",
+            "issuerPath": [
+                {
+                    "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                    "name": "./src/index.js",
+                    "id": 0
+                },
+                {
+                    "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                    "name": "./lzy-React/lib/index.js",
+                    "id": 1
+                }
+            ],
+            "failed": false,
+            "errors": 0,
+            "warnings": 0,
+            "id": 11,
+            "issuerId": 1,
+            "chunks": [
+                0
+            ],
+            "assets": [],
+            "reasons": [
+                {
+                    "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                    "module": "./lzy-React/lib/index.js",
+                    "moduleName": "./lzy-React/lib/index.js",
+                    "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                    "resolvedModule": "./lzy-React/lib/index.js",
+                    "type": "harmony side effect evaluation",
+                    "active": true,
+                    "explanation": "",
+                    "userRequest": "./js/myRekV/index",
+                    "loc": "5:0-36",
+                    "moduleId": 1,
+                    "resolvedModuleId": 1
+                },
+                {
+                    "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                    "module": "./lzy-React/lib/index.js",
+                    "moduleName": "./lzy-React/lib/index.js",
+                    "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                    "resolvedModule": "./lzy-React/lib/index.js",
+                    "type": "harmony export imported specifier",
+                    "active": true,
+                    "explanation": "",
+                    "userRequest": "./js/myRekV/index",
+                    "loc": "7:0-70",
+                    "moduleId": 1,
+                    "resolvedModuleId": 1
+                }
+            ],
+            "usedExports": null,
+            "providedExports": [
+                "Rekv",
+                "__esModule",
+                "default"
+            ],
+            "optimizationBailout": [],
+            "depth": 2
+        },
+        {
+            "type": "module",
+            "moduleType": "javascript/auto",
+            "layer": null,
+            "size": 9824,
+            "sizes": {
+                "javascript": 9824
+            },
+            "built": true,
+            "codeGenerated": true,
+            "buildTimeExecuted": false,
+            "cached": false,
+            "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myJSX\\createFiberTree.js",
+            "name": "./lzy-React/lib/js/myJSX/createFiberTree.js",
+            "nameForCondition": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myJSX\\createFiberTree.js",
+            "index": 6,
+            "preOrderIndex": 6,
+            "index2": 4,
+            "postOrderIndex": 4,
+            "cacheable": true,
+            "optional": false,
+            "orphan": false,
+            "issuer": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myReactCore\\render.js",
+            "issuerName": "./lzy-React/lib/js/myReactCore/render.js",
+            "issuerPath": [
+                {
+                    "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                    "name": "./src/index.js",
+                    "id": 0
+                },
+                {
+                    "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                    "name": "./lzy-React/lib/index.js",
+                    "id": 1
+                },
+                {
+                    "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myReactCore\\render.js",
+                    "name": "./lzy-React/lib/js/myReactCore/render.js",
+                    "id": 5
+                }
+            ],
+            "failed": false,
+            "errors": 0,
+            "warnings": 0,
+            "id": 6,
+            "issuerId": 5,
+            "chunks": [
+                0
+            ],
+            "assets": [],
+            "reasons": [
+                {
+                    "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myJSX\\updateFiberTree.js",
+                    "module": "./lzy-React/lib/js/myJSX/updateFiberTree.js",
+                    "moduleName": "./lzy-React/lib/js/myJSX/updateFiberTree.js",
+                    "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myJSX\\updateFiberTree.js",
+                    "resolvedModule": "./lzy-React/lib/js/myJSX/updateFiberTree.js",
+                    "type": "cjs require",
+                    "active": true,
+                    "explanation": "",
+                    "userRequest": "./createFiberTree",
+                    "loc": "5:26-54",
+                    "moduleId": 9,
+                    "resolvedModuleId": 9
+                },
+                {
+                    "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myReactCore\\render.js",
+                    "module": "./lzy-React/lib/js/myReactCore/render.js",
+                    "moduleName": "./lzy-React/lib/js/myReactCore/render.js",
+                    "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myReactCore\\render.js",
+                    "resolvedModule": "./lzy-React/lib/js/myReactCore/render.js",
+                    "type": "cjs require",
+                    "active": true,
+                    "explanation": "",
+                    "userRequest": "../myJSX/createFiberTree",
+                    "loc": "9:26-61",
+                    "moduleId": 5,
+                    "resolvedModuleId": 5
+                }
+            ],
+            "usedExports": null,
+            "providedExports": [
+                "__esModule",
+                "conbineVnodAndFiber",
+                "createDomElement",
+                "createFiberTree",
+                "getParentDom",
+                "handleFunctionComponentProps",
+                "handleFunctionFiberNode",
+                "handleProps",
+                "preHandleFiberNode",
+                "renderFunctionComponent",
+                "useRoute"
+            ],
+            "optimizationBailout": [],
+            "depth": 3
+        },
+        {
+            "type": "module",
+            "moduleType": "javascript/auto",
+            "layer": null,
+            "size": 7292,
+            "sizes": {
+                "javascript": 7292
+            },
+            "built": true,
+            "codeGenerated": true,
+            "buildTimeExecuted": false,
+            "cached": false,
+            "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myJSX\\updateFiberTree.js",
+            "name": "./lzy-React/lib/js/myJSX/updateFiberTree.js",
+            "nameForCondition": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myJSX\\updateFiberTree.js",
+            "index": 9,
+            "preOrderIndex": 9,
+            "index2": 5,
+            "postOrderIndex": 5,
+            "cacheable": true,
+            "optional": false,
+            "orphan": false,
+            "issuer": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myReactCore\\render.js",
+            "issuerName": "./lzy-React/lib/js/myReactCore/render.js",
+            "issuerPath": [
+                {
+                    "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                    "name": "./src/index.js",
+                    "id": 0
+                },
+                {
+                    "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                    "name": "./lzy-React/lib/index.js",
+                    "id": 1
+                },
+                {
+                    "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myReactCore\\render.js",
+                    "name": "./lzy-React/lib/js/myReactCore/render.js",
+                    "id": 5
+                }
+            ],
+            "failed": false,
+            "errors": 0,
+            "warnings": 0,
+            "id": 9,
+            "issuerId": 5,
+            "chunks": [
+                0
+            ],
+            "assets": [],
+            "reasons": [
+                {
+                    "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myReactCore\\render.js",
+                    "module": "./lzy-React/lib/js/myReactCore/render.js",
+                    "moduleName": "./lzy-React/lib/js/myReactCore/render.js",
+                    "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myReactCore\\render.js",
+                    "resolvedModule": "./lzy-React/lib/js/myReactCore/render.js",
+                    "type": "cjs require",
+                    "active": true,
+                    "explanation": "",
+                    "userRequest": "../myJSX/updateFiberTree",
+                    "loc": "10:26-61",
+                    "moduleId": 5,
+                    "resolvedModuleId": 5
+                }
+            ],
+            "usedExports": null,
+            "providedExports": [
+                "__esModule",
+                "createAlternate",
+                "updateFiberTree"
+            ],
+            "optimizationBailout": [],
+            "depth": 3
+        },
+        {
+            "type": "module",
+            "moduleType": "javascript/auto",
+            "layer": null,
+            "size": 4177,
+            "sizes": {
+                "javascript": 4177
+            },
+            "built": true,
+            "codeGenerated": true,
+            "buildTimeExecuted": false,
+            "cached": false,
+            "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myReactCore\\Reconciler.js",
+            "name": "./lzy-React/lib/js/myReactCore/Reconciler.js",
+            "nameForCondition": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myReactCore\\Reconciler.js",
+            "index": 10,
+            "preOrderIndex": 10,
+            "index2": 6,
+            "postOrderIndex": 6,
+            "cacheable": true,
+            "optional": false,
+            "orphan": false,
+            "issuer": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myReactCore\\render.js",
+            "issuerName": "./lzy-React/lib/js/myReactCore/render.js",
+            "issuerPath": [
+                {
+                    "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                    "name": "./src/index.js",
+                    "id": 0
+                },
+                {
+                    "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                    "name": "./lzy-React/lib/index.js",
+                    "id": 1
+                },
+                {
+                    "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myReactCore\\render.js",
+                    "name": "./lzy-React/lib/js/myReactCore/render.js",
+                    "id": 5
+                }
+            ],
+            "failed": false,
+            "errors": 0,
+            "warnings": 0,
+            "id": 10,
+            "issuerId": 5,
+            "chunks": [
+                0
+            ],
+            "assets": [],
+            "reasons": [
+                {
+                    "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myReactCore\\render.js",
+                    "module": "./lzy-React/lib/js/myReactCore/render.js",
+                    "moduleName": "./lzy-React/lib/js/myReactCore/render.js",
+                    "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myReactCore\\render.js",
+                    "resolvedModule": "./lzy-React/lib/js/myReactCore/render.js",
+                    "type": "cjs require",
+                    "active": true,
+                    "explanation": "",
+                    "userRequest": "./Reconciler",
+                    "loc": "11:21-44",
+                    "moduleId": 5,
+                    "resolvedModuleId": 5
+                }
+            ],
+            "usedExports": null,
+            "providedExports": [
+                "__esModule",
+                "reconcileFiberNode",
+                "reconcileUseEffect"
+            ],
+            "optimizationBailout": [],
+            "depth": 3
+        },
+        {
+            "type": "module",
+            "moduleType": "javascript/auto",
+            "layer": null,
+            "size": 831,
+            "sizes": {
+                "javascript": 831
+            },
+            "built": true,
+            "codeGenerated": true,
+            "buildTimeExecuted": false,
+            "cached": false,
+            "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myRekV\\utils.js",
+            "name": "./lzy-React/lib/js/myRekV/utils.js",
+            "nameForCondition": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myRekV\\utils.js",
+            "index": 12,
+            "preOrderIndex": 12,
+            "index2": 9,
+            "postOrderIndex": 9,
+            "cacheable": true,
+            "optional": false,
+            "orphan": false,
+            "issuer": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myRekV\\index.js",
+            "issuerName": "./lzy-React/lib/js/myRekV/index.js",
+            "issuerPath": [
+                {
+                    "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                    "name": "./src/index.js",
+                    "id": 0
+                },
+                {
+                    "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                    "name": "./lzy-React/lib/index.js",
+                    "id": 1
+                },
+                {
+                    "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myRekV\\index.js",
+                    "name": "./lzy-React/lib/js/myRekV/index.js",
+                    "id": 11
+                }
+            ],
+            "failed": false,
+            "errors": 0,
+            "warnings": 0,
+            "id": 12,
+            "issuerId": 11,
+            "chunks": [
+                0
+            ],
+            "assets": [],
+            "reasons": [
+                {
+                    "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myRekV\\index.js",
+                    "module": "./lzy-React/lib/js/myRekV/index.js",
+                    "moduleName": "./lzy-React/lib/js/myRekV/index.js",
+                    "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myRekV\\index.js",
+                    "resolvedModule": "./lzy-React/lib/js/myRekV/index.js",
+                    "type": "cjs require",
+                    "active": true,
+                    "explanation": "",
+                    "userRequest": "./utils",
+                    "loc": "7:16-34",
+                    "moduleId": 11,
+                    "resolvedModuleId": 11
+                }
+            ],
+            "usedExports": null,
+            "providedExports": [
+                "__esModule",
+                "isFunction",
+                "isPlainObject"
+            ],
+            "optimizationBailout": [],
+            "depth": 3
+        },
+        {
+            "type": "module",
+            "moduleType": "javascript/auto",
+            "layer": null,
+            "size": 6617,
+            "sizes": {
+                "javascript": 6617
+            },
+            "built": true,
+            "codeGenerated": true,
+            "buildTimeExecuted": false,
+            "cached": false,
+            "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myJSX\\tplToVnode.js",
+            "name": "./lzy-React/lib/js/myJSX/tplToVnode.js",
+            "nameForCondition": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myJSX\\tplToVnode.js",
+            "index": 7,
+            "preOrderIndex": 7,
+            "index2": 3,
+            "postOrderIndex": 3,
+            "cacheable": true,
+            "optional": false,
+            "orphan": false,
+            "issuer": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myJSX\\createFiberTree.js",
+            "issuerName": "./lzy-React/lib/js/myJSX/createFiberTree.js",
+            "issuerPath": [
+                {
+                    "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                    "name": "./src/index.js",
+                    "id": 0
+                },
+                {
+                    "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                    "name": "./lzy-React/lib/index.js",
+                    "id": 1
+                },
+                {
+                    "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myReactCore\\render.js",
+                    "name": "./lzy-React/lib/js/myReactCore/render.js",
+                    "id": 5
+                },
+                {
+                    "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myJSX\\createFiberTree.js",
+                    "name": "./lzy-React/lib/js/myJSX/createFiberTree.js",
+                    "id": 6
+                }
+            ],
+            "failed": false,
+            "errors": 0,
+            "warnings": 0,
+            "id": 7,
+            "issuerId": 6,
+            "chunks": [
+                0
+            ],
+            "assets": [],
+            "reasons": [
+                {
+                    "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myJSX\\createFiberTree.js",
+                    "module": "./lzy-React/lib/js/myJSX/createFiberTree.js",
+                    "moduleName": "./lzy-React/lib/js/myJSX/createFiberTree.js",
+                    "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myJSX\\createFiberTree.js",
+                    "resolvedModule": "./lzy-React/lib/js/myJSX/createFiberTree.js",
+                    "type": "cjs require",
+                    "active": true,
+                    "explanation": "",
+                    "userRequest": "./tplToVnode",
+                    "loc": "4:21-44",
+                    "moduleId": 6,
+                    "resolvedModuleId": 6
+                },
+                {
+                    "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myJSX\\tplToVnode.js",
+                    "module": "./lzy-React/lib/js/myJSX/tplToVnode.js",
+                    "moduleName": "./lzy-React/lib/js/myJSX/tplToVnode.js",
+                    "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myJSX\\tplToVnode.js",
+                    "resolvedModule": "./lzy-React/lib/js/myJSX/tplToVnode.js",
+                    "type": "cjs self exports reference",
+                    "active": true,
+                    "explanation": "",
+                    "userRequest": null,
+                    "loc": "2:23-27",
+                    "moduleId": 7,
+                    "resolvedModuleId": 7
+                },
+                {
+                    "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myJSX\\tplToVnode.js",
+                    "module": "./lzy-React/lib/js/myJSX/tplToVnode.js",
+                    "moduleName": "./lzy-React/lib/js/myJSX/tplToVnode.js",
+                    "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myJSX\\tplToVnode.js",
+                    "resolvedModule": "./lzy-React/lib/js/myJSX/tplToVnode.js",
+                    "type": "cjs self exports reference",
+                    "active": true,
+                    "explanation": "",
+                    "userRequest": null,
+                    "loc": "2:31-51",
+                    "moduleId": 7,
+                    "resolvedModuleId": 7
+                }
+            ],
+            "usedExports": null,
+            "providedExports": null,
+            "optimizationBailout": [
+                "CommonJS bailout: this is used directly at 2:23-27"
+            ],
+            "depth": 4
+        },
+        {
+            "type": "module",
+            "moduleType": "javascript/auto",
+            "layer": null,
+            "size": 1525,
+            "sizes": {
+                "javascript": 1525
+            },
+            "built": true,
+            "codeGenerated": true,
+            "buildTimeExecuted": false,
+            "cached": false,
+            "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myJSX\\tplScanner.js",
+            "name": "./lzy-React/lib/js/myJSX/tplScanner.js",
+            "nameForCondition": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myJSX\\tplScanner.js",
+            "index": 8,
+            "preOrderIndex": 8,
+            "index2": 2,
+            "postOrderIndex": 2,
+            "cacheable": true,
+            "optional": false,
+            "orphan": false,
+            "issuer": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myJSX\\tplToVnode.js",
+            "issuerName": "./lzy-React/lib/js/myJSX/tplToVnode.js",
+            "issuerPath": [
+                {
+                    "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\src\\index.js",
+                    "name": "./src/index.js",
+                    "id": 0
+                },
+                {
+                    "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\index.js",
+                    "name": "./lzy-React/lib/index.js",
+                    "id": 1
+                },
+                {
+                    "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myReactCore\\render.js",
+                    "name": "./lzy-React/lib/js/myReactCore/render.js",
+                    "id": 5
+                },
+                {
+                    "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myJSX\\createFiberTree.js",
+                    "name": "./lzy-React/lib/js/myJSX/createFiberTree.js",
+                    "id": 6
+                },
+                {
+                    "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myJSX\\tplToVnode.js",
+                    "name": "./lzy-React/lib/js/myJSX/tplToVnode.js",
+                    "id": 7
+                }
+            ],
+            "failed": false,
+            "errors": 0,
+            "warnings": 0,
+            "id": 8,
+            "issuerId": 7,
+            "chunks": [
+                0
+            ],
+            "assets": [],
+            "reasons": [
+                {
+                    "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myJSX\\tplToVnode.js",
+                    "module": "./lzy-React/lib/js/myJSX/tplToVnode.js",
+                    "moduleName": "./lzy-React/lib/js/myJSX/tplToVnode.js",
+                    "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\lzy-React\\lib\\js\\myJSX\\tplToVnode.js",
+                    "resolvedModule": "./lzy-React/lib/js/myJSX/tplToVnode.js",
+                    "type": "cjs require",
+                    "active": true,
+                    "explanation": "",
+                    "userRequest": "./tplScanner",
+                    "loc": "7:37-60",
+                    "moduleId": 7,
+                    "resolvedModuleId": 7
+                }
+            ],
+            "usedExports": null,
+            "providedExports": [
+                "__esModule",
+                "default"
+            ],
+            "optimizationBailout": [],
+            "depth": 5
+        },
+        {
+            "type": "module",
+            "moduleType": "runtime",
+            "layer": null,
+            "size": 308,
+            "sizes": {
+                "runtime": 308
+            },
+            "built": false,
+            "codeGenerated": true,
+            "buildTimeExecuted": false,
+            "cached": false,
+            "identifier": "webpack/runtime/define property getters",
+            "name": "webpack/runtime/define property getters",
+            "nameForCondition": null,
+            "index": null,
+            "preOrderIndex": null,
+            "index2": null,
+            "postOrderIndex": null,
+            "optional": false,
+            "orphan": false,
+            "failed": false,
+            "errors": 0,
+            "warnings": 0,
+            "id": "",
+            "chunks": [
+                0
+            ],
+            "assets": [],
+            "reasons": [],
+            "usedExports": null,
+            "providedExports": [],
+            "optimizationBailout": [],
+            "depth": null
+        },
+        {
+            "type": "module",
+            "moduleType": "runtime",
+            "layer": null,
+            "size": 88,
+            "sizes": {
+                "runtime": 88
+            },
+            "built": false,
+            "codeGenerated": true,
+            "buildTimeExecuted": false,
+            "cached": false,
+            "identifier": "webpack/runtime/hasOwnProperty shorthand",
+            "name": "webpack/runtime/hasOwnProperty shorthand",
+            "nameForCondition": null,
+            "index": null,
+            "preOrderIndex": null,
+            "index2": null,
+            "postOrderIndex": null,
+            "optional": false,
+            "orphan": false,
+            "failed": false,
+            "errors": 0,
+            "warnings": 0,
+            "id": "",
+            "chunks": [
+                0
+            ],
+            "assets": [],
+            "reasons": [],
+            "usedExports": null,
+            "providedExports": [],
+            "optimizationBailout": [],
+            "depth": null
+        },
+        {
+            "type": "module",
+            "moduleType": "runtime",
+            "layer": null,
+            "size": 274,
+            "sizes": {
+                "runtime": 274
+            },
+            "built": false,
+            "codeGenerated": true,
+            "buildTimeExecuted": false,
+            "cached": false,
+            "identifier": "webpack/runtime/make namespace object",
+            "name": "webpack/runtime/make namespace object",
+            "nameForCondition": null,
+            "index": null,
+            "preOrderIndex": null,
+            "index2": null,
+            "postOrderIndex": null,
+            "optional": false,
+            "orphan": false,
+            "failed": false,
+            "errors": 0,
+            "warnings": 0,
+            "id": "",
+            "chunks": [
+                0
+            ],
+            "assets": [],
+            "reasons": [],
+            "usedExports": null,
+            "providedExports": [],
+            "optimizationBailout": [],
+            "depth": null
+        }
+    ],
+    "entrypoints": {
+        "main": {
+            "name": "main",
+            "chunks": [
+                0
+            ],
+            "assets": [
+                {
+                    "name": "bundle.js",
+                    "size": 82235
+                }
+            ],
+            "filteredAssets": 0,
+            "assetsSize": 82235,
+            "auxiliaryAssets": [],
+            "filteredAuxiliaryAssets": 0,
+            "auxiliaryAssetsSize": 0,
+            "children": {},
+            "childAssets": {},
+            "isOverSizeLimit": false
+        }
+    },
+    "namedChunkGroups": {
+        "main": {
+            "name": "main",
+            "chunks": [
+                0
+            ],
+            "assets": [
+                {
+                    "name": "bundle.js",
+                    "size": 82235
+                }
+            ],
+            "filteredAssets": 0,
+            "assetsSize": 82235,
+            "auxiliaryAssets": [],
+            "filteredAuxiliaryAssets": 0,
+            "auxiliaryAssetsSize": 0,
+            "children": {},
+            "childAssets": {},
+            "isOverSizeLimit": false
+        }
+    },
+    "errors": [],
+    "errorsCount": 0,
+    "warnings": [],
+    "warningsCount": 0,
+    "children": [
+        {
+            "name": "HtmlWebpackCompiler",
+            "hash": "1a1176f1a7cd80de4b56",
+            "version": "5.72.0",
+            "time": 86,
+            "builtAt": 1660629971561,
+            "publicPath": "",
+            "outputPath": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\dist",
+            "assetsByChunkName": {},
+            "assets": [],
+            "chunks": [
+                {
+                    "rendered": true,
+                    "initial": true,
+                    "entry": true,
+                    "recorded": false,
+                    "size": 1461,
+                    "sizes": {
+                        "javascript": 749,
+                        "runtime": 712
+                    },
+                    "names": [
+                        "HtmlWebpackPlugin_0-0"
+                    ],
+                    "idHints": [],
+                    "runtime": [
+                        "HtmlWebpackPlugin_0-0"
+                    ],
+                    "files": [],
+                    "auxiliaryFiles": [],
+                    "hash": "c545492f8d28ab4c161a",
+                    "childrenByOrder": {},
+                    "id": 0,
+                    "siblings": [],
+                    "parents": [],
+                    "children": [],
+                    "modules": [
+                        {
+                            "type": "module",
+                            "moduleType": "javascript/auto",
+                            "layer": null,
+                            "size": 672,
+                            "sizes": {
+                                "javascript": 672
+                            },
+                            "built": true,
+                            "codeGenerated": true,
+                            "buildTimeExecuted": false,
+                            "cached": false,
+                            "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\node_modules\\html-webpack-plugin\\lib\\loader.js!E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\index.html",
+                            "name": "./node_modules/html-webpack-plugin/lib/loader.js!./index.html",
+                            "nameForCondition": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\index.html",
+                            "index": 1,
+                            "preOrderIndex": 1,
+                            "index2": 1,
+                            "postOrderIndex": 1,
+                            "cacheable": true,
+                            "optional": false,
+                            "orphan": false,
+                            "dependent": false,
+                            "issuer": null,
+                            "issuerName": null,
+                            "issuerPath": null,
+                            "failed": false,
+                            "errors": 0,
+                            "warnings": 0,
+                            "id": 1,
+                            "issuerId": null,
+                            "chunks": [
+                                0
+                            ],
+                            "assets": [],
+                            "reasons": [
+                                {
+                                    "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\node_modules\\html-webpack-plugin\\lib\\loader.js!E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\index.html",
+                                    "module": "./node_modules/html-webpack-plugin/lib/loader.js!./index.html",
+                                    "moduleName": "./node_modules/html-webpack-plugin/lib/loader.js!./index.html",
+                                    "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\node_modules\\html-webpack-plugin\\lib\\loader.js!E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\index.html",
+                                    "resolvedModule": "./node_modules/html-webpack-plugin/lib/loader.js!./index.html",
+                                    "type": "cjs self exports reference",
+                                    "active": true,
+                                    "explanation": "",
+                                    "userRequest": null,
+                                    "loc": "1:134-148",
+                                    "moduleId": 1,
+                                    "resolvedModuleId": 1
+                                },
+                                {
+                                    "moduleIdentifier": null,
+                                    "module": null,
+                                    "moduleName": null,
+                                    "resolvedModuleIdentifier": null,
+                                    "resolvedModule": null,
+                                    "type": "entry",
+                                    "active": true,
+                                    "explanation": "",
+                                    "userRequest": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\node_modules\\html-webpack-plugin\\lib\\loader.js!E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\index.html",
+                                    "loc": "HtmlWebpackPlugin_0-0",
+                                    "moduleId": null,
+                                    "resolvedModuleId": null
+                                },
+                                {
+                                    "moduleIdentifier": null,
+                                    "module": null,
+                                    "moduleName": null,
+                                    "resolvedModuleIdentifier": null,
+                                    "resolvedModule": null,
+                                    "type": null,
+                                    "active": true,
+                                    "explanation": "used as library export",
+                                    "userRequest": null,
+                                    "moduleId": null,
+                                    "resolvedModuleId": null
+                                }
+                            ],
+                            "usedExports": null,
+                            "providedExports": null,
+                            "optimizationBailout": [
+                                "CommonJS bailout: module.exports is used directly at 1:134-148"
+                            ],
+                            "depth": 0
+                        },
+                        {
+                            "type": "module",
+                            "moduleType": "javascript/esm",
+                            "layer": null,
+                            "size": 77,
+                            "sizes": {
+                                "javascript": 77
+                            },
+                            "built": true,
+                            "codeGenerated": true,
+                            "buildTimeExecuted": false,
+                            "cached": false,
+                            "identifier": "javascript/esm|data:text/javascript,__webpack_public_path__ = __webpack_base_uri__ = htmlWebpackPluginPublicPath;",
+                            "name": "data:text/javascript,__webpack_public_path__ = __webpack_base_uri__ = htmlWebpackPluginPublicPath;",
+                            "nameForCondition": "data:text/javascript,__webpack_public_path__ = __webpack_base_uri__ = htmlWebpackPluginPublicPath;",
+                            "index": 0,
+                            "preOrderIndex": 0,
+                            "index2": 0,
+                            "postOrderIndex": 0,
+                            "cacheable": true,
+                            "optional": false,
+                            "orphan": false,
+                            "dependent": false,
+                            "issuer": null,
+                            "issuerName": null,
+                            "issuerPath": null,
+                            "failed": false,
+                            "errors": 0,
+                            "warnings": 0,
+                            "id": 0,
+                            "issuerId": null,
+                            "chunks": [
+                                0
+                            ],
+                            "assets": [],
+                            "reasons": [
+                                {
+                                    "moduleIdentifier": null,
+                                    "module": null,
+                                    "moduleName": null,
+                                    "resolvedModuleIdentifier": null,
+                                    "resolvedModule": null,
+                                    "type": "entry",
+                                    "active": true,
+                                    "explanation": "",
+                                    "userRequest": "data:text/javascript,__webpack_public_path__ = __webpack_base_uri__ = htmlWebpackPluginPublicPath;",
+                                    "loc": "HtmlWebpackPlugin_0-0",
+                                    "moduleId": null,
+                                    "resolvedModuleId": null
+                                }
+                            ],
+                            "usedExports": null,
+                            "providedExports": [],
+                            "optimizationBailout": [],
+                            "depth": 0
+                        },
+                        {
+                            "type": "module",
+                            "moduleType": "runtime",
+                            "layer": null,
+                            "size": 88,
+                            "sizes": {
+                                "runtime": 88
+                            },
+                            "built": false,
+                            "codeGenerated": true,
+                            "buildTimeExecuted": false,
+                            "cached": false,
+                            "identifier": "webpack/runtime/hasOwnProperty shorthand",
+                            "name": "webpack/runtime/hasOwnProperty shorthand",
+                            "nameForCondition": null,
+                            "index": null,
+                            "preOrderIndex": null,
+                            "index2": null,
+                            "postOrderIndex": null,
+                            "optional": false,
+                            "orphan": false,
+                            "dependent": false,
+                            "failed": false,
+                            "errors": 0,
+                            "warnings": 0,
+                            "id": "",
+                            "chunks": [
+                                0
+                            ],
+                            "assets": [],
+                            "reasons": [],
+                            "usedExports": null,
+                            "providedExports": [],
+                            "optimizationBailout": [],
+                            "depth": null
+                        },
+                        {
+                            "type": "module",
+                            "moduleType": "runtime",
+                            "layer": null,
+                            "size": 274,
+                            "sizes": {
+                                "runtime": 274
+                            },
+                            "built": false,
+                            "codeGenerated": true,
+                            "buildTimeExecuted": false,
+                            "cached": false,
+                            "identifier": "webpack/runtime/make namespace object",
+                            "name": "webpack/runtime/make namespace object",
+                            "nameForCondition": null,
+                            "index": null,
+                            "preOrderIndex": null,
+                            "index2": null,
+                            "postOrderIndex": null,
+                            "optional": false,
+                            "orphan": false,
+                            "dependent": false,
+                            "failed": false,
+                            "errors": 0,
+                            "warnings": 0,
+                            "id": "",
+                            "chunks": [
+                                0
+                            ],
+                            "assets": [],
+                            "reasons": [],
+                            "usedExports": null,
+                            "providedExports": [],
+                            "optimizationBailout": [],
+                            "depth": null
+                        },
+                        {
+                            "type": "module",
+                            "moduleType": "runtime",
+                            "layer": null,
+                            "size": 27,
+                            "sizes": {
+                                "runtime": 27
+                            },
+                            "built": false,
+                            "codeGenerated": true,
+                            "buildTimeExecuted": false,
+                            "cached": false,
+                            "identifier": "webpack/runtime/publicPath",
+                            "name": "webpack/runtime/publicPath",
+                            "nameForCondition": null,
+                            "index": null,
+                            "preOrderIndex": null,
+                            "index2": null,
+                            "postOrderIndex": null,
+                            "optional": false,
+                            "orphan": false,
+                            "dependent": false,
+                            "failed": false,
+                            "errors": 0,
+                            "warnings": 0,
+                            "id": "",
+                            "chunks": [
+                                0
+                            ],
+                            "assets": [],
+                            "reasons": [],
+                            "usedExports": null,
+                            "providedExports": [],
+                            "optimizationBailout": [],
+                            "depth": null
+                        },
+                        {
+                            "type": "module",
+                            "moduleType": "runtime",
+                            "layer": null,
+                            "size": 323,
+                            "sizes": {
+                                "runtime": 323
+                            },
+                            "built": false,
+                            "codeGenerated": true,
+                            "buildTimeExecuted": false,
+                            "cached": false,
+                            "identifier": "webpack/runtime/require chunk loading",
+                            "name": "webpack/runtime/require chunk loading",
+                            "nameForCondition": null,
+                            "index": null,
+                            "preOrderIndex": null,
+                            "index2": null,
+                            "postOrderIndex": null,
+                            "optional": false,
+                            "orphan": false,
+                            "dependent": false,
+                            "failed": false,
+                            "errors": 0,
+                            "warnings": 0,
+                            "id": "",
+                            "chunks": [
+                                0
+                            ],
+                            "assets": [],
+                            "reasons": [],
+                            "usedExports": null,
+                            "providedExports": [],
+                            "optimizationBailout": [],
+                            "depth": null
+                        }
+                    ],
+                    "origins": [
+                        {
+                            "module": "",
+                            "moduleIdentifier": "",
+                            "moduleName": "",
+                            "loc": "HtmlWebpackPlugin_0-0",
+                            "request": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\node_modules\\html-webpack-plugin\\lib\\loader.js!E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\index.html"
+                        },
+                        {
+                            "module": "",
+                            "moduleIdentifier": "",
+                            "moduleName": "",
+                            "loc": "HtmlWebpackPlugin_0-0",
+                            "request": "data:text/javascript,__webpack_public_path__ = __webpack_base_uri__ = htmlWebpackPluginPublicPath;"
+                        }
+                    ]
+                }
+            ],
+            "modules": [
+                {
+                    "type": "module",
+                    "moduleType": "javascript/esm",
+                    "layer": null,
+                    "size": 77,
+                    "sizes": {
+                        "javascript": 77
+                    },
+                    "built": true,
+                    "codeGenerated": true,
+                    "buildTimeExecuted": false,
+                    "cached": false,
+                    "identifier": "javascript/esm|data:text/javascript,__webpack_public_path__ = __webpack_base_uri__ = htmlWebpackPluginPublicPath;",
+                    "name": "data:text/javascript,__webpack_public_path__ = __webpack_base_uri__ = htmlWebpackPluginPublicPath;",
+                    "nameForCondition": "data:text/javascript,__webpack_public_path__ = __webpack_base_uri__ = htmlWebpackPluginPublicPath;",
+                    "index": 0,
+                    "preOrderIndex": 0,
+                    "index2": 0,
+                    "postOrderIndex": 0,
+                    "cacheable": true,
+                    "optional": false,
+                    "orphan": false,
+                    "issuer": null,
+                    "issuerName": null,
+                    "issuerPath": null,
+                    "failed": false,
+                    "errors": 0,
+                    "warnings": 0,
+                    "id": 0,
+                    "issuerId": null,
+                    "chunks": [
+                        0
+                    ],
+                    "assets": [],
+                    "reasons": [
+                        {
+                            "moduleIdentifier": null,
+                            "module": null,
+                            "moduleName": null,
+                            "resolvedModuleIdentifier": null,
+                            "resolvedModule": null,
+                            "type": "entry",
+                            "active": true,
+                            "explanation": "",
+                            "userRequest": "data:text/javascript,__webpack_public_path__ = __webpack_base_uri__ = htmlWebpackPluginPublicPath;",
+                            "loc": "HtmlWebpackPlugin_0-0",
+                            "moduleId": null,
+                            "resolvedModuleId": null
+                        }
+                    ],
+                    "usedExports": null,
+                    "providedExports": [],
+                    "optimizationBailout": [],
+                    "depth": 0
+                },
+                {
+                    "type": "module",
+                    "moduleType": "javascript/auto",
+                    "layer": null,
+                    "size": 672,
+                    "sizes": {
+                        "javascript": 672
+                    },
+                    "built": true,
+                    "codeGenerated": true,
+                    "buildTimeExecuted": false,
+                    "cached": false,
+                    "identifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\node_modules\\html-webpack-plugin\\lib\\loader.js!E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\index.html",
+                    "name": "./node_modules/html-webpack-plugin/lib/loader.js!./index.html",
+                    "nameForCondition": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\index.html",
+                    "index": 1,
+                    "preOrderIndex": 1,
+                    "index2": 1,
+                    "postOrderIndex": 1,
+                    "cacheable": true,
+                    "optional": false,
+                    "orphan": false,
+                    "issuer": null,
+                    "issuerName": null,
+                    "issuerPath": null,
+                    "failed": false,
+                    "errors": 0,
+                    "warnings": 0,
+                    "id": 1,
+                    "issuerId": null,
+                    "chunks": [
+                        0
+                    ],
+                    "assets": [],
+                    "reasons": [
+                        {
+                            "moduleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\node_modules\\html-webpack-plugin\\lib\\loader.js!E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\index.html",
+                            "module": "./node_modules/html-webpack-plugin/lib/loader.js!./index.html",
+                            "moduleName": "./node_modules/html-webpack-plugin/lib/loader.js!./index.html",
+                            "resolvedModuleIdentifier": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\node_modules\\html-webpack-plugin\\lib\\loader.js!E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\index.html",
+                            "resolvedModule": "./node_modules/html-webpack-plugin/lib/loader.js!./index.html",
+                            "type": "cjs self exports reference",
+                            "active": true,
+                            "explanation": "",
+                            "userRequest": null,
+                            "loc": "1:134-148",
+                            "moduleId": 1,
+                            "resolvedModuleId": 1
+                        },
+                        {
+                            "moduleIdentifier": null,
+                            "module": null,
+                            "moduleName": null,
+                            "resolvedModuleIdentifier": null,
+                            "resolvedModule": null,
+                            "type": "entry",
+                            "active": true,
+                            "explanation": "",
+                            "userRequest": "E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\node_modules\\html-webpack-plugin\\lib\\loader.js!E:\\My_React_Projects\\React源码解析+自己的React脚手架项目\\tinyReact_Project\\index.html",
+                            "loc": "HtmlWebpackPlugin_0-0",
+                            "moduleId": null,
+                            "resolvedModuleId": null
+                        },
+                        {
+                            "moduleIdentifier": null,
+                            "module": null,
+                            "moduleName": null,
+                            "resolvedModuleIdentifier": null,
+                            "resolvedModule": null,
+                            "type": null,
+                            "active": true,
+                            "explanation": "used as library export",
+                            "userRequest": null,
+                            "moduleId": null,
+                            "resolvedModuleId": null
+                        }
+                    ],
+                    "usedExports": null,
+                    "providedExports": null,
+                    "optimizationBailout": [
+                        "CommonJS bailout: module.exports is used directly at 1:134-148"
+                    ],
+                    "depth": 0
+                },
+                {
+                    "type": "module",
+                    "moduleType": "runtime",
+                    "layer": null,
+                    "size": 88,
+                    "sizes": {
+                        "runtime": 88
+                    },
+                    "built": false,
+                    "codeGenerated": true,
+                    "buildTimeExecuted": false,
+                    "cached": false,
+                    "identifier": "webpack/runtime/hasOwnProperty shorthand",
+                    "name": "webpack/runtime/hasOwnProperty shorthand",
+                    "nameForCondition": null,
+                    "index": null,
+                    "preOrderIndex": null,
+                    "index2": null,
+                    "postOrderIndex": null,
+                    "optional": false,
+                    "orphan": false,
+                    "failed": false,
+                    "errors": 0,
+                    "warnings": 0,
+                    "id": "",
+                    "chunks": [
+                        0
+                    ],
+                    "assets": [],
+                    "reasons": [],
+                    "usedExports": null,
+                    "providedExports": [],
+                    "optimizationBailout": [],
+                    "depth": null
+                },
+                {
+                    "type": "module",
+                    "moduleType": "runtime",
+                    "layer": null,
+                    "size": 274,
+                    "sizes": {
+                        "runtime": 274
+                    },
+                    "built": false,
+                    "codeGenerated": true,
+                    "buildTimeExecuted": false,
+                    "cached": false,
+                    "identifier": "webpack/runtime/make namespace object",
+                    "name": "webpack/runtime/make namespace object",
+                    "nameForCondition": null,
+                    "index": null,
+                    "preOrderIndex": null,
+                    "index2": null,
+                    "postOrderIndex": null,
+                    "optional": false,
+                    "orphan": false,
+                    "failed": false,
+                    "errors": 0,
+                    "warnings": 0,
+                    "id": "",
+                    "chunks": [
+                        0
+                    ],
+                    "assets": [],
+                    "reasons": [],
+                    "usedExports": null,
+                    "providedExports": [],
+                    "optimizationBailout": [],
+                    "depth": null
+                },
+                {
+                    "type": "module",
+                    "moduleType": "runtime",
+                    "layer": null,
+                    "size": 27,
+                    "sizes": {
+                        "runtime": 27
+                    },
+                    "built": false,
+                    "codeGenerated": true,
+                    "buildTimeExecuted": false,
+                    "cached": false,
+                    "identifier": "webpack/runtime/publicPath",
+                    "name": "webpack/runtime/publicPath",
+                    "nameForCondition": null,
+                    "index": null,
+                    "preOrderIndex": null,
+                    "index2": null,
+                    "postOrderIndex": null,
+                    "optional": false,
+                    "orphan": false,
+                    "failed": false,
+                    "errors": 0,
+                    "warnings": 0,
+                    "id": "",
+                    "chunks": [
+                        0
+                    ],
+                    "assets": [],
+                    "reasons": [],
+                    "usedExports": null,
+                    "providedExports": [],
+                    "optimizationBailout": [],
+                    "depth": null
+                },
+                {
+                    "type": "module",
+                    "moduleType": "runtime",
+                    "layer": null,
+                    "size": 323,
+                    "sizes": {
+                        "runtime": 323
+                    },
+                    "built": false,
+                    "codeGenerated": true,
+                    "buildTimeExecuted": false,
+                    "cached": false,
+                    "identifier": "webpack/runtime/require chunk loading",
+                    "name": "webpack/runtime/require chunk loading",
+                    "nameForCondition": null,
+                    "index": null,
+                    "preOrderIndex": null,
+                    "index2": null,
+                    "postOrderIndex": null,
+                    "optional": false,
+                    "orphan": false,
+                    "failed": false,
+                    "errors": 0,
+                    "warnings": 0,
+                    "id": "",
+                    "chunks": [
+                        0
+                    ],
+                    "assets": [],
+                    "reasons": [],
+                    "usedExports": null,
+                    "providedExports": [],
+                    "optimizationBailout": [],
+                    "depth": null
+                }
+            ],
+            "entrypoints": {
+                "HtmlWebpackPlugin_0-0": {
+                    "name": "HtmlWebpackPlugin_0-0",
+                    "chunks": [
+                        0
+                    ],
+                    "assets": [],
+                    "filteredAssets": 0,
+                    "assetsSize": 0,
+                    "auxiliaryAssets": [],
+                    "filteredAuxiliaryAssets": 0,
+                    "auxiliaryAssetsSize": 0,
+                    "children": {},
+                    "childAssets": {},
+                    "isOverSizeLimit": false
+                }
+            },
+            "namedChunkGroups": {
+                "HtmlWebpackPlugin_0-0": {
+                    "name": "HtmlWebpackPlugin_0-0",
+                    "chunks": [
+                        0
+                    ],
+                    "assets": [],
+                    "filteredAssets": 0,
+                    "assetsSize": 0,
+                    "auxiliaryAssets": [],
+                    "filteredAuxiliaryAssets": 0,
+                    "auxiliaryAssetsSize": 0,
+                    "children": {},
+                    "childAssets": {},
+                    "isOverSizeLimit": false
+                }
+            },
+            "errors": [],
+            "errorsCount": 0,
+            "warnings": [],
+            "warningsCount": 0,
+            "children": []
+        }
+    ]
+}
+
+

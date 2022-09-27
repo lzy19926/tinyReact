@@ -1,0 +1,24 @@
+import { createElement } from '../lzy-React/lib/js/myJSX/createElement'
+
+const LzyReact = { createElement }
+
+
+const fn = () => <div id={1} name={'张三'}>1</div>
+
+function App() {
+    return (
+        <LZY-TEMPLATE>
+            <div id={1} name={'张三'}>
+                文字内容
+                <div id={1} name={'张三'}>1</div>
+                <div id={1} name={'张三'}>1</div>
+                {fn()}
+            </div>
+        </LZY-TEMPLATE>
+    )
+}
+
+
+console.log(App());
+
+export default App

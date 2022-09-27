@@ -8,7 +8,7 @@
 // import RoutePage from './page/routePage'
 // //JSX测试页面
 // import JsyTest from './lzyPage/JsyTest.lzy'
-import Demo2 from './lzyPage/Demo2.lzy'
+// import Demo2 from './lzyPage/Demo2.lzy'
 // // 结构渲染测试页面
 // import RenderTest from './page/renderTest.lzy'
 // // 添加节点测试
@@ -19,16 +19,16 @@ import Demo2 from './lzyPage/Demo2.lzy'
 // import './App.css'
 
 
-function App() {
+// function App() {
 
-  return (
-    <LZY-TEMPLATE>
-      <Demo2></Demo2>
-    </LZY-TEMPLATE>
-  )
-}
+//   return (
+//     <LZY-TEMPLATE>
+//       <Demo2></Demo2>
+//     </LZY-TEMPLATE>
+//   )
+// }
 
-export default App
+// export default App
 
 
 
