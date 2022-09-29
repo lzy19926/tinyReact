@@ -1,5 +1,5 @@
-import * as LzyReact from '../lzy-React/lib/index'
-import { render } from '../lzy-React/lib/js/myReactCore/render2'
+import * as LzyReact from '../lzy-React/out/index_V2'
+import { render } from '../lzy-React/out/index_V2'
 
 
 
@@ -17,4 +17,4 @@ function App() {
 }
 
 // 执行渲染
-// render(App)
+render(App)
