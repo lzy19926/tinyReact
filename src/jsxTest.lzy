@@ -1,24 +1,20 @@
-import { createElement } from '../lzy-React/lib/js/myJSX/createElement'
+import * as LzyReact from '../lzy-React/lib/index'
+import { render } from '../lzy-React/lib/js/myReactCore/render2'
 
-const LzyReact = { createElement }
 
 
-const fn = () => <div id={1} name={'张三'}>1</div>
+const Child = () => <div>子组件</div>
+
 
 function App() {
     return (
         <LZY-TEMPLATE>
-            <div id={1} name={'张三'}>
-                文字内容
-                <div id={1} name={'张三'}>1</div>
-                <div id={1} name={'张三'}>1</div>
-                {fn()}
-            </div>
+            123
+            <Child />
+            <div id={1} fn={() => { }} onClick={() => { console.log('点击') }}>div</div>
         </LZY-TEMPLATE>
     )
 }
 
-
-console.log(App());
-
-export default App
+// 执行渲染
+// render(App)

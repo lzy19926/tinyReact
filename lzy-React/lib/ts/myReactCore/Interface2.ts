@@ -1,3 +1,4 @@
+import type { FiberNode } from './GlobalFiber2'
 //!--------------单个UseEffectHook结构-------------------
 //todo 通过判断tag 'useEffect','useLayoutEffect' 来判断何种钩子  改变执行时机
 interface UseEffectHook {
@@ -31,28 +32,6 @@ interface StateUpdater {
     next: StateUpdater | null
 }
 
-//!------------fiberNode结构----------------------
-interface FiberNode {
-    memorizedState: any,
-    stateNode: Function | HTMLElement | null,
-    updateQueue: any,
-    stateQueueTimer: any,
-    fiberFlags: 'mount' | 'update' | undefined,
-    // effectTag: 'Update' | 'Delete' | 'Placement' | undefined,
-    hasRef: boolean,
-    ref: any,
-    children: any,
-    props: any,
-    tag: any,
-    text: any,
-    sourcePool: any,
-    hookIndex: number,
-    parentNode: FiberNode | null,
-    nodeType: 'HostText' | 'HostComponent' | 'FunctionComponent' | 'AppNode' | undefined,
-    alternate: FiberNode | null,
-    $fiber: '$1' | '$2' | undefined
-    key: number | null
-}
 
 //!-------------全局需要的变量结构---------------
 interface Global {

@@ -7,7 +7,7 @@ function isElement(node) {
         return false;
     return Symbol.keyFor(node.$$typeof) === 'lzyElement';
 }
-// 创建Element树
+// 通过解析来的JSX创建Element树
 function createElement(...args) {
     let key;
     let ref;
@@ -15,6 +15,19 @@ function createElement(...args) {
     const tag = args[0];
     const config = args[1];
     const childNodes = args.slice(2);
+    // 处理tag为函数组件的情况(创建组件Element  执行函数并返回ElementNode)
+    if (typeof tag === 'function') {
+        let fc = tag;
+        return {
+            $$typeof: Symbol.for('lzyElement'),
+            tag: fc.name,
+            ref: fc,
+            key,
+            props: config,
+            children: [fc()],
+            fiber: undefined
+        };
+    }
     // 单独处理ref和key
     if (config) {
         ref = config.ref;
@@ -31,8 +44,10 @@ function createElement(...args) {
             }
             else {
                 children.push({
-                    $$typeof: Symbol.for('textElement'),
-                    text: child
+                    $$typeof: Symbol.for('lzyElement'),
+                    tag: 'text',
+                    text: child,
+                    fiber: undefined
                 });
             }
         });
@@ -44,7 +59,8 @@ function createElement(...args) {
         ref,
         key,
         props: config,
-        children
+        children,
+        fiber: undefined
     };
 }
 exports.createElement = createElement;

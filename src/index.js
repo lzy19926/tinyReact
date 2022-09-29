@@ -1,5 +1,5 @@
 import { render, myUseState, myUseEffect } from '../lzy-React/lib/index'
-import JsxTest from './jsxTest.lzy'
+// import JsxTest from './jsxTest.lzy'
 //! Demo组件
 function Demo() {
 
@@ -40,19 +40,15 @@ function Demo() {
 
     return ({
         components: {},
-
         data: { addNum, addAge, addArr },
-
         template: `
         <div>
         <h1>Demo</h1>
         
-        <div>简单适配了bootStarp组件库</div>
         <button type="button" class="btn btn-primary" onClick={addNum}>增加Num</button>
         <button type="button" class="btn btn-secondary" onClick={addAge}>增加Age和Num</button>
         <button type="button" class="btn btn-success" onClick={addArr}>增加Arr</button>
 
-    
         <h3 className="blue">当前Num:${num}</h3>
         <h3 className='blue'>当前Age:${age}</h3>
         
@@ -66,8 +62,8 @@ function Demo() {
             `
     })
 }
-
-render(JsxTest, document.getElementById('root'))
+// 执行渲染
+render(Demo, document.getElementById('root'))
 
 
 

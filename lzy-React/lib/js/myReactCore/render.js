@@ -378,7 +378,7 @@ function render(functionComponent, rootDom) {
     GlobalFiber_1.global.workInprogressFiberNode = workInProgressFiber; //挂载到全局
     //todo render阶段
     const beginWorkFiber = renderPart(functionComponent, rootDom, workInProgressFiber);
-    // 从下往上遍历fiber收集所有的Effects 形成环链表 上传递优先级给root
+    // 从下往上遍历fiber收集所有的Effects 形成链表 上传递优先级给root
     //! 这里finishedWork应该在renderPart中   待修改
     const finishedWorkFiber = finishedWork(beginWorkFiber, null);
     //todo commit阶段
@@ -491,5 +491,3 @@ exports.resetFiber = resetFiber;
 //         return destoryEffectsArr
 //     }
 // }
-// this.jql += ` AND description ~ ${keyword[0]}`; // 描述查询
-// this.jql += ` OR issuekey = ${keyword[0]}`; // ID查询
