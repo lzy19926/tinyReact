@@ -1,11 +1,19 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createElement = void 0;
+exports.createBinadyElementTree = exports.transformElementTreeToBinadyTree = exports.createElement = void 0;
 // 判断是否为Element
 function isElement(node) {
     if (!node.$$typeof)
         return false;
     return Symbol.keyFor(node.$$typeof) === 'lzyElement';
+}
+// 给节点添加child和sibling,parent三个属性 放到connect属性里作为二叉树链接
+function addPropsToElement(elementNode, parentNode) {
+    Object.assign(elementNode, {
+        _child: undefined,
+        _sibling: undefined,
+        _parent: parentNode
+    });
 }
 // 通过解析来的JSX创建Element树
 function createElement(...args) {
@@ -24,7 +32,7 @@ function createElement(...args) {
             ref: fc,
             key,
             props: config,
-            children: [fc()],
+            children: [],
             fiber: undefined
         };
     }
@@ -64,6 +72,35 @@ function createElement(...args) {
     };
 }
 exports.createElement = createElement;
+//! 将ElementTree森林结构递归转为二叉Element树
+function transformElementTreeToBinadyTree(elementTree, parentElement) {
+    const rootElementNode = elementTree;
+    const children = rootElementNode.children;
+    addPropsToElement(rootElementNode, parentElement);
+    children.forEach((child, index) => {
+        addPropsToElement(child, rootElementNode);
+        if (index === 0) {
+            rootElementNode._child = child;
+            delete rootElementNode.children;
+        }
+        else {
+            children[index - 1]._sibling = child;
+            delete children[index - 1].children;
+        }
+        if (child.children) {
+            transformElementTreeToBinadyTree(child, rootElementNode);
+        }
+    });
+    return rootElementNode;
+}
+exports.transformElementTreeToBinadyTree = transformElementTreeToBinadyTree;
+//! 综合方法
+function createBinadyElementTree(functionComponent, parentElement) {
+    const elementTree = createElement(functionComponent);
+    const binadyElementTree = transformElementTreeToBinadyTree(elementTree, parentElement);
+    return binadyElementTree;
+}
+exports.createBinadyElementTree = createBinadyElementTree;
 // 测试函数
 const test = () => {
     function App() {

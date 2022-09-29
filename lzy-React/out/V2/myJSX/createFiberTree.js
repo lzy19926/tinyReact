@@ -1,41 +1,23 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createFiberWorkLoop = exports.createFiberWorkLoop2 = exports.createFiberTree = exports.transformElementTreeToBinadyTree = void 0;
+exports.createFiberWorkLoop = exports.createFiberWorkLoop2 = exports.handleProps = exports.createTextElement = exports.createDomElement = exports.createFiberTree = void 0;
 const GlobalFiber_1 = require("../myReactCore/GlobalFiber");
-//! 这里先将ElementTree森林结构递归转为二叉Element树
-function transformElementTreeToBinadyTree(elementTree, parentNode) {
-    const rootElementNode = elementTree;
-    const children = rootElementNode.children;
-    addPropsToElement(rootElementNode, parentNode);
-    children.forEach((child, index) => {
-        addPropsToElement(child, rootElementNode);
-        if (index === 0) {
-            rootElementNode._child = child;
-            delete rootElementNode.children;
-        }
-        else {
-            children[index - 1]._sibling = child;
-            delete children[index - 1].children;
-        }
-        if (child.children) {
-            transformElementTreeToBinadyTree(child, rootElementNode);
-        }
-    });
-    return rootElementNode;
-}
-exports.transformElementTreeToBinadyTree = transformElementTreeToBinadyTree;
+const createElement_1 = require("../myJSX/createElement");
 function createFiberTree(elementNode, parentFiber) {
     let newFiberNode = new GlobalFiber_1.FiberNode('mount', '$1');
     let childElement = elementNode._child;
     let siblingElement = elementNode._sibling;
+    //todo 切换当前工作fiber
+    GlobalFiber_1.global.workInprogressFiberNode = newFiberNode;
     newFiberNode.tag = elementNode.tag;
     newFiberNode._parent = parentFiber;
     newFiberNode._element = elementNode;
     elementNode.fiber = newFiberNode;
-    //如果tag大写 解析为FC组件节点
+    //如果tag大写 解析为FC组件节点 执行渲染
     if (elementNode.tag[0] === elementNode.tag[0].toUpperCase()) {
         newFiberNode.nodeType = 'FunctionComponent';
         newFiberNode.stateNode = elementNode.ref;
+        childElement = (0, createElement_1.transformElementTreeToBinadyTree)(elementNode.ref(), elementNode); //! 重新生成新的二叉element树
     }
     //解析为text节点
     else if (elementNode.tag === 'text') {
@@ -62,14 +44,6 @@ function createFiberTree(elementNode, parentFiber) {
     return newFiberNode;
 }
 exports.createFiberTree = createFiberTree;
-// 给节点添加child和sibling,parent三个属性 放到connect属性里作为二叉树链接
-function addPropsToElement(elementNode, parentNode) {
-    Object.assign(elementNode, {
-        _child: undefined,
-        _sibling: undefined,
-        _parent: parentNode
-    });
-}
 //! -------------创建html并挂载到fiber节点上--------------------
 function createDomElement(fiber) {
     //找到父dom节点 将创建好的dom节点添加进去
@@ -80,6 +54,7 @@ function createDomElement(fiber) {
     fiber.stateNode = domElement;
     return domElement;
 }
+exports.createDomElement = createDomElement;
 //! -------------创建text节点并挂载到fiber节点上--------------------
 function createTextElement(fiber) {
     //找到父dom节点 将创建好的dom节点添加进去
@@ -89,6 +64,7 @@ function createTextElement(fiber) {
     fiber.stateNode = textElement;
     return textElement;
 }
+exports.createTextElement = createTextElement;
 //! ----------找到父dom节点---------------------
 function getParentDom(fiber) {
     let parentNode = fiber._parent;
@@ -138,6 +114,7 @@ function handleProps(fiber, dom) {
         }
     }
 }
+exports.handleProps = handleProps;
 //todo 深度优先遍历  优先进入child  再进入sibling 都无的情况返回parent 进入sibling （交替执行begin和completeWork）
 function createFiberWorkLoop2(elementNode) {
     if (Symbol.keyFor(elementNode.$$typeof) === 'textElement') {
@@ -232,5 +209,5 @@ function test() {
             }
         ]
     };
-    console.log(transformElementTreeToBinadyTree(obj, 1));
+    console.log((0, createElement_1.transformElementTreeToBinadyTree)(obj, 1));
 }

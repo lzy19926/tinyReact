@@ -24,7 +24,7 @@ class FiberNode {
     }
 }
 exports.FiberNode = FiberNode;
-//! -----需要使用的全局变量---------------
+//! -----挂载需要使用的全局变量---------------
 const global = {
     workInprogressFiberNode: null,
     workInProgressHook: { currentHook: null },

@@ -3,13 +3,13 @@ import { global } from './GlobalFiber'
 
 
 //! 更新事件
+// TODO (重要)如果节点有挂载事件  需要更新这些事件(否则无法更新  事件引用不会变更)!!!!!!!!!
 function reconcileEvent(workInProgressFiber: FiberNode, currentFiber: FiberNode) {
-    // TODO 如果节点有挂载事件  需要更新这些事件!!!!!!!!!
-    const wkProps = workInProgressFiber.props
+
+    const wkProps = workInProgressFiber._element.props
     if (!wkProps) return
     // 如果有事件 创建对应的Effect
     const hasEvent = wkProps.hasOwnProperty('onClick' || 'onMouseOver')
-
     if (hasEvent) {
         pushEffectList('Update', workInProgressFiber)
     }
@@ -17,22 +17,15 @@ function reconcileEvent(workInProgressFiber: FiberNode, currentFiber: FiberNode)
 
 //! 判断是否有useEffect钩子调用
 function reconcileUseEffect(workInProgressFiber: FiberNode, currentFiber: FiberNode) {
-    if (workInProgressFiber.updateQueue) {
+    if (workInProgressFiber?.updateQueue?.lastEffect) {
         pushEffectList('UseEffect', workInProgressFiber)
     }
 }
 
 
-
-//! 计算Props
-function reconcileProps(workInProgressFiber: FiberNode, currentFiber: FiberNode) {
-    pushEffectList('Update', workInProgressFiber)
-}
-
 //! 计算Text
 function reconcileText(workInProgressFiber: FiberNode, currentFiber: FiberNode) {
-    if (!workInProgressFiber.text || !currentFiber.text) return
-
+    if (!workInProgressFiber || !currentFiber) return
     if (workInProgressFiber.text !== currentFiber.text) {
         pushEffectList('Update', workInProgressFiber)
     }
@@ -44,11 +37,10 @@ function reconcileTag(workInProgressFiber: FiberNode, currentFiber: FiberNode) {
 }
 
 
-
 //! 添加(待优化)
 function reconcilePlacement(workInProgressFiber: FiberNode, currentFiber: FiberNode) {
-    const wkKey = workInProgressFiber?.key
-    const curKey = currentFiber?.key
+    const wkKey = workInProgressFiber?._element.key
+    const curKey = currentFiber?._element.key
 
     // 或者有cur  无work算为插入节点
     if (!currentFiber && workInProgressFiber) {
@@ -108,6 +100,7 @@ function reconcileFiberNode(workInProgressFiber: FiberNode, currentFiber: FiberN
     reconcilePlacement(workInProgressFiber, currentFiber)
 
     let needDiff = true
+
     if (workInProgressFiber && !currentFiber) {
         needDiff = false
     } else if (!workInProgressFiber && currentFiber) {
@@ -116,6 +109,7 @@ function reconcileFiberNode(workInProgressFiber: FiberNode, currentFiber: FiberN
     } else if (workInProgressFiber.key !== currentFiber.key) {
 
     }
+
 
 
     if (needDiff) {

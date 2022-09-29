@@ -2,7 +2,8 @@
 import { FiberNode, StateUpdater, UseStateHook } from '../myReactCore/Interface'
 import { updateRender } from '../myReactCore/render'
 // 全局变量和当前 Fiber
-import { global, updateWorkInProgressHook } from '../myReactCore/GlobalFiber'
+import { updateWorkInProgressHook, global } from '../myReactCore/GlobalFiber'
+
 
 
 //! ---------------useState返回的updater方法(updateState方法)-------------------
@@ -108,7 +109,6 @@ function updateUseStateHook(hook: UseStateHook) {
 
 //! ----------执行useState会执行state的计算过程----------------
 function myUseState(initialState: any) {
-
 
     //todo  需要找到当前的fiber节点()
     let fiber = global.workInprogressFiberNode

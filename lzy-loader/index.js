@@ -12,8 +12,8 @@ function lzyLoader(source) {
 
     //todo 将所有<LZY-TEMPLATE>标签替换为div标签
     const newSource = source
-        .replace('<LZY-TEMPLATE>', '<div>')
-        .replace('</LZY-TEMPLATE>', '</div>')
+        .replace(/<LZY-TEMPLATE>/g, '<div>')
+        .replace(/<\/LZY-TEMPLATE>/g, '</div>')
 
     const { code } = jsx.transformSync(newSource, {
         presets: ["@babel/preset-react"],

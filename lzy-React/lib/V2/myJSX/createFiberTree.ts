@@ -1,46 +1,27 @@
-import { FiberNode } from '../myReactCore/GlobalFiber'
+import { FiberNode, global } from '../myReactCore/GlobalFiber'
 import { ElementNode, TextElementNode } from "../myReactCore/Interface";
+import { transformElementTreeToBinadyTree } from '../myJSX/createElement'
 
-//! 这里先将ElementTree森林结构递归转为二叉Element树
-export function transformElementTreeToBinadyTree(elementTree: any, parentNode: any): ElementNode {
-    const rootElementNode = elementTree
-    const children = rootElementNode.children
-    addPropsToElement(rootElementNode, parentNode)
-
-    children.forEach((child, index) => {
-        addPropsToElement(child, rootElementNode)
-
-        if (index === 0) {
-            rootElementNode._child = child
-            delete rootElementNode.children
-        }
-        else {
-            children[index - 1]._sibling = child
-            delete children[index - 1].children
-        }
-
-        if (child.children) {
-            transformElementTreeToBinadyTree(child, rootElementNode)
-        }
-    })
-
-    return rootElementNode
-}
 
 export function createFiberTree(elementNode: ElementNode | TextElementNode, parentFiber: FiberNode): FiberNode {
     let newFiberNode = new FiberNode('mount', '$1')
     let childElement = elementNode._child
     let siblingElement = elementNode._sibling
 
+    //todo 切换当前工作fiber
+    global.workInprogressFiberNode = newFiberNode
+
     newFiberNode.tag = elementNode.tag
     newFiberNode._parent = parentFiber
     newFiberNode._element = elementNode
     elementNode.fiber = newFiberNode
 
-    //如果tag大写 解析为FC组件节点
+
+    //如果tag大写 解析为FC组件节点 执行渲染
     if (elementNode.tag[0] === elementNode.tag[0].toUpperCase()) {
         newFiberNode.nodeType = 'FunctionComponent'
         newFiberNode.stateNode = elementNode.ref
+        childElement = transformElementTreeToBinadyTree(elementNode.ref(), elementNode) //! 重新生成新的二叉element树
     }
     //解析为text节点
     else if (elementNode.tag === 'text') {
@@ -74,16 +55,9 @@ export function createFiberTree(elementNode: ElementNode | TextElementNode, pare
     return newFiberNode
 }
 
-// 给节点添加child和sibling,parent三个属性 放到connect属性里作为二叉树链接
-function addPropsToElement(elementNode, parentNode) {
-    Object.assign(elementNode, {
-        _child: undefined,
-        _sibling: undefined,
-        _parent: parentNode
-    })
-}
+
 //! -------------创建html并挂载到fiber节点上--------------------
-function createDomElement(fiber: FiberNode) {
+export function createDomElement(fiber: FiberNode) {
     //找到父dom节点 将创建好的dom节点添加进去
     const parentDom = getParentDom(fiber)
 
@@ -96,7 +70,7 @@ function createDomElement(fiber: FiberNode) {
 }
 
 //! -------------创建text节点并挂载到fiber节点上--------------------
-function createTextElement(fiber: FiberNode) {
+export function createTextElement(fiber: FiberNode) {
     //找到父dom节点 将创建好的dom节点添加进去
     const parentDom = getParentDom(fiber)
 
@@ -130,7 +104,7 @@ function getParentDom(fiber: FiberNode) {
 }
 
 //! 对标签中的属性进行处理 给dom节点添加标签 (未完成)
-function handleProps(fiber: FiberNode, dom: HTMLElement) {
+export function handleProps(fiber: FiberNode, dom: HTMLElement | any) {
 
     const props = fiber._element.props
 
@@ -167,14 +141,6 @@ function handleProps(fiber: FiberNode, dom: HTMLElement) {
         }
     }
 }
-
-
-
-
-
-
-
-
 
 
 

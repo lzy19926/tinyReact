@@ -1,4 +1,4 @@
-import type { Global, ElementNode, TextElementNode } from './Interface'
+import type { ElementNode, TextElementNode, Global } from './Interface'
 
 //! ----------Fiber节点结构---------------
 class FiberNode {
@@ -41,7 +41,8 @@ class FiberNode {
     }
 }
 
-//! -----需要使用的全局变量---------------
+//! -----挂载需要使用的全局变量---------------
+
 const global: Global = {
     workInprogressFiberNode: null, //! 当前工作的fiber节点
     workInProgressHook: { currentHook: null },//React中使用链表来保存hooks 挂在全局
@@ -49,6 +50,7 @@ const global: Global = {
     destoryEffectsArr: [],
     renderTag: 'mount', // 用于判断是否是首次更新
 }
+
 
 //! ----------拿取需要本次update需要更新的hook----------------------
 function updateWorkInProgressHook(fiber: FiberNode) {

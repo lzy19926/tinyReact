@@ -1,5 +1,5 @@
 import * as LzyReact from '../lzy-React/out/index_V2'
-import { render } from '../lzy-React/out/index_V2'
+import { render, updateRender, myUseState } from '../lzy-React/out/index_V2'
 
 
 
@@ -7,14 +7,18 @@ const Child = () => <div>子组件</div>
 
 
 function App() {
+    const [num, setNum] = myUseState(0)
+    const add = () => { setNum(num + 1) }
     return (
         <LZY-TEMPLATE>
-            123
-            <Child />
-            <div id={1} fn={() => { }} onClick={() => { console.log('点击') }}>div</div>
+            <button onClick={add}>{num}</button>
         </LZY-TEMPLATE>
     )
 }
 
+
 // 执行渲染
-render(App)
+const fiber$1 = render(App)
+// const fiber$2 = updateRender(App2, undefined, fiber$1)
+// const nextFiber2 = updateRender(App3, fiber$1, fiber$2)
+// console.log(nextFiber2);

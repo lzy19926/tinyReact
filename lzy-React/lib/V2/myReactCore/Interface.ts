@@ -1,4 +1,14 @@
 import type { FiberNode } from './GlobalFiber'
+
+//全局变量声明
+declare global {
+    interface Window {
+        $$routeContainerFiber?: any
+        $$lzyReactGlobal?: Global
+    }
+}
+
+
 //!--------------单个UseEffectHook结构-------------------
 //todo 通过判断tag 'useEffect','useLayoutEffect' 来判断何种钩子  改变执行时机
 interface UseEffectHook {
@@ -66,6 +76,7 @@ type TextElementNode = {
     _parent: ElementNode | TextElementNode
     props?: any
     ref?: any
+    key?: string
 }
 
 export type { FiberNode, StateUpdater, Effect, UseStateHook, UseEffectHook, Global, ElementNode, TextElementNode }

@@ -1,11 +1,21 @@
+import { ElementNode, TextElementNode } from '../myReactCore/Interface'
 // 判断是否为Element
 function isElement(node: any) {
     if (!node.$$typeof) return false
     return Symbol.keyFor(node.$$typeof) === 'lzyElement'
 }
 
+// 给节点添加child和sibling,parent三个属性 放到connect属性里作为二叉树链接
+function addPropsToElement(elementNode, parentNode) {
+    Object.assign(elementNode, {
+        _child: undefined,
+        _sibling: undefined,
+        _parent: parentNode
+    })
+}
+
 // 通过解析来的JSX创建Element树
-export function createElement(...args: any[]) {
+export function createElement(...args: any[]): any {
     let key;
     let ref;
     let children = [];
@@ -23,7 +33,7 @@ export function createElement(...args: any[]) {
             ref: fc,
             key,
             props: config,
-            children: [fc()],
+            children: [],
             fiber: undefined
         }
     }
@@ -65,6 +75,38 @@ export function createElement(...args: any[]) {
     }
 }
 
+//! 将ElementTree森林结构递归转为二叉Element树
+export function transformElementTreeToBinadyTree(elementTree: any, parentElement: any): ElementNode {
+    const rootElementNode = elementTree
+    const children = rootElementNode.children
+    addPropsToElement(rootElementNode, parentElement)
+
+    children.forEach((child, index) => {
+        addPropsToElement(child, rootElementNode)
+
+        if (index === 0) {
+            rootElementNode._child = child
+            delete rootElementNode.children
+        }
+        else {
+            children[index - 1]._sibling = child
+            delete children[index - 1].children
+        }
+
+        if (child.children) {
+            transformElementTreeToBinadyTree(child, rootElementNode)
+        }
+    })
+
+    return rootElementNode
+}
+
+//! 综合方法
+export function createBinadyElementTree(functionComponent: Function, parentElement: any) {
+    const elementTree = createElement(functionComponent)
+    const binadyElementTree = transformElementTreeToBinadyTree(elementTree, parentElement)
+    return binadyElementTree
+}
 
 // 测试函数
 const test = () => {
