@@ -1,8 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createFiberWorkLoop = exports.createFiberWorkLoop2 = exports.handleProps = exports.createTextElement = exports.createDomElement = exports.createFiberTree = void 0;
+exports.createFiberWorkLoop = exports.createFiberWorkLoop2 = exports.handleProps = exports.createTextElement = exports.createDomElement = exports.createAlternate = exports.createFiberTree = void 0;
 const GlobalFiber_1 = require("../myReactCore/GlobalFiber");
 const createElement_1 = require("../myJSX/createElement");
+//! ---------------初始创建fiberTree--------------------
 function createFiberTree(elementNode, parentFiber) {
     let newFiberNode = new GlobalFiber_1.FiberNode('mount', '$1');
     let childElement = elementNode._child;
@@ -13,11 +14,13 @@ function createFiberTree(elementNode, parentFiber) {
     newFiberNode._parent = parentFiber;
     newFiberNode._element = elementNode;
     elementNode.fiber = newFiberNode;
-    //如果tag大写 解析为FC组件节点 执行渲染
+    //如果tag大写 解析为FC组件节点 重新生成element  挂载props
     if (elementNode.tag[0] === elementNode.tag[0].toUpperCase()) {
         newFiberNode.nodeType = 'FunctionComponent';
         newFiberNode.stateNode = elementNode.ref;
-        childElement = (0, createElement_1.transformElementTreeToBinadyTree)(elementNode.ref(), elementNode); //! 重新生成新的二叉element树
+        const childElementTree = elementNode.ref.call(undefined, elementNode.props); //! 挂载props
+        childElement = (0, createElement_1.transformElementTreeToBinadyTree)(childElementTree, elementNode); //! 重新生成新的二叉element树
+        elementNode._child = childElement;
     }
     //解析为text节点
     else if (elementNode.tag === 'text') {
@@ -44,6 +47,41 @@ function createFiberTree(elementNode, parentFiber) {
     return newFiberNode;
 }
 exports.createFiberTree = createFiberTree;
+//! -------------创建复制的alternate------------------
+function createAlternate(currentFiber) {
+    let alternateFiber = new GlobalFiber_1.FiberNode('mount', '$2');
+    let child = currentFiber._child;
+    let sibling = currentFiber._sibling;
+    //! 将一些属性复制给workInProgress
+    alternateFiber.stateQueueTimer = currentFiber.stateQueueTimer;
+    alternateFiber.updateQueue = currentFiber.updateQueue;
+    alternateFiber.hookIndex = currentFiber.hookIndex;
+    alternateFiber.memorizedState = currentFiber.memorizedState;
+    alternateFiber.nodeType = currentFiber.nodeType;
+    alternateFiber.tag = currentFiber.tag;
+    alternateFiber.text = currentFiber.text;
+    //! 链接两个fiber 
+    alternateFiber.alternate = currentFiber;
+    currentFiber.alternate = alternateFiber;
+    //! 链接parent
+    if (currentFiber._parent) {
+        alternateFiber._parent = currentFiber._parent.alternate;
+        currentFiber._parent.alternate = alternateFiber._parent;
+    }
+    // 深度优先递归执行
+    if (child) {
+        const childAlternateFiber = createAlternate(child);
+        alternateFiber._child = childAlternateFiber;
+    }
+    if (sibling) {
+        const siblingAlternateFiber = createAlternate(sibling);
+        alternateFiber._sibling = siblingAlternateFiber;
+    }
+    // 更改状态
+    alternateFiber.fiberFlags = 'update';
+    return alternateFiber;
+}
+exports.createAlternate = createAlternate;
 //! -------------创建html并挂载到fiber节点上--------------------
 function createDomElement(fiber) {
     //找到父dom节点 将创建好的dom节点添加进去
@@ -87,21 +125,13 @@ function handleProps(fiber, dom) {
     for (let key in props) {
         const value = props[key];
         switch (key) {
-            //todo  处理className (合并所有的类名)
+            //todo  处理className 
             case 'className':
-                let classNameStr = '';
-                for (let i = 0; i < value.length; i++) {
-                    classNameStr += value[i] + ' ';
-                }
-                dom.setAttribute("class", classNameStr.trim());
+                dom.setAttribute("class", value);
                 break;
-            //todo  处理class (合并所有的类名)
+            //todo  处理class
             case 'class':
-                let classStr = '';
-                for (let i = 0; i < value.length; i++) {
-                    classStr += value[i] + ' ';
-                }
-                dom.setAttribute("class", classStr.trim());
+                dom.setAttribute("class", value);
                 break;
             //todo  处理点击事件(还需处理其他事件)
             case 'onClick':

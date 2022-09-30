@@ -3,10 +3,12 @@ import { FiberNode, global } from '../myReactCore/GlobalFiber'
 import { ElementNode, TextElementNode } from '../myReactCore/Interface'
 import { transformElementTreeToBinadyTree } from '../myJSX/createElement'
 //! ---------------更新fiberTree 遍历wk树 (在这里生成第二棵fiberTree)-------------------
+//   (不需要更新跟组件节点的sibling节点  下层需要更新)
 function updateFiberTree(
     newElementNode: ElementNode | TextElementNode,
     workInProgressFiber: FiberNode,
-    currentFiber: FiberNode) {
+    currentFiber: FiberNode,
+    tag?: string) {
 
     //todo 添加节点逻辑
     if (!currentFiber) {
@@ -21,21 +23,16 @@ function updateFiberTree(
 
     // 如果没有  生成一个alternate链接上去 
     if (!workInProgressFiber) {
-        workInProgressFiber = createAlternate(currentFiber)
+        // workInProgressFiber = createAlternate(currentFiber)
     }
 
 
-    //todo 链接element和节点
-    let childElement = newElementNode._child
-    let siblingElement = newElementNode._sibling
-    currentFiber._element = newElementNode
+    // 链接element和节点
     workInProgressFiber._element = newElementNode
-    if (currentFiber.$fiber === '$1') { newElementNode.fiber = currentFiber }
-    if (workInProgressFiber.$fiber === '$1') { newElementNode.fiber = workInProgressFiber }
+    newElementNode.fiber = workInProgressFiber
 
 
-
-    //todo 切换当前工作fiber
+    // 切换当前工作fiber
     global.workInprogressFiberNode = workInProgressFiber
 
 
@@ -43,7 +40,10 @@ function updateFiberTree(
     if (newElementNode.tag[0] === newElementNode.tag[0].toUpperCase()) {
         workInProgressFiber.nodeType = 'FunctionComponent'
         workInProgressFiber.stateNode = newElementNode.ref
-        childElement = transformElementTreeToBinadyTree(newElementNode.ref(), newElementNode) //! 重新生成新的二叉element树
+        //! 挂载props(这里从alternate中获取  需要修改)
+        const props = currentFiber._element.props
+        const childElementTree = newElementNode.ref.call(undefined, props)
+        newElementNode._child = transformElementTreeToBinadyTree(childElementTree, newElementNode)  //! 重新生成新的二叉element树 并链接 
     }
     //解析为text节点 挂载dom节点
     else if (newElementNode.tag === 'text') {
@@ -58,17 +58,18 @@ function updateFiberTree(
     }
 
     //深度优先递归执行
-    if (currentFiber._child) {
-        const childWkFiber = updateFiberTree(childElement, workInProgressFiber._child, currentFiber._child)
+    if (newElementNode._child) {
+        const childWkFiber = updateFiberTree(newElementNode._child, workInProgressFiber._child, currentFiber._child)
         workInProgressFiber._child = childWkFiber
     }
-    if (currentFiber._sibling) {
-        const siblingWkFiber = updateFiberTree(siblingElement, workInProgressFiber._sibling, currentFiber._sibling)
+    if (newElementNode._sibling && tag !== 'rootUpdateFiber') {// (不需要更新跟组件节点的sibling节点)
+        const siblingWkFiber = updateFiberTree(newElementNode._sibling, workInProgressFiber._sibling, currentFiber._sibling)
         workInProgressFiber._sibling = siblingWkFiber
     }
 
     return workInProgressFiber
 }
+
 
 //! ---------新建一个alternateFiber----------
 function createAlternate(currentFiber: FiberNode) {
@@ -90,6 +91,7 @@ function createAlternate(currentFiber: FiberNode) {
     //! 链接parent
     if (currentFiber._parent) {
         workInProgressFiber._parent = currentFiber._parent.alternate
+        currentFiber._parent.alternate = workInProgressFiber._parent
     }
 
     return workInProgressFiber

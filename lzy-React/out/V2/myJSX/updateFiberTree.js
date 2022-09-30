@@ -4,7 +4,8 @@ exports.createAlternate = exports.updateFiberTree = void 0;
 const GlobalFiber_1 = require("../myReactCore/GlobalFiber");
 const createElement_1 = require("../myJSX/createElement");
 //! ---------------更新fiberTree 遍历wk树 (在这里生成第二棵fiberTree)-------------------
-function updateFiberTree(newElementNode, workInProgressFiber, currentFiber) {
+//   (不需要更新跟组件节点的sibling节点  下层需要更新)
+function updateFiberTree(newElementNode, workInProgressFiber, currentFiber, tag) {
     //todo 添加节点逻辑
     if (!currentFiber) {
         // const placementFiber = createFiberTree()
@@ -16,26 +17,21 @@ function updateFiberTree(newElementNode, workInProgressFiber, currentFiber) {
     }
     // 如果没有  生成一个alternate链接上去 
     if (!workInProgressFiber) {
-        workInProgressFiber = createAlternate(currentFiber);
+        // workInProgressFiber = createAlternate(currentFiber)
     }
-    //todo 链接element和节点
-    let childElement = newElementNode._child;
-    let siblingElement = newElementNode._sibling;
-    currentFiber._element = newElementNode;
+    // 链接element和节点
     workInProgressFiber._element = newElementNode;
-    if (currentFiber.$fiber === '$1') {
-        newElementNode.fiber = currentFiber;
-    }
-    if (workInProgressFiber.$fiber === '$1') {
-        newElementNode.fiber = workInProgressFiber;
-    }
-    //todo 切换当前工作fiber
+    newElementNode.fiber = workInProgressFiber;
+    // 切换当前工作fiber
     GlobalFiber_1.global.workInprogressFiberNode = workInProgressFiber;
     //如果tag大写 解析为FC组件节点
     if (newElementNode.tag[0] === newElementNode.tag[0].toUpperCase()) {
         workInProgressFiber.nodeType = 'FunctionComponent';
         workInProgressFiber.stateNode = newElementNode.ref;
-        childElement = (0, createElement_1.transformElementTreeToBinadyTree)(newElementNode.ref(), newElementNode); //! 重新生成新的二叉element树
+        //! 挂载props(这里从alternate中获取  需要修改)
+        const props = currentFiber._element.props;
+        const childElementTree = newElementNode.ref.call(undefined, props);
+        newElementNode._child = (0, createElement_1.transformElementTreeToBinadyTree)(childElementTree, newElementNode); //! 重新生成新的二叉element树 并链接 
     }
     //解析为text节点 挂载dom节点
     else if (newElementNode.tag === 'text') {
@@ -49,12 +45,12 @@ function updateFiberTree(newElementNode, workInProgressFiber, currentFiber) {
         workInProgressFiber.stateNode = currentFiber.stateNode;
     }
     //深度优先递归执行
-    if (currentFiber._child) {
-        const childWkFiber = updateFiberTree(childElement, workInProgressFiber._child, currentFiber._child);
+    if (newElementNode._child) {
+        const childWkFiber = updateFiberTree(newElementNode._child, workInProgressFiber._child, currentFiber._child);
         workInProgressFiber._child = childWkFiber;
     }
-    if (currentFiber._sibling) {
-        const siblingWkFiber = updateFiberTree(siblingElement, workInProgressFiber._sibling, currentFiber._sibling);
+    if (newElementNode._sibling && tag !== 'rootUpdateFiber') { // (不需要更新跟组件节点的sibling节点)
+        const siblingWkFiber = updateFiberTree(newElementNode._sibling, workInProgressFiber._sibling, currentFiber._sibling);
         workInProgressFiber._sibling = siblingWkFiber;
     }
     return workInProgressFiber;
@@ -77,6 +73,7 @@ function createAlternate(currentFiber) {
     //! 链接parent
     if (currentFiber._parent) {
         workInProgressFiber._parent = currentFiber._parent.alternate;
+        currentFiber._parent.alternate = workInProgressFiber._parent;
     }
     return workInProgressFiber;
 }

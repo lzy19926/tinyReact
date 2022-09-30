@@ -10,6 +10,7 @@ const GlobalFiber_1 = require("./GlobalFiber");
 function firstRenderPart(functionComponent, rootDom) {
     const elementTree = (0, createElement_1.createBinadyElementTree)(functionComponent, undefined);
     const rootFiber = (0, createFiberTree_1.createFiberTree)(elementTree, undefined);
+    (0, createFiberTree_1.createAlternate)(rootFiber);
     return rootFiber;
 }
 //todo 获取上一次的fiberTree 执行所有打上tag的functionComponent进行state更新 再commit   
@@ -19,7 +20,7 @@ function updateRenderPart(functionComponent, workInProgressFiber, currentFiber) 
     GlobalFiber_1.global.renderTag = 'update';
     const parentElement = (_a = currentFiber === null || currentFiber === void 0 ? void 0 : currentFiber._parent) === null || _a === void 0 ? void 0 : _a._element;
     const newElementTree = (0, createElement_1.createBinadyElementTree)(functionComponent, parentElement);
-    const workInProgressRootFiber = (0, updateFiberTree_1.updateFiberTree)(newElementTree, workInProgressFiber, currentFiber);
+    const workInProgressRootFiber = (0, updateFiberTree_1.updateFiberTree)(newElementTree, workInProgressFiber, currentFiber, 'rootUpdateFiber');
     return workInProgressRootFiber;
 }
 //! -----------------模拟Commit阶段-----------------------------
@@ -233,18 +234,17 @@ function finishedWorkLoop(currentFiber, rootUpdateQueue) {
         finishedWorkLoop(siblingFiber, rootUpdateQueue);
     }
 }
-//! 更新时的finishedWork
+//! 更新时的finishedWork(第一次不进入组件的sibling节点)
 function updateFinishedWork(workInProgressFiber, currentFiber) {
     // 遍历fiber树 将所有Effect添加进root节点的update环链表中
-    const root = workInProgressFiber;
     let rootUpdateQueue = { lastEffect: null };
     // 首屏不需要diff  更新需要进行diff计算
-    updateFinishedWorkLoop(workInProgressFiber, currentFiber, rootUpdateQueue);
+    updateFinishedWorkLoop(workInProgressFiber, currentFiber, rootUpdateQueue, 'first');
     // 处理好的updateQueue成为到本次root节点的updateQueue
-    root.updateQueue = rootUpdateQueue;
-    return root;
+    workInProgressFiber.updateQueue = rootUpdateQueue;
+    return workInProgressFiber;
 }
-function updateFinishedWorkLoop(workInProgressFiber, currentFiber, rootUpdateQueue) {
+function updateFinishedWorkLoop(workInProgressFiber, currentFiber, rootUpdateQueue, tag) {
     // 拼接两个链表
     collectEffect(workInProgressFiber, rootUpdateQueue);
     //TODO ---------diff两个节点 打上tag 生成Effect交给commit阶段更新------------
@@ -253,7 +253,7 @@ function updateFinishedWorkLoop(workInProgressFiber, currentFiber, rootUpdateQue
     if (workInProgressFiber._child) {
         updateFinishedWorkLoop(workInProgressFiber._child, currentFiber._child, rootUpdateQueue);
     }
-    if (workInProgressFiber._sibling) {
+    if (workInProgressFiber._sibling && tag !== 'first') { // 第一次不进入组件节点的sibling
         updateFinishedWorkLoop(workInProgressFiber._sibling, currentFiber._sibling, rootUpdateQueue);
     }
 }
@@ -289,6 +289,7 @@ function render(functionComponent, rootDom) {
     const finishedWorkFiber = finishedWork(beginWorkFiber, null);
     //todo commit阶段
     commitPart(finishedWorkFiber);
+    console.log('首屏渲染生成的fiber', finishedWorkFiber);
     return finishedWorkFiber;
 }
 exports.render = render;

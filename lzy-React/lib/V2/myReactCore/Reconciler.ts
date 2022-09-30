@@ -6,7 +6,7 @@ import { global } from './GlobalFiber'
 // TODO (重要)如果节点有挂载事件  需要更新这些事件(否则无法更新  事件引用不会变更)!!!!!!!!!
 function reconcileEvent(workInProgressFiber: FiberNode, currentFiber: FiberNode) {
 
-    const wkProps = workInProgressFiber._element.props
+    const wkProps = workInProgressFiber?._element?.props
     if (!wkProps) return
     // 如果有事件 创建对应的Effect
     const hasEvent = wkProps.hasOwnProperty('onClick' || 'onMouseOver')
@@ -39,13 +39,13 @@ function reconcileTag(workInProgressFiber: FiberNode, currentFiber: FiberNode) {
 
 //! 添加(待优化)
 function reconcilePlacement(workInProgressFiber: FiberNode, currentFiber: FiberNode) {
-    const wkKey = workInProgressFiber?._element.key
-    const curKey = currentFiber?._element.key
+    // const wkKey = workInProgressFiber?._element.key
+    // const curKey = currentFiber?._element.key
 
     // 或者有cur  无work算为插入节点
-    if (!currentFiber && workInProgressFiber) {
-        pushEffectList('Placement', workInProgressFiber)
-    }
+    // if (!currentFiber && workInProgressFiber) {
+    //     pushEffectList('Placement', workInProgressFiber)
+    // }
 
 }
 
@@ -117,8 +117,6 @@ function reconcileFiberNode(workInProgressFiber: FiberNode, currentFiber: FiberN
         reconcileText(workInProgressFiber, currentFiber)
         //TODO 有事件更新事件
         reconcileEvent(workInProgressFiber, currentFiber)
-        //TODO 判断是否使用了useEffect
-        reconcileUseEffect(workInProgressFiber, currentFiber)
     }
 
 }

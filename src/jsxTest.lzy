@@ -1,24 +1,39 @@
 import * as LzyReact from '../lzy-React/out/index_V2'
-import { render, updateRender, myUseState } from '../lzy-React/out/index_V2'
+import { render, myUseState, myUseEffect } from '../lzy-React/out/index_V2'
+import Demo from './lzyPage_2/Demo.lzy'
 
+function Child(props) {
 
+    console.log(props);                 //! props传递测试
 
-const Child = () => <div>子组件</div>
+    const [num, setNum] = myUseState(0) //! setState钩子测试
+
+    myUseEffect(() => {                 //! useEffect钩子测试
+        console.log('执行useEffect钩子,(首屏渲染执行)');
+    }, [])
+
+    myUseEffect(() => {
+        console.log(`执行useEffect钩子,(依赖项变更时执行)`);
+    }, [num])
+
+    myUseEffect(() => {
+        console.log(`执行useEffect钩子,(任意渲染时执行)`);
+    })
+
+    return (
+        <button onClick={() => { setNum(num + 1) }}>number:{num}</button>
+    )
+}
 
 
 function App() {
-    const [num, setNum] = myUseState(0)
-    const add = () => { setNum(num + 1) }
     return (
         <LZY-TEMPLATE>
-            <button onClick={add}>{num}</button>
+            <Child msg={'父组件传递来的props'} />
         </LZY-TEMPLATE>
     )
 }
 
 
 // 执行渲染
-const fiber$1 = render(App)
-// const fiber$2 = updateRender(App2, undefined, fiber$1)
-// const nextFiber2 = updateRender(App3, fiber$1, fiber$2)
-// console.log(nextFiber2);
+render(Demo)
