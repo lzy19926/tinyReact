@@ -58,7 +58,7 @@ module.exports = {
                 test: /\.lzy$/,
                 use: [
                     'babel-loader',
-                    { loader: path.resolve(__dirname, './lzy-loader/index.js') }
+                    { loader: path.resolve(__dirname, './my_node_modules/lzy-loader/index') }
                 ]
             },
         ],
